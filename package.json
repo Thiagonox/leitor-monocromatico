@@ -7,7 +7,7 @@
     "dev": "concurrently -n \"web,api\" -c \"cyan,magenta\" \"pnpm --filter @mono-reader/web dev\" \"pnpm --filter @mono-reader/api dev\"",
     "dev:web": "pnpm --filter @mono-reader/web dev",
     "dev:api": "pnpm --filter @mono-reader/api dev",
-    "build": "pnpm --filter @mono-reader/api build && pnpm --filter @mono-reader/web build",
+    "build": "pnpm --filter @mono-reader/shared build && pnpm --filter @mono-reader/api build && pnpm --filter @mono-reader/web build",
     "build:web": "pnpm --filter @mono-reader/web build",
     "build:api": "pnpm --filter @mono-reader/api build",
     "start": "concurrently -n \"web,api\" -c \"cyan,magenta\" \"pnpm --filter @mono-reader/web start\" \"pnpm --filter @mono-reader/api start\"",
