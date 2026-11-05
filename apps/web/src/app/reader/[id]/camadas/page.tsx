@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useEffect, useState, use } from 'react';
+import React, { useEffect, useState, useRef, use } from 'react';
 import Link from 'next/link';
 import {
   ArrowLeft,
@@ -12,12 +12,14 @@ import {
   ChevronRight,
   Layers,
   CheckCircle2,
+  Pencil,
 } from 'lucide-react';
 import { fetchBook } from '@/lib/api';
 import { BookDoc, Chapter, Section } from '@mono-reader/shared';
 import { ThemeToggle } from '@/components/ThemeToggle';
 import { TocDrawer } from '@/components/TocDrawer';
-import { AudioPlayerModal } from '@/components/AudioPlayerModal';
+import { AudioPlayerModal, AudioPlaybackState } from '@/components/AudioPlayerModal';
+import { ReadingPencilGuide } from '@/components/ReadingPencilGuide';
 
 const LAYERS = [
   { id: 1, title: 'Resumo Essencial', subtitle: 'Visão direta e rápida dos pontos-chave' },
@@ -34,6 +36,15 @@ export default function LayeredReaderPage({ params }: { params: Promise<{ id: st
   const [loading, setLoading] = useState(true);
   const [tocOpen, setTocOpen] = useState(false);
   const [audioOpen, setAudioOpen] = useState(false);
+  const [pencilEnabled, setPencilEnabled] = useState(true);
+  const [audioPlayback, setAudioPlayback] = useState<AudioPlaybackState>({
+    isPlaying: false,
+    currentTime: 0,
+    duration: 0,
+    isLoading: false,
+  });
+
+  const contentRef = useRef<HTMLElement | null>(null);
 
   useEffect(() => {
     let active = true;
@@ -179,7 +190,7 @@ export default function LayeredReaderPage({ params }: { params: Promise<{ id: st
       />
 
       {/* Conteúdo Principal Monocromático */}
-      <main className="max-w-2xl mx-auto px-6 py-12">
+      <main ref={contentRef} className="max-w-2xl mx-auto px-6 py-12">
         {/* Cabeçalho do Capítulo */}
         <div className="mb-10 pb-6 border-b border-[var(--border-color)]">
           <div className="flex items-center gap-2 mb-2 font-mono text-xs text-[var(--text-muted)] uppercase tracking-widest">
@@ -414,6 +425,17 @@ export default function LayeredReaderPage({ params }: { params: Promise<{ id: st
         textToRead={chapterFullText}
         chapterTitle={`${book.meta.title} — Cap. ${currentChapter.number}: ${currentChapter.title}`}
         chapterId={`${book.meta.id}-${currentChapter.id}`}
+        onPlaybackUpdate={setAudioPlayback}
+      />
+
+      {/* Guia Animado do Lápis Editorial */}
+      <ReadingPencilGuide
+        containerRef={contentRef}
+        isPlaying={audioPlayback.isPlaying}
+        currentTime={audioPlayback.currentTime}
+        duration={audioPlayback.duration}
+        isLoading={audioPlayback.isLoading}
+        enabled={pencilEnabled}
       />
     </div>
   );

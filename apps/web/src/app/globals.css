@@ -199,3 +199,220 @@ body {
 ::-webkit-scrollbar-thumb:hover {
   background: var(--text-muted);
 }
+
+
+/* --------------------------------------------------------------------------
+   GUIA ANIMADO DE LEITURA: LÁPIS EDITORIAL (ACOMPANHAMENTO PALAVRA A PALAVRA)
+   -------------------------------------------------------------------------- */
+.tts-pencil-layer {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 520;
+  opacity: 0;
+  transition: opacity 0.25s ease;
+  overflow: hidden;
+}
+
+.tts-pencil-layer.is-active {
+  opacity: 1;
+}
+
+/* Rastro sutil de grafite sob a linha que está sendo lida */
+.tts-pencil-trail {
+  position: fixed;
+  left: 0;
+  top: 0;
+  height: 2px;
+  width: 0;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    var(--border-color) 25%,
+    var(--text-primary) 100%
+  );
+  border-radius: 2px;
+  opacity: 0.65;
+  transform-origin: left center;
+  will-change: transform, width;
+}
+
+/* Cursor principal posicionado na ponta do grafite (0,0) */
+.tts-pencil-cursor {
+  position: fixed;
+  left: 0;
+  top: 0;
+  width: 0;
+  height: 0;
+  pointer-events: none;
+  will-change: transform;
+}
+
+.tts-pencil-rig {
+  position: relative;
+  transform-origin: 0 0;
+  transition: transform 0.18s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+/* Micro-animação orgânica enquanto desliza pelas palavras */
+.tts-pencil-cursor.is-writing .tts-pencil-rig {
+  animation: pencilGlideBob 0.55s ease-in-out infinite alternate;
+}
+
+/* Quando muda de linha ou bloco: levanta levemente a ponta do papel */
+.tts-pencil-cursor.is-lifting .tts-pencil-rig {
+  transform: translate(2px, -6px) rotate(-10deg) scale(1.03);
+}
+
+/* Quando aguardando ou pausado: flutuação suave de espera */
+.tts-pencil-cursor.is-waiting .tts-pencil-rig {
+  animation: pencilIdleFloat 1.6s ease-in-out infinite alternate;
+}
+
+/* Ponto de contato de grafite na ponta exata (0,0) */
+.tts-pencil-tip-dot {
+  position: absolute;
+  left: -2.5px;
+  top: -2.5px;
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background-color: var(--border-strong);
+  box-shadow: 0 0 0 3px rgba(0, 0, 0, 0.12);
+  animation: pencilTipPulse 1.1s ease-in-out infinite alternate;
+}
+
+[data-theme="dark"] .tts-pencil-tip-dot {
+  box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.18);
+}
+
+.tts-pencil-svg {
+  position: absolute;
+  left: -3px;
+  top: -3px;
+  overflow: visible;
+  filter: drop-shadow(0 3px 5px rgba(0, 0, 0, 0.18));
+}
+
+/* Paleta monocromática editorial do lápis (adaptativa aos temas E-Ink, Claro e Escuro) */
+.tts-pencil-svg .pencil-lead {
+  fill: var(--text-primary);
+  stroke: var(--text-primary);
+  stroke-width: 0.4;
+}
+
+.tts-pencil-svg .pencil-wood {
+  fill: var(--bg-secondary);
+  stroke: var(--border-strong);
+  stroke-width: 1.1;
+  stroke-linejoin: round;
+}
+
+.tts-pencil-svg .pencil-wood-collar {
+  fill: none;
+  stroke: var(--border-strong);
+  stroke-width: 0.9;
+}
+
+.tts-pencil-svg .pencil-body {
+  fill: var(--text-primary);
+  stroke: var(--border-strong);
+  stroke-width: 1.1;
+}
+
+.tts-pencil-svg .pencil-facet {
+  stroke: var(--bg-primary);
+  stroke-width: 0.75;
+  opacity: 0.55;
+}
+
+.tts-pencil-svg .pencil-ferrule {
+  fill: var(--bg-surface);
+  stroke: var(--border-strong);
+  stroke-width: 1.1;
+}
+
+.tts-pencil-svg .pencil-ferrule-band {
+  stroke: var(--border-color);
+  stroke-width: 0.8;
+}
+
+.tts-pencil-svg .pencil-eraser {
+  fill: var(--bg-secondary);
+  stroke: var(--border-strong);
+  stroke-width: 1.1;
+}
+
+@keyframes pencilGlideBob {
+  0% {
+    transform: translate(0, 0) rotate(0deg);
+  }
+  50% {
+    transform: translate(0.4px, -1.1px) rotate(-1.6deg);
+  }
+  100% {
+    transform: translate(0, -0.3px) rotate(1.1deg);
+  }
+}
+
+@keyframes pencilIdleFloat {
+  0% {
+    transform: translate(0, -1px) rotate(-2deg);
+  }
+  100% {
+    transform: translate(1.5px, -4.5px) rotate(-7deg);
+  }
+}
+
+@keyframes pencilTipPulse {
+  0% {
+    transform: scale(0.8);
+    opacity: 0.65;
+  }
+  100% {
+    transform: scale(1.25);
+    opacity: 1;
+  }
+}
+
+/* --------------------------------------------------------------------------
+   RÉGUA DE LEITURA (READING RULER OVERLAY)
+   -------------------------------------------------------------------------- */
+.reading-ruler-overlay {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 400;
+}
+
+.reading-ruler-mask-top {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  background-color: var(--bg-mask);
+  backdrop-filter: blur(1px);
+  -webkit-backdrop-filter: blur(1px);
+  transition: height 0.05s linear;
+}
+
+.reading-ruler-window {
+  position: absolute;
+  left: 0;
+  right: 0;
+  border-top: 1.5px solid var(--border-strong);
+  border-bottom: 1.5px solid var(--border-strong);
+  box-shadow: 0 0 25px rgba(0, 0, 0, 0.12);
+  transition: top 0.05s linear, height 0.05s linear;
+}
+
+.reading-ruler-mask-bottom {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background-color: var(--bg-mask);
+  backdrop-filter: blur(1px);
+  -webkit-backdrop-filter: blur(1px);
+  transition: top 0.05s linear;
+}

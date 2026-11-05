@@ -4,12 +4,20 @@ import React, { useState, useEffect, useRef } from 'react';
 import { Volume2, Play, Pause, Square, X, Database, AlertCircle } from 'lucide-react';
 import { requestTTS } from '../lib/api';
 
+export interface AudioPlaybackState {
+  isPlaying: boolean;
+  currentTime: number;
+  duration: number;
+  isLoading: boolean;
+}
+
 interface AudioPlayerModalProps {
   isOpen: boolean;
   onClose: () => void;
   textToRead: string;
   chapterTitle?: string;
   chapterId?: string;
+  onPlaybackUpdate?: (state: AudioPlaybackState) => void;
 }
 
 const VOICES = [
@@ -23,6 +31,7 @@ export function AudioPlayerModal({
   textToRead,
   chapterTitle,
   chapterId,
+  onPlaybackUpdate,
 }: AudioPlayerModalProps) {
   const [isPlaying, setIsPlaying] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
@@ -35,6 +44,16 @@ export function AudioPlayerModal({
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
   const audioRef = useRef<HTMLAudioElement | null>(null);
+
+  // Notifica o estado de reprodução para o Lápis de Leitura e componentes externos
+  useEffect(() => {
+    onPlaybackUpdate?.({
+      isPlaying,
+      currentTime,
+      duration,
+      isLoading,
+    });
+  }, [isPlaying, currentTime, duration, isLoading, onPlaybackUpdate]);
 
   // Limpa o áudio ao fechar
   useEffect(() => {

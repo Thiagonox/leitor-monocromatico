@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useEffect, useState, use } from 'react';
+import React, { useEffect, useState, useRef, use } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import {
@@ -12,7 +12,9 @@ import {
   ChevronLeft,
   ChevronRight,
   Bookmark,
-  Type
+  Type,
+  Pencil,
+  Eye,
 } from 'lucide-react';
 import { fetchBook } from '@/lib/api';
 import { BookDoc, Chapter, Section } from '@mono-reader/shared';
@@ -32,7 +34,9 @@ import { ThemeToggle } from '@/components/ThemeToggle';
 import { TocDrawer } from '@/components/TocDrawer';
 import { QuizBlock } from '@/components/QuizBlock';
 import { DeepenModal } from '@/components/DeepenModal';
-import { AudioPlayerModal } from '@/components/AudioPlayerModal';
+import { AudioPlayerModal, AudioPlaybackState } from '@/components/AudioPlayerModal';
+import { ReadingPencilGuide } from '@/components/ReadingPencilGuide';
+import { ReadingRuler } from '@/components/ReadingRuler';
 
 export default function ReaderPage({ params }: { params: Promise<{ id: string }> }) {
   const resolvedParams = use(params);
@@ -47,6 +51,18 @@ export default function ReaderPage({ params }: { params: Promise<{ id: string }>
   const [fontSize, setFontSizeState] = useState(20);
   const [fontMode, setFontModeState] = useState<FontMode>('serif');
   const [selectedTextForDeepen, setSelectedTextForDeepen] = useState('');
+
+  // Guias de leitura: Lápis Editorial e Régua de Foco Ocular
+  const [pencilEnabled, setPencilEnabled] = useState(true);
+  const [rulerEnabled, setRulerEnabled] = useState(false);
+  const [audioPlayback, setAudioPlayback] = useState<AudioPlaybackState>({
+    isPlaying: false,
+    currentTime: 0,
+    duration: 0,
+    isLoading: false,
+  });
+
+  const contentRef = useRef<HTMLDivElement | null>(null);
 
   // Carrega Livro
   useEffect(() => {
@@ -202,6 +218,34 @@ export default function ReaderPage({ params }: { params: Promise<{ id: string }>
               <span className="hidden md:inline">Ouvir</span>
             </button>
 
+            {/* Lápis Guia de Leitura */}
+            <button
+              onClick={() => setPencilEnabled(!pencilEnabled)}
+              className={`p-1.5 rounded transition-colors text-xs font-mono flex items-center gap-1 ${
+                pencilEnabled
+                  ? 'bg-[var(--border-strong)] text-[var(--bg-primary)]'
+                  : 'hover:bg-[var(--bg-secondary)] text-[var(--text-muted)]'
+              }`}
+              title={pencilEnabled ? 'Desativar Lápis de Leitura' : 'Ativar Lápis de Leitura'}
+            >
+              <Pencil className="w-3.5 h-3.5" />
+              <span className="hidden lg:inline">Lápis</span>
+            </button>
+
+            {/* Régua de Foco Ocular */}
+            <button
+              onClick={() => setRulerEnabled(!rulerEnabled)}
+              className={`p-1.5 rounded transition-colors text-xs font-mono flex items-center gap-1 ${
+                rulerEnabled
+                  ? 'bg-[var(--border-strong)] text-[var(--bg-primary)]'
+                  : 'hover:bg-[var(--bg-secondary)] text-[var(--text-muted)]'
+              }`}
+              title={rulerEnabled ? 'Desativar Régua de Foco' : 'Ativar Régua de Foco Ocular'}
+            >
+              <Eye className="w-3.5 h-3.5" />
+              <span className="hidden lg:inline">Régua</span>
+            </button>
+
             {/* Alternar Fonte */}
             <button
               onClick={toggleFont}
@@ -270,7 +314,7 @@ export default function ReaderPage({ params }: { params: Promise<{ id: string }>
         </header>
 
         {/* Seções do Capítulo */}
-        <article className="space-y-6">
+        <article ref={contentRef} className="space-y-6">
           {currentChapter.sections.map((sec: Section, sIdx: number) => {
             if (sec.type === 'heading') {
               if (sec.level === 2) {
@@ -391,7 +435,21 @@ export default function ReaderPage({ params }: { params: Promise<{ id: string }>
         textToRead={allChapterText}
         chapterTitle={`${book.meta.title} — Cap. ${currentChapter.number}: ${currentChapter.title}`}
         chapterId={`${book.meta.id}-${currentChapter.id}`}
+        onPlaybackUpdate={setAudioPlayback}
       />
+
+      {/* Guia Animado do Lápis Editorial (Acompanha a voz palavra por palavra) */}
+      <ReadingPencilGuide
+        containerRef={contentRef}
+        isPlaying={audioPlayback.isPlaying}
+        currentTime={audioPlayback.currentTime}
+        duration={audioPlayback.duration}
+        isLoading={audioPlayback.isLoading}
+        enabled={pencilEnabled}
+      />
+
+      {/* Régua de Foco Ocular */}
+      <ReadingRuler isActive={rulerEnabled} />
     </div>
   );
 }
