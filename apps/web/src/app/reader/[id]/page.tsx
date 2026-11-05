@@ -9,9 +9,6 @@ import {
   Layers,
   Volume2,
   Sparkles,
-  ChevronLeft,
-  ChevronRight,
-  Bookmark,
   Type,
   Pencil,
   Eye,
@@ -19,16 +16,13 @@ import {
 import { fetchBook } from '@/lib/api';
 import { BookDoc, Chapter, Section } from '@mono-reader/shared';
 import {
-  getStoredTheme,
-  setStoredTheme,
   getStoredFont,
   setStoredFont,
   getStoredFontSize,
   setStoredFontSize,
   getBookProgress,
   setBookProgress,
-  ThemeMode,
-  FontMode
+  FontMode,
 } from '@/lib/storage';
 import { ThemeToggle } from '@/components/ThemeToggle';
 import { TocDrawer } from '@/components/TocDrawer';
@@ -63,6 +57,13 @@ export default function ReaderPage({ params }: { params: Promise<{ id: string }>
   });
 
   const contentRef = useRef<HTMLDivElement | null>(null);
+  const chapterRefs = useRef<(HTMLElement | null)[]>([]);
+  const activeChapterContainerRef = useRef<HTMLElement | null>(null);
+
+  // Mantém a referência do container do capítulo ativo para o lápis de leitura
+  useEffect(() => {
+    activeChapterContainerRef.current = chapterRefs.current[currentChapterIndex] || contentRef.current;
+  }, [currentChapterIndex]);
 
   // Carrega Livro
   useEffect(() => {
@@ -76,16 +77,29 @@ export default function ReaderPage({ params }: { params: Promise<{ id: string }>
           const progress = getBookProgress(doc.meta.id);
           if (progress.chapterIndex < doc.chapters.length) {
             setCurrentChapterIndex(progress.chapterIndex);
+            // Se havia progresso salvo anterior a 0, rola suavemente após renderizar
+            if (progress.chapterIndex > 0) {
+              setTimeout(() => {
+                const targetChapter = doc.chapters[progress.chapterIndex];
+                const el = document.getElementById(`chapter-${targetChapter.id || progress.chapterIndex}`);
+                if (el) {
+                  const y = el.getBoundingClientRect().top + window.pageYOffset - 72;
+                  window.scrollTo({ top: y, behavior: 'smooth' });
+                }
+              }, 400);
+            }
           }
         }
         setLoading(false);
       }
     }
     load();
-    return () => { active = false; };
+    return () => {
+      active = false;
+    };
   }, [resolvedParams.id]);
 
-  // Carrega Preferências
+  // Carrega Preferências de Fonte
   useEffect(() => {
     const sSize = getStoredFontSize();
     setFontSizeState(sSize);
@@ -93,13 +107,36 @@ export default function ReaderPage({ params }: { params: Promise<{ id: string }>
     setFontModeState(sFont);
   }, []);
 
-  // Salva Progresso ao trocar de capítulo
+  // Observa os capítulos em tela para atualizar o cabeçalho e progresso automaticamente sem saltos
   useEffect(() => {
-    if (book) {
-      setBookProgress(book.meta.id, currentChapterIndex, 0);
-      window.scrollTo({ top: 0, behavior: 'smooth' });
-    }
-  }, [currentChapterIndex, book]);
+    if (!book || loading) return;
+
+    const sections = document.querySelectorAll<HTMLElement>('.chapter-section');
+    if (!sections.length) return;
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        for (const entry of entries) {
+          if (entry.isIntersecting) {
+            const idxStr = entry.target.getAttribute('data-chapter-index');
+            if (idxStr !== null) {
+              const idx = parseInt(idxStr, 10);
+              setCurrentChapterIndex(idx);
+              setBookProgress(book.meta.id, idx, 0);
+            }
+          }
+        }
+      },
+      {
+        rootMargin: '-10% 0px -70% 0px',
+        threshold: 0,
+      }
+    );
+
+    sections.forEach((sec) => observer.observe(sec));
+
+    return () => observer.disconnect();
+  }, [book, loading]);
 
   const changeFontSize = (delta: number) => {
     const next = Math.min(32, Math.max(14, fontSize + delta));
@@ -113,7 +150,52 @@ export default function ReaderPage({ params }: { params: Promise<{ id: string }>
     setStoredFont(next);
   };
 
+  // Navega suavemente até o capítulo desejado no fluxo contínuo
+  const handleSelectChapter = (index: number) => {
+    setCurrentChapterIndex(index);
+    setTocOpen(false);
+    const targetChapter = book?.chapters[index];
+    if (targetChapter) {
+      const el = document.getElementById(`chapter-${targetChapter.id || index}`);
+      if (el) {
+        const y = el.getBoundingClientRect().top + window.pageYOffset - 72;
+        window.scrollTo({ top: y, behavior: 'smooth' });
+      }
+    }
+  };
+
+  // Avança para o próximo capítulo no áudio player e no scroll
+  const handleNextChapter = () => {
+    if (!book) return;
+    if (currentChapterIndex < book.chapters.length - 1) {
+      const nextIdx = currentChapterIndex + 1;
+      setCurrentChapterIndex(nextIdx);
+      const targetChapter = book.chapters[nextIdx];
+      const el = document.getElementById(`chapter-${targetChapter.id || nextIdx}`);
+      if (el) {
+        const y = el.getBoundingClientRect().top + window.pageYOffset - 72;
+        window.scrollTo({ top: y, behavior: 'smooth' });
+      }
+    }
+  };
+
+  // Volta para o capítulo anterior no áudio player e no scroll
+  const handlePreviousChapter = () => {
+    if (!book) return;
+    if (currentChapterIndex > 0) {
+      const prevIdx = currentChapterIndex - 1;
+      setCurrentChapterIndex(prevIdx);
+      const targetChapter = book.chapters[prevIdx];
+      const el = document.getElementById(`chapter-${targetChapter.id || prevIdx}`);
+      if (el) {
+        const y = el.getBoundingClientRect().top + window.pageYOffset - 72;
+        window.scrollTo({ top: y, behavior: 'smooth' });
+      }
+    }
+  };
+
   const currentChapter: Chapter | undefined = book?.chapters[currentChapterIndex];
+  const allCurrentChapterText = currentChapter?.sections.map((s) => s.content || '').join('\n\n') || '';
 
   // Captura seleção de texto para aprofundar
   const handleOpenDeepen = () => {
@@ -129,12 +211,12 @@ export default function ReaderPage({ params }: { params: Promise<{ id: string }>
   if (loading) {
     return (
       <div className="min-h-screen bg-[var(--bg-primary)] flex items-center justify-center font-mono text-xs text-[var(--text-muted)]">
-        Carregando obra no leitor monocromático...
+        Carregando obra no leitor monocromático infinito...
       </div>
     );
   }
 
-  if (!book || !currentChapter) {
+  if (!book || !book.chapters || book.chapters.length === 0) {
     return (
       <div className="min-h-screen bg-[var(--bg-primary)] flex flex-col items-center justify-center p-6 text-center">
         <h2 className="font-serif text-2xl font-bold mb-3">Obra não encontrada</h2>
@@ -150,8 +232,6 @@ export default function ReaderPage({ params }: { params: Promise<{ id: string }>
       </div>
     );
   }
-
-  const allChapterText = currentChapter.sections.map(s => s.content || '').join('\n\n');
 
   return (
     <div className="min-h-screen bg-[var(--bg-primary)] text-[var(--text-primary)]">
@@ -179,10 +259,10 @@ export default function ReaderPage({ params }: { params: Promise<{ id: string }>
             </button>
           </div>
 
-          {/* Título Central Truncado */}
+          {/* Título Central Dinâmico Truncado (Acompanha o Scroll) */}
           <div className="hidden lg:block text-center flex-1 mx-4">
             <span className="font-serif text-xs italic text-[var(--text-secondary)] line-clamp-1">
-              {book.meta.title} — Cap. {currentChapter.number}
+              {book.meta.title} — Cap. {currentChapter?.number}: {currentChapter?.title}
             </span>
           </div>
 
@@ -285,140 +365,140 @@ export default function ReaderPage({ params }: { params: Promise<{ id: string }>
         onClose={() => setTocOpen(false)}
         chapters={book.chapters}
         currentChapterIndex={currentChapterIndex}
-        onSelectChapter={setCurrentChapterIndex}
+        onSelectChapter={handleSelectChapter}
         bookTitle={book.meta.title}
       />
 
-      {/* Coluna Central de Leitura */}
-      <main className="reader-container py-12 md:py-16">
-        {/* Cabeçalho do Capítulo */}
-        <header className="mb-10 text-center">
-          <div className="font-mono text-xs uppercase tracking-widest text-[var(--text-muted)] mb-3">
-            Capítulo {currentChapter.number} de {book.chapters.length}
-          </div>
-          <h1 className="reader-heading-1 font-serif text-3xl sm:text-4xl leading-tight">
-            {currentChapter.title}
-          </h1>
+      {/* Coluna Central de Leitura Contínua (Scroll Infinito Sem Cortes) */}
+      <main ref={contentRef} className="reader-container py-8 sm:py-12 md:py-16">
+        {book.chapters.map((chapter: Chapter, cIdx: number) => (
+          <section
+            key={chapter.id || cIdx}
+            id={`chapter-${chapter.id || cIdx}`}
+            data-chapter-index={cIdx}
+            ref={(el) => {
+              chapterRefs.current[cIdx] = el;
+            }}
+            className="chapter-section pt-8 sm:pt-14 pb-12 sm:pb-16 border-b border-[var(--border-color)] last:border-b-0"
+          >
+            {/* Cabeçalho Editorial do Capítulo */}
+            <header className="mb-8 sm:mb-10 text-center">
+              <div className="font-mono text-xs uppercase tracking-widest text-[var(--text-muted)] mb-3">
+                Capítulo {chapter.number} de {book.chapters.length}
+              </div>
+              <h2 className="reader-heading-1 font-serif text-3xl sm:text-4xl leading-tight">
+                {chapter.title}
+              </h2>
 
-          {/* Epígrafe */}
-          {currentChapter.epigraph && (
-            <div className="reader-epigraph font-serif text-sm">
-              <p className="italic">&ldquo;{currentChapter.epigraph.text}&rdquo;</p>
-              {currentChapter.epigraph.author && (
-                <span className="reader-epigraph-author">
-                  — {currentChapter.epigraph.author}
-                </span>
-              )}
-            </div>
-          )}
-        </header>
-
-        {/* Seções do Capítulo */}
-        <article ref={contentRef} className="space-y-6">
-          {currentChapter.sections.map((sec: Section, sIdx: number) => {
-            if (sec.type === 'heading') {
-              if (sec.level === 2) {
-                return (
-                  <h2 key={sIdx} className="reader-heading-2">
-                    {sec.content}
-                  </h2>
-                );
-              }
-              return (
-                <h3 key={sIdx} className="reader-heading-3">
-                  {sec.content}
-                </h3>
-              );
-            }
-
-            if (sec.type === 'callout') {
-              return (
-                <div key={sIdx} className="reader-callout font-sans text-sm">
-                  {sec.title && (
-                    <div className="font-mono text-xs uppercase tracking-wider font-bold mb-2 text-[var(--text-primary)]">
-                      {sec.title}
-                    </div>
+              {/* Epígrafe */}
+              {chapter.epigraph && (
+                <div className="reader-epigraph font-serif text-sm">
+                  <p className="italic">&ldquo;{chapter.epigraph.text}&rdquo;</p>
+                  {chapter.epigraph.author && (
+                    <span className="reader-epigraph-author">
+                      — {chapter.epigraph.author}
+                    </span>
                   )}
-                  <p className="whitespace-pre-line leading-relaxed text-[var(--text-secondary)]">
+                </div>
+              )}
+            </header>
+
+            {/* Seções do Capítulo */}
+            <article className="space-y-6">
+              {chapter.sections.map((sec: Section, sIdx: number) => {
+                if (sec.type === 'heading') {
+                  if (sec.level === 2) {
+                    return (
+                      <h2 key={sIdx} className="reader-heading-2">
+                        {sec.content}
+                      </h2>
+                    );
+                  }
+                  return (
+                    <h3 key={sIdx} className="reader-heading-3">
+                      {sec.content}
+                    </h3>
+                  );
+                }
+
+                if (sec.type === 'callout') {
+                  return (
+                    <div key={sIdx} className="reader-callout font-sans text-sm">
+                      {sec.title && (
+                        <div className="font-mono text-xs uppercase tracking-wider font-bold mb-2 text-[var(--text-primary)]">
+                          {sec.title}
+                        </div>
+                      )}
+                      <p className="whitespace-pre-line leading-relaxed text-[var(--text-secondary)]">
+                        {sec.content}
+                      </p>
+                    </div>
+                  );
+                }
+
+                if (sec.type === 'quote') {
+                  return (
+                    <blockquote key={sIdx} className="reader-blockquote font-serif text-base">
+                      <p className="italic">&ldquo;{sec.content}&rdquo;</p>
+                      {sec.author && (
+                        <cite className="block text-xs font-mono not-italic mt-2 text-[var(--text-muted)]">
+                          — {sec.author}
+                        </cite>
+                      )}
+                    </blockquote>
+                  );
+                }
+
+                // Paragraph padrão
+                return (
+                  <p key={sIdx} className="reader-paragraph">
                     {sec.content}
                   </p>
-                </div>
-              );
-            }
+                );
+              })}
+            </article>
 
-            if (sec.type === 'quote') {
-              return (
-                <blockquote key={sIdx} className="reader-blockquote font-serif text-base">
-                  <p className="italic">&ldquo;{sec.content}&rdquo;</p>
-                  {sec.author && (
-                    <cite className="block text-xs font-mono not-italic mt-2 text-[var(--text-muted)]">
-                      — {sec.author}
-                    </cite>
-                  )}
-                </blockquote>
-              );
-            }
+            {/* Quizzes de Fixação do Capítulo (Discretos e Opcionais) */}
+            {chapter.quiz && chapter.quiz.length > 0 && (
+              <div className="mt-10 pt-6 border-t border-[var(--border-color)]">
+                <h3 className="font-serif text-xl font-bold mb-3">
+                  Recuperação Ativa & Fixação
+                </h3>
+                {chapter.quiz.map((q, qIdx) => (
+                  <QuizBlock key={qIdx} quiz={q} index={qIdx + 1} />
+                ))}
+              </div>
+            )}
+          </section>
+        ))}
 
-            // Paragraph padrão
-            return (
-              <p key={sIdx} className="reader-paragraph">
-                {sec.content}
+        {/* Colofão / Conclusão Contínua da Obra */}
+        <div className="py-16 text-center border-t-2 border-[var(--border-strong)] mt-8">
+          <div className="font-mono text-xs uppercase tracking-widest text-[var(--text-muted)] mb-2">
+            Fim do Manual
+          </div>
+          <h3 className="font-serif text-2xl font-bold mb-3">
+            {book.meta.title}
+          </h3>
+          <p className="text-xs text-[var(--text-secondary)] font-sans max-w-md mx-auto mb-6">
+            Você completou a leitura contínua de todos os capítulos. Pratique os conceitos e revise pontos específicos no Sumário.
+          </p>
+
+          {/* Quizzes Globais da Obra */}
+          {book.quiz && book.quiz.length > 0 && (
+            <div className="mt-8 pt-8 border-t border-[var(--border-color)] text-left">
+              <h4 className="font-serif text-xl font-bold mb-2">
+                Desafio Geral da Obra
+              </h4>
+              <p className="text-xs text-[var(--text-secondary)] font-sans mb-6">
+                Teste sua fixação final com as questões fundamentais do manual.
               </p>
-            );
-          })}
-        </article>
-
-        {/* Quizzes do Capítulo */}
-        {currentChapter.quiz && currentChapter.quiz.length > 0 && (
-          <div className="mt-12 pt-8 border-t border-[var(--border-strong)]">
-            <h3 className="font-serif text-xl font-bold mb-4">
-              Recuperação Ativa & Fixação
-            </h3>
-            {currentChapter.quiz.map((q, qIdx) => (
-              <QuizBlock key={qIdx} quiz={q} index={qIdx + 1} />
-            ))}
-          </div>
-        )}
-
-        {/* Quizzes Globais da Obra no último capítulo */}
-        {currentChapterIndex === book.chapters.length - 1 && book.quiz && book.quiz.length > 0 && (
-          <div className="mt-12 pt-8 border-t-2 border-[var(--border-strong)]">
-            <h3 className="font-serif text-2xl font-bold mb-2">
-              Desafio Geral da Obra
-            </h3>
-            <p className="text-xs text-[var(--text-secondary)] font-sans mb-6">
-              Teste sua fixação final com as questões fundamentais do manual.
-            </p>
-            {book.quiz.map((q, qIdx) => (
-              <QuizBlock key={`global-${qIdx}`} quiz={q} index={qIdx + 1} />
-            ))}
-          </div>
-        )}
-
-        {/* Navegação Inferior entre Capítulos */}
-        <nav className="mt-16 pt-8 border-t border-[var(--border-color)] flex items-center justify-between gap-4 font-mono text-xs">
-          <button
-            onClick={() => setCurrentChapterIndex(prev => Math.max(0, prev - 1))}
-            disabled={currentChapterIndex === 0}
-            className="flex items-center gap-1.5 p-2 rounded border border-[var(--border-color)] hover:bg-[var(--bg-secondary)] disabled:opacity-30 disabled:hover:bg-transparent"
-          >
-            <ChevronLeft className="w-4 h-4" />
-            <span>Anterior</span>
-          </button>
-
-          <span className="text-[var(--text-muted)] text-center">
-            {currentChapterIndex + 1} / {book.chapters.length}
-          </span>
-
-          <button
-            onClick={() => setCurrentChapterIndex(prev => Math.min(book.chapters.length - 1, prev + 1))}
-            disabled={currentChapterIndex === book.chapters.length - 1}
-            className="flex items-center gap-1.5 p-2 rounded border border-[var(--border-color)] hover:bg-[var(--bg-secondary)] disabled:opacity-30 disabled:hover:bg-transparent"
-          >
-            <span>Próximo</span>
-            <ChevronRight className="w-4 h-4" />
-          </button>
-        </nav>
+              {book.quiz.map((q, qIdx) => (
+                <QuizBlock key={`global-${qIdx}`} quiz={q} index={qIdx + 1} />
+              ))}
+            </div>
+          )}
+        </div>
       </main>
 
       {/* Modais de Aprofundamento e Áudio */}
@@ -426,21 +506,25 @@ export default function ReaderPage({ params }: { params: Promise<{ id: string }>
         isOpen={deepenOpen}
         onClose={() => setDeepenOpen(false)}
         initialTopic={selectedTextForDeepen}
-        contextText={allChapterText.slice(0, 400)}
+        contextText={allCurrentChapterText.slice(0, 400)}
       />
 
       <AudioPlayerModal
         isOpen={audioOpen}
         onClose={() => setAudioOpen(false)}
-        textToRead={allChapterText}
-        chapterTitle={`${book.meta.title} — Cap. ${currentChapter.number}: ${currentChapter.title}`}
-        chapterId={`${book.meta.id}-${currentChapter.id}`}
+        textToRead={allCurrentChapterText}
+        chapterTitle={`${book.meta.title} — Cap. ${currentChapter?.number}: ${currentChapter?.title}`}
+        chapterId={`${book.meta.id}-${currentChapter?.id}`}
         onPlaybackUpdate={setAudioPlayback}
+        onNextChapter={handleNextChapter}
+        onPreviousChapter={handlePreviousChapter}
+        hasNextChapter={currentChapterIndex < book.chapters.length - 1}
+        hasPreviousChapter={currentChapterIndex > 0}
       />
 
-      {/* Guia Animado do Lápis Editorial (Acompanha a voz palavra por palavra) */}
+      {/* Guia Animado do Lápis Editorial (Acompanha a voz palavra por palavra no capítulo ativo) */}
       <ReadingPencilGuide
-        containerRef={contentRef}
+        containerRef={activeChapterContainerRef}
         isPlaying={audioPlayback.isPlaying}
         currentTime={audioPlayback.currentTime}
         duration={audioPlayback.duration}

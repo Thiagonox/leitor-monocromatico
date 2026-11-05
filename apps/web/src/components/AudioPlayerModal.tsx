@@ -1,7 +1,17 @@
 'use client';
 
 import React, { useState, useEffect, useRef } from 'react';
-import { Volume2, Play, Pause, Square, X, Database, AlertCircle } from 'lucide-react';
+import {
+  Volume2,
+  Play,
+  Pause,
+  Square,
+  X,
+  Database,
+  AlertCircle,
+  SkipBack,
+  SkipForward,
+} from 'lucide-react';
 import { requestTTS } from '../lib/api';
 
 export interface AudioPlaybackState {
@@ -18,6 +28,10 @@ interface AudioPlayerModalProps {
   chapterTitle?: string;
   chapterId?: string;
   onPlaybackUpdate?: (state: AudioPlaybackState) => void;
+  onNextChapter?: () => void;
+  onPreviousChapter?: () => void;
+  hasNextChapter?: boolean;
+  hasPreviousChapter?: boolean;
 }
 
 const VOICES = [
@@ -32,6 +46,10 @@ export function AudioPlayerModal({
   chapterTitle,
   chapterId,
   onPlaybackUpdate,
+  onNextChapter,
+  onPreviousChapter,
+  hasNextChapter = false,
+  hasPreviousChapter = false,
 }: AudioPlayerModalProps) {
   const [isPlaying, setIsPlaying] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
@@ -44,6 +62,7 @@ export function AudioPlayerModal({
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
   const audioRef = useRef<HTMLAudioElement | null>(null);
+  const wasPlayingRef = useRef(false);
 
   // Notifica o estado de reprodução para o Lápis de Leitura e componentes externos
   useEffect(() => {
@@ -63,10 +82,11 @@ export function AudioPlayerModal({
         audioRef.current.currentTime = 0;
       }
       setIsPlaying(false);
+      wasPlayingRef.current = false;
     }
   }, [isOpen]);
 
-  // Carrega ou busca no bucket cache quando o modal abre ou a voz muda
+  // Carrega ou busca no bucket cache quando o modal abre ou a voz/capítulo muda
   useEffect(() => {
     if (!isOpen || !textToRead) return;
 
@@ -81,7 +101,6 @@ export function AudioPlayerModal({
         audioRef.current.pause();
         audioRef.current.currentTime = 0;
       }
-      setIsPlaying(false);
 
       try {
         const res = await requestTTS({
@@ -121,6 +140,7 @@ export function AudioPlayerModal({
       audioRef.current.playbackRate = rate;
       await audioRef.current.play();
       setIsPlaying(true);
+      wasPlayingRef.current = true;
     } catch (e) {
       console.error('Falha ao reproduzir áudio:', e);
     }
@@ -130,6 +150,7 @@ export function AudioPlayerModal({
     if (!audioRef.current) return;
     audioRef.current.pause();
     setIsPlaying(false);
+    wasPlayingRef.current = false;
   };
 
   const handleStop = () => {
@@ -137,6 +158,7 @@ export function AudioPlayerModal({
     audioRef.current.pause();
     audioRef.current.currentTime = 0;
     setIsPlaying(false);
+    wasPlayingRef.current = false;
   };
 
   const handleSeek = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -173,9 +195,23 @@ export function AudioPlayerModal({
             if (audioRef.current) setCurrentTime(audioRef.current.currentTime);
           }}
           onLoadedMetadata={() => {
-            if (audioRef.current) setDuration(audioRef.current.duration);
+            if (audioRef.current) {
+              setDuration(audioRef.current.duration);
+              if (wasPlayingRef.current) {
+                audioRef.current.playbackRate = rate;
+                audioRef.current.play().then(() => setIsPlaying(true)).catch(console.error);
+              }
+            }
           }}
-          onEnded={() => setIsPlaying(false)}
+          onEnded={() => {
+            setIsPlaying(false);
+            if (onNextChapter && hasNextChapter) {
+              wasPlayingRef.current = true;
+              onNextChapter();
+            } else {
+              wasPlayingRef.current = false;
+            }
+          }}
         />
       )}
 
@@ -276,7 +312,20 @@ export function AudioPlayerModal({
 
           {/* Controles Principais */}
           <div className="flex items-center justify-between gap-3 pt-1">
-            <div className="flex items-center gap-2">
+            <div className="flex items-center gap-1.5 sm:gap-2">
+              {hasPreviousChapter && onPreviousChapter && (
+                <button
+                  onClick={() => {
+                    wasPlayingRef.current = isPlaying;
+                    onPreviousChapter();
+                  }}
+                  className="p-1.5 rounded hover:bg-[var(--bg-secondary)] text-[var(--text-muted)] hover:text-[var(--text-primary)] transition-colors"
+                  title="Capítulo Anterior"
+                >
+                  <SkipBack className="w-3.5 h-3.5" />
+                </button>
+              )}
+
               {isPlaying ? (
                 <button
                   onClick={handlePause}
@@ -292,6 +341,19 @@ export function AudioPlayerModal({
                   title="Reproduzir"
                 >
                   <Play className="w-4 h-4 ml-0.5" />
+                </button>
+              )}
+
+              {hasNextChapter && onNextChapter && (
+                <button
+                  onClick={() => {
+                    wasPlayingRef.current = isPlaying;
+                    onNextChapter();
+                  }}
+                  className="p-1.5 rounded hover:bg-[var(--bg-secondary)] text-[var(--text-muted)] hover:text-[var(--text-primary)] transition-colors"
+                  title="Próximo Capítulo"
+                >
+                  <SkipForward className="w-3.5 h-3.5" />
                 </button>
               )}
 

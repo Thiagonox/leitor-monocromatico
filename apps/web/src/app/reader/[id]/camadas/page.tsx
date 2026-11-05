@@ -4,14 +4,9 @@ import React, { useEffect, useState, useRef, use } from 'react';
 import Link from 'next/link';
 import {
   ArrowLeft,
-  BookOpen,
   List,
   Volume2,
-  Sparkles,
-  ChevronLeft,
-  ChevronRight,
   Layers,
-  CheckCircle2,
   Pencil,
 } from 'lucide-react';
 import { fetchBook } from '@/lib/api';
@@ -45,6 +40,12 @@ export default function LayeredReaderPage({ params }: { params: Promise<{ id: st
   });
 
   const contentRef = useRef<HTMLElement | null>(null);
+  const chapterRefs = useRef<(HTMLElement | null)[]>([]);
+  const activeChapterContainerRef = useRef<HTMLElement | null>(null);
+
+  useEffect(() => {
+    activeChapterContainerRef.current = chapterRefs.current[currentChapterIndex] || contentRef.current;
+  }, [currentChapterIndex]);
 
   useEffect(() => {
     let active = true;
@@ -64,17 +65,89 @@ export default function LayeredReaderPage({ params }: { params: Promise<{ id: st
     };
   }, [resolvedParams.id]);
 
-  const currentChapter = book?.chapters[currentChapterIndex];
+  // Observa os capítulos em tela para atualizar o cabeçalho no fluxo contínuo
+  useEffect(() => {
+    if (!book || loading) return;
+
+    const sections = document.querySelectorAll<HTMLElement>('.chapter-section');
+    if (!sections.length) return;
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        for (const entry of entries) {
+          if (entry.isIntersecting) {
+            const idxStr = entry.target.getAttribute('data-chapter-index');
+            if (idxStr !== null) {
+              const idx = parseInt(idxStr, 10);
+              setCurrentChapterIndex(idx);
+            }
+          }
+        }
+      },
+      {
+        rootMargin: '-10% 0px -70% 0px',
+        threshold: 0,
+      }
+    );
+
+    sections.forEach((sec) => observer.observe(sec));
+
+    return () => observer.disconnect();
+  }, [book, loading, activeLayer]);
+
+  const handleSelectChapter = (index: number) => {
+    setCurrentChapterIndex(index);
+    setTocOpen(false);
+    const targetChapter = book?.chapters[index];
+    if (targetChapter) {
+      const el = document.getElementById(`chapter-${targetChapter.id || index}`);
+      if (el) {
+        const y = el.getBoundingClientRect().top + window.pageYOffset - 110;
+        window.scrollTo({ top: y, behavior: 'smooth' });
+      }
+    }
+  };
+
+  const handleNextChapter = () => {
+    if (!book) return;
+    if (currentChapterIndex < book.chapters.length - 1) {
+      const nextIdx = currentChapterIndex + 1;
+      setCurrentChapterIndex(nextIdx);
+      const targetChapter = book.chapters[nextIdx];
+      const el = document.getElementById(`chapter-${targetChapter.id || nextIdx}`);
+      if (el) {
+        const y = el.getBoundingClientRect().top + window.pageYOffset - 110;
+        window.scrollTo({ top: y, behavior: 'smooth' });
+      }
+    }
+  };
+
+  const handlePreviousChapter = () => {
+    if (!book) return;
+    if (currentChapterIndex > 0) {
+      const prevIdx = currentChapterIndex - 1;
+      setCurrentChapterIndex(prevIdx);
+      const targetChapter = book.chapters[prevIdx];
+      const el = document.getElementById(`chapter-${targetChapter.id || prevIdx}`);
+      if (el) {
+        const y = el.getBoundingClientRect().top + window.pageYOffset - 110;
+        window.scrollTo({ top: y, behavior: 'smooth' });
+      }
+    }
+  };
+
+  const currentChapter: Chapter | undefined = book?.chapters[currentChapterIndex];
+  const allCurrentChapterText = currentChapter?.sections.map((s) => s.content || '').join('\n\n') || '';
 
   if (loading) {
     return (
       <div className="min-h-screen bg-[var(--bg-primary)] flex items-center justify-center font-mono text-xs text-[var(--text-muted)]">
-        Carregando leitura em camadas...
+        Carregando leitor contínuo em camadas...
       </div>
     );
   }
 
-  if (!book || !currentChapter) {
+  if (!book || !book.chapters || book.chapters.length === 0) {
     return (
       <div className="min-h-screen bg-[var(--bg-primary)] flex flex-col items-center justify-center p-6 text-center text-[var(--text-primary)]">
         <h2 className="font-serif text-2xl font-bold mb-3">Obra não encontrada</h2>
@@ -88,22 +161,9 @@ export default function LayeredReaderPage({ params }: { params: Promise<{ id: st
     );
   }
 
-  // Prepara o texto integral do capítulo para audiodescrição
-  const chapterFullText = currentChapter.sections
-    .map((s) => s.content)
-    .join('\n\n');
-
-  // Camada 1: Resumo (1º parágrafo + callout ou síntese)
-  const paragraphs = currentChapter.sections.filter((s) => s.type === 'paragraph');
-  const callouts = currentChapter.sections.filter((s) => s.type === 'callout');
-  const headings = currentChapter.sections.filter((s) => s.type === 'heading');
-
-  const summaryParagraphs = paragraphs.slice(0, 2);
-  const mainCallout = callouts[0] || null;
-
   return (
     <div className="min-h-screen bg-[var(--bg-primary)] text-[var(--text-primary)]">
-      {/* Top Header - Idêntico ao Leitor Padrão */}
+      {/* Top Header */}
       <header className="sticky top-0 z-40 bg-[var(--bg-primary)]/95 backdrop-blur-sm border-b border-[var(--border-color)]">
         <div className="max-w-4xl mx-auto px-4 h-14 flex items-center justify-between gap-3">
           <div className="flex items-center gap-2">
@@ -127,17 +187,31 @@ export default function LayeredReaderPage({ params }: { params: Promise<{ id: st
           </div>
 
           <div className="hidden md:block text-center font-mono text-xs text-[var(--text-secondary)] line-clamp-1 max-w-sm">
-            Cap. {currentChapter.number}: {currentChapter.title}
+            Cap. {currentChapter?.number}: {currentChapter?.title}
           </div>
 
           <div className="flex items-center gap-2">
+            {/* Lápis Guia de Leitura */}
+            <button
+              onClick={() => setPencilEnabled(!pencilEnabled)}
+              className={`p-1.5 rounded transition-colors text-xs font-mono flex items-center gap-1 ${
+                pencilEnabled
+                  ? 'bg-[var(--border-strong)] text-[var(--bg-primary)]'
+                  : 'hover:bg-[var(--bg-secondary)] text-[var(--text-muted)]'
+              }`}
+              title={pencilEnabled ? 'Desativar Lápis de Leitura' : 'Ativar Lápis de Leitura'}
+            >
+              <Pencil className="w-3.5 h-3.5" />
+              <span className="hidden lg:inline">Lápis</span>
+            </button>
+
             <button
               onClick={() => setAudioOpen(true)}
-              className="p-2 rounded hover:bg-[var(--bg-secondary)] text-[var(--text-primary)] transition-colors flex items-center gap-1.5 text-xs font-mono border border-[var(--border-color)]"
+              className="p-1.5 sm:px-2 sm:py-1.5 rounded hover:bg-[var(--bg-secondary)] text-[var(--text-primary)] transition-colors flex items-center gap-1 text-xs font-mono border border-[var(--border-color)]"
               title="Audiodescrição com IA do Capítulo"
             >
               <Volume2 className="w-4 h-4" />
-              <span className="hidden sm:inline">Audiodescrição</span>
+              <span className="hidden sm:inline">Ouvir</span>
             </button>
 
             <ThemeToggle />
@@ -145,7 +219,7 @@ export default function LayeredReaderPage({ params }: { params: Promise<{ id: st
         </div>
       </header>
 
-      {/* Seletor Editorial de Camadas (3 Camadas Limpas) */}
+      {/* Seletor Editorial de Camadas Fixo */}
       <div className="border-b border-[var(--border-color)] bg-[var(--bg-surface)] sticky top-14 z-30">
         <div className="max-w-3xl mx-auto px-4 py-2 flex items-center justify-between gap-2">
           {LAYERS.map((layer) => {
@@ -182,239 +256,160 @@ export default function LayeredReaderPage({ params }: { params: Promise<{ id: st
         onClose={() => setTocOpen(false)}
         chapters={book.chapters}
         currentChapterIndex={currentChapterIndex}
-        onSelectChapter={(idx) => {
-          setCurrentChapterIndex(idx);
-          setTocOpen(false);
-        }}
+        onSelectChapter={handleSelectChapter}
         bookTitle={book.meta.title}
       />
 
-      {/* Conteúdo Principal Monocromático */}
-      <main ref={contentRef} className="max-w-2xl mx-auto px-6 py-12">
-        {/* Cabeçalho do Capítulo */}
-        <div className="mb-10 pb-6 border-b border-[var(--border-color)]">
-          <div className="flex items-center gap-2 mb-2 font-mono text-xs text-[var(--text-muted)] uppercase tracking-widest">
-            <Layers className="w-3.5 h-3.5" />
-            <span>Capítulo {currentChapter.number} · {LAYERS[activeLayer - 1].title}</span>
-          </div>
+      {/* Conteúdo Principal Monocromático em Scroll Contínuo Infinito */}
+      <main ref={contentRef} className="max-w-2xl mx-auto px-4 sm:px-6 py-8 sm:py-12">
+        {book.chapters.map((chapter: Chapter, cIdx: number) => {
+          const paragraphs = chapter.sections.filter((s) => s.type === 'paragraph');
+          const callouts = chapter.sections.filter((s) => s.type === 'callout');
+          const summaryParagraphs = paragraphs.slice(0, 2);
+          const mainCallout = callouts[0] || null;
 
-          <h1 className="font-serif text-3xl sm:text-4xl font-bold tracking-tight text-[var(--text-primary)] mb-4 leading-tight">
-            {currentChapter.title}
-          </h1>
+          return (
+            <section
+              key={chapter.id || cIdx}
+              id={`chapter-${chapter.id || cIdx}`}
+              data-chapter-index={cIdx}
+              ref={(el) => {
+                chapterRefs.current[cIdx] = el;
+              }}
+              className="chapter-section pt-8 sm:pt-14 pb-12 sm:pb-16 border-b border-[var(--border-color)] last:border-b-0"
+            >
+              {/* Cabeçalho do Capítulo */}
+              <div className="mb-8 pb-4 border-b border-[var(--border-color)]">
+                <div className="flex items-center gap-2 mb-2 font-mono text-xs text-[var(--text-muted)] uppercase tracking-widest">
+                  <Layers className="w-3.5 h-3.5" />
+                  <span>
+                    Capítulo {chapter.number} de {book.chapters.length} · {LAYERS[activeLayer - 1].title}
+                  </span>
+                </div>
 
-          {currentChapter.epigraph && (
-            <blockquote className="border-l-2 border-[var(--border-strong)] pl-4 my-4 font-serif italic text-sm text-[var(--text-secondary)]">
-              "{currentChapter.epigraph.text}"
-              {currentChapter.epigraph.author && (
-                <cite className="block text-xs font-mono text-[var(--text-muted)] mt-1.5 not-italic">
-                  — {currentChapter.epigraph.author}
-                </cite>
-              )}
-            </blockquote>
-          )}
-        </div>
+                <h2 className="font-serif text-2xl sm:text-3xl font-bold tracking-tight text-[var(--text-primary)] mb-3 leading-tight">
+                  {chapter.title}
+                </h2>
 
-        {/* CAMADA 1: RESUMO ESSENCIAL */}
-        {activeLayer === 1 && (
-          <div className="space-y-6">
-            <div className="p-4 rounded border border-[var(--border-strong)] bg-[var(--bg-surface)]">
-              <span className="font-mono text-xs font-bold uppercase tracking-wider text-[var(--text-primary)] block mb-1">
-                💡 Síntese Panorâmica
-              </span>
-              <p className="font-sans text-xs text-[var(--text-secondary)]">
-                Leia este resumo essencial para ancorar o tema sem esforço. Quando estiver pronto, avance para a versão intermediária ou texto completo.
-              </p>
-            </div>
-
-            {summaryParagraphs.map((p, idx) => (
-              <p key={idx} className="font-serif text-lg leading-relaxed text-[var(--text-primary)]">
-                {p.content}
-              </p>
-            ))}
-
-            {mainCallout && (
-              <div className="p-5 rounded border border-[var(--border-strong)] bg-[var(--bg-card)] my-6">
-                <span className="font-mono text-xs font-bold uppercase tracking-wider text-[var(--text-primary)] block mb-2">
-                  📌 {mainCallout.title || 'Ponto Central'}
-                </span>
-                <p className="font-serif text-base leading-relaxed text-[var(--text-secondary)]">
-                  {mainCallout.content}
-                </p>
-              </div>
-            )}
-
-            <div className="pt-8 border-t border-[var(--border-color)] flex justify-end">
-              <button
-                onClick={() => setActiveLayer(2)}
-                className="px-4 py-2 border border-[var(--border-strong)] bg-[var(--text-primary)] text-[var(--bg-primary)] font-mono text-xs rounded font-bold hover:opacity-90 transition-opacity"
-              >
-                Avançar para Camada 2: Intermediário →
-              </button>
-            </div>
-          </div>
-        )}
-
-        {/* CAMADA 2: VERSÃO INTERMEDIÁRIA (CONCEITO, EXEMPLO E APLICAÇÃO) */}
-        {activeLayer === 2 && (
-          <div className="space-y-8">
-            <div className="p-4 rounded border border-[var(--border-strong)] bg-[var(--bg-surface)]">
-              <span className="font-mono text-xs font-bold uppercase tracking-wider text-[var(--text-primary)] block mb-1">
-                🧩 Progressive Disclosure
-              </span>
-              <p className="font-sans text-xs text-[var(--text-secondary)]">
-                O conteúdo estruturado em pequenas partes fáceis de digerir: <strong>O Conceito</strong>, <strong>O Exemplo Prático</strong> e <strong>A Aplicação Imediata</strong>.
-              </p>
-            </div>
-
-            {/* Bloco 1: Conceito */}
-            <div className="space-y-3 pb-6 border-b border-[var(--border-color)]">
-              <div className="flex items-center gap-2 font-mono text-xs font-bold uppercase text-[var(--text-primary)]">
-                <span className="w-5 h-5 rounded-full border border-[var(--border-strong)] bg-[var(--text-primary)] text-[var(--bg-primary)] flex items-center justify-center text-[10px]">1</span>
-                <span>O Conceito Fundamental</span>
-              </div>
-              <p className="font-serif text-lg leading-relaxed text-[var(--text-primary)]">
-                {paragraphs[0]?.content || 'Compreender a base estrutural deste capítulo antes de avançar para a execução prática.'}
-              </p>
-            </div>
-
-            {/* Bloco 2: Exemplo */}
-            <div className="space-y-3 pb-6 border-b border-[var(--border-color)]">
-              <div className="flex items-center gap-2 font-mono text-xs font-bold uppercase text-[var(--text-primary)]">
-                <span className="w-5 h-5 rounded-full border border-[var(--border-strong)] bg-[var(--text-primary)] text-[var(--bg-primary)] flex items-center justify-center text-[10px]">2</span>
-                <span>O Exemplo em Ação</span>
-              </div>
-              <p className="font-serif text-lg leading-relaxed text-[var(--text-primary)]">
-                {paragraphs[1]?.content || 'Observe como a teoria se manifesta em situações reais de avaliação e análise argumentativa.'}
-              </p>
-            </div>
-
-            {/* Bloco 3: Aplicação Prática */}
-            <div className="space-y-3 pb-6 border-b border-[var(--border-color)]">
-              <div className="flex items-center gap-2 font-mono text-xs font-bold uppercase text-[var(--text-primary)]">
-                <span className="w-5 h-5 rounded-full border border-[var(--border-strong)] bg-[var(--text-primary)] text-[var(--bg-primary)] flex items-center justify-center text-[10px]">3</span>
-                <span>Como Aplicar no Seu Rascunho</span>
-              </div>
-              <p className="font-serif text-lg leading-relaxed text-[var(--text-primary)]">
-                {paragraphs[2]?.content || 'Transponha este princípio diretamente para a construção da sua redação ou estudo diário.'}
-              </p>
-            </div>
-
-            {/* Callouts do Capítulo */}
-            {callouts.map((callout, idx) => (
-              <div key={idx} className="p-5 rounded border border-[var(--border-strong)] bg-[var(--bg-card)]">
-                <span className="font-mono text-xs font-bold uppercase tracking-wider text-[var(--text-primary)] block mb-1">
-                  📌 {callout.title || 'Destaque de Fixação'}
-                </span>
-                <p className="font-serif text-base text-[var(--text-secondary)] leading-relaxed">
-                  {callout.content}
-                </p>
-              </div>
-            ))}
-
-            <div className="pt-4 flex items-center justify-between">
-              <button
-                onClick={() => setActiveLayer(1)}
-                className="px-4 py-2 border border-[var(--border-color)] text-[var(--text-secondary)] hover:text-[var(--text-primary)] font-mono text-xs rounded transition-colors"
-              >
-                ← Voltar ao Resumo
-              </button>
-              <button
-                onClick={() => setActiveLayer(3)}
-                className="px-4 py-2 border border-[var(--border-strong)] bg-[var(--text-primary)] text-[var(--bg-primary)] font-mono text-xs rounded font-bold hover:opacity-90 transition-opacity"
-              >
-                Avançar para Texto Completo →
-              </button>
-            </div>
-          </div>
-        )}
-
-        {/* CAMADA 3: TEXTO COMPLETO APROFUNDADO */}
-        {activeLayer === 3 && (
-          <div className="space-y-6">
-            {currentChapter.sections.map((section, idx) => {
-              if (section.type === 'heading') {
-                return (
-                  <h2
-                    key={idx}
-                    className="font-serif text-2xl font-bold tracking-tight text-[var(--text-primary)] mt-10 mb-4 pt-4 border-t border-[var(--border-color)]"
-                  >
-                    {section.content}
-                  </h2>
-                );
-              }
-
-              if (section.type === 'callout') {
-                return (
-                  <div
-                    key={idx}
-                    className="p-5 rounded border border-[var(--border-strong)] bg-[var(--bg-card)] my-6"
-                  >
-                    {section.title && (
-                      <span className="font-mono text-xs font-bold uppercase tracking-wider text-[var(--text-primary)] block mb-2">
-                        {section.title}
-                      </span>
+                {chapter.epigraph && (
+                  <blockquote className="border-l-2 border-[var(--border-strong)] pl-4 my-3 font-serif italic text-xs sm:text-sm text-[var(--text-secondary)]">
+                    &ldquo;{chapter.epigraph.text}&rdquo;
+                    {chapter.epigraph.author && (
+                      <cite className="block text-xs font-mono text-[var(--text-muted)] mt-1 not-italic">
+                        — {chapter.epigraph.author}
+                      </cite>
                     )}
-                    <p className="font-serif text-base leading-relaxed text-[var(--text-secondary)]">
-                      {section.content}
+                  </blockquote>
+                )}
+              </div>
+
+              {/* CAMADA 1: RESUMO ESSENCIAL */}
+              {activeLayer === 1 && (
+                <div className="space-y-4">
+                  {summaryParagraphs.map((p, idx) => (
+                    <p key={idx} className="font-serif text-base sm:text-lg leading-relaxed text-[var(--text-primary)]">
+                      {p.content}
+                    </p>
+                  ))}
+
+                  {mainCallout && (
+                    <div className="p-4 rounded border border-[var(--border-strong)] bg-[var(--bg-card)] my-4">
+                      <span className="font-mono text-xs font-bold uppercase tracking-wider text-[var(--text-primary)] block mb-1">
+                        📌 {mainCallout.title || 'Ponto Central'}
+                      </span>
+                      <p className="font-serif text-sm sm:text-base leading-relaxed text-[var(--text-secondary)]">
+                        {mainCallout.content}
+                      </p>
+                    </div>
+                  )}
+                </div>
+              )}
+
+              {/* CAMADA 2: VERSÃO INTERMEDIÁRIA (CONCEITO, EXEMPLO E APLICAÇÃO) */}
+              {activeLayer === 2 && (
+                <div className="space-y-6">
+                  <div className="space-y-2 pb-4 border-b border-[var(--border-color)]">
+                    <div className="flex items-center gap-2 font-mono text-xs font-bold uppercase text-[var(--text-primary)]">
+                      <span className="w-5 h-5 rounded-full border border-[var(--border-strong)] bg-[var(--text-primary)] text-[var(--bg-primary)] flex items-center justify-center text-[10px]">1</span>
+                      <span>O Conceito Fundamental</span>
+                    </div>
+                    <p className="font-serif text-base sm:text-lg leading-relaxed text-[var(--text-primary)]">
+                      {paragraphs[0]?.content || 'Compreender a base estrutural deste capítulo antes de avançar para a execução prática.'}
                     </p>
                   </div>
-                );
-              }
 
-              return (
-                <p
-                  key={idx}
-                  className="font-serif text-lg leading-relaxed text-[var(--text-primary)]"
-                >
-                  {section.content}
-                </p>
-              );
-            })}
+                  <div className="space-y-2 pb-4 border-b border-[var(--border-color)]">
+                    <div className="flex items-center gap-2 font-mono text-xs font-bold uppercase text-[var(--text-primary)]">
+                      <span className="w-5 h-5 rounded-full border border-[var(--border-strong)] bg-[var(--text-primary)] text-[var(--bg-primary)] flex items-center justify-center text-[10px]">2</span>
+                      <span>O Exemplo em Ação</span>
+                    </div>
+                    <p className="font-serif text-base sm:text-lg leading-relaxed text-[var(--text-primary)]">
+                      {paragraphs[1]?.content || 'Observe como a teoria se manifesta em situações reais de avaliação e análise argumentativa.'}
+                    </p>
+                  </div>
 
-            <div className="pt-8 border-t border-[var(--border-color)] flex justify-start">
-              <button
-                onClick={() => setActiveLayer(1)}
-                className="px-4 py-2 border border-[var(--border-color)] text-[var(--text-secondary)] hover:text-[var(--text-primary)] font-mono text-xs rounded transition-colors"
-              >
-                ← Voltar ao Resumo Panorâmico
-              </button>
-            </div>
+                  <div className="space-y-2 pb-4 border-b border-[var(--border-color)]">
+                    <div className="flex items-center gap-2 font-mono text-xs font-bold uppercase text-[var(--text-primary)]">
+                      <span className="w-5 h-5 rounded-full border border-[var(--border-strong)] bg-[var(--text-primary)] text-[var(--bg-primary)] flex items-center justify-center text-[10px]">3</span>
+                      <span>Como Aplicar no Seu Rascunho</span>
+                    </div>
+                    <p className="font-serif text-base sm:text-lg leading-relaxed text-[var(--text-primary)]">
+                      {paragraphs[2]?.content || 'Transponha este princípio diretamente para a construção da sua redação ou estudo diário.'}
+                    </p>
+                  </div>
+                </div>
+              )}
+
+              {/* CAMADA 3: TEXTO COMPLETO E APROFUNDADO */}
+              {activeLayer === 3 && (
+                <div className="space-y-5">
+                  {chapter.sections.map((sec: Section, sIdx: number) => {
+                    if (sec.type === 'heading') {
+                      return (
+                        <h3 key={sIdx} className="font-serif text-xl sm:text-2xl font-bold mt-6 mb-2 text-[var(--text-primary)]">
+                          {sec.content}
+                        </h3>
+                      );
+                    }
+
+                    if (sec.type === 'callout') {
+                      return (
+                        <div key={sIdx} className="p-4 rounded border border-[var(--border-color)] bg-[var(--bg-card)] my-4">
+                          {sec.title && (
+                            <div className="font-mono text-xs uppercase tracking-wider font-bold mb-1 text-[var(--text-primary)]">
+                              💡 {sec.title}
+                            </div>
+                          )}
+                          <p className="font-serif text-sm sm:text-base leading-relaxed text-[var(--text-secondary)]">
+                            {sec.content}
+                          </p>
+                        </div>
+                      );
+                    }
+
+                    return (
+                      <p key={sIdx} className="font-serif text-base sm:text-lg leading-relaxed text-[var(--text-primary)]">
+                        {sec.content}
+                      </p>
+                    );
+                  })}
+                </div>
+              )}
+            </section>
+          );
+        })}
+
+        {/* Fim da Leitura em Camadas */}
+        <div className="py-12 text-center border-t-2 border-[var(--border-strong)] mt-8">
+          <div className="font-mono text-xs uppercase tracking-widest text-[var(--text-muted)] mb-2">
+            Fim da Leitura em Camadas
           </div>
-        )}
-
-        {/* Navegação entre Capítulos - Idêntico ao Leitor Padrão */}
-        <div className="mt-16 pt-8 border-t border-[var(--border-color)] flex items-center justify-between">
-          {currentChapterIndex > 0 ? (
-            <button
-              onClick={() => {
-                setCurrentChapterIndex((prev) => prev - 1);
-                setActiveLayer(1);
-                window.scrollTo({ top: 0, behavior: 'smooth' });
-              }}
-              className="flex items-center gap-2 px-4 py-2 rounded border border-[var(--border-color)] hover:border-[var(--border-strong)] text-xs font-mono transition-colors"
-            >
-              <ChevronLeft className="w-4 h-4" />
-              <span>Capítulo Anterior</span>
-            </button>
-          ) : (
-            <div />
-          )}
-
-          {currentChapterIndex < book.chapters.length - 1 ? (
-            <button
-              onClick={() => {
-                setCurrentChapterIndex((prev) => prev + 1);
-                setActiveLayer(1);
-                window.scrollTo({ top: 0, behavior: 'smooth' });
-              }}
-              className="flex items-center gap-2 px-4 py-2 rounded border border-[var(--border-strong)] bg-[var(--text-primary)] text-[var(--bg-primary)] text-xs font-mono font-bold transition-opacity hover:opacity-90"
-            >
-              <span>Próximo Capítulo</span>
-              <ChevronRight className="w-4 h-4" />
-            </button>
-          ) : (
-            <div />
-          )}
+          <h3 className="font-serif text-2xl font-bold mb-2">
+            {book.meta.title}
+          </h3>
+          <p className="text-xs text-[var(--text-secondary)] font-sans max-w-md mx-auto">
+            Você percorreu todos os capítulos nesta camada de forma contínua. Alterne para outra camada no topo sempre que desejar outro nível de profundidade.
+          </p>
         </div>
       </main>
 
@@ -422,15 +417,19 @@ export default function LayeredReaderPage({ params }: { params: Promise<{ id: st
       <AudioPlayerModal
         isOpen={audioOpen}
         onClose={() => setAudioOpen(false)}
-        textToRead={chapterFullText}
-        chapterTitle={`${book.meta.title} — Cap. ${currentChapter.number}: ${currentChapter.title}`}
-        chapterId={`${book.meta.id}-${currentChapter.id}`}
+        textToRead={allCurrentChapterText}
+        chapterTitle={`${book.meta.title} — Cap. ${currentChapter?.number}: ${currentChapter?.title}`}
+        chapterId={`${book.meta.id}-${currentChapter?.id}`}
         onPlaybackUpdate={setAudioPlayback}
+        onNextChapter={handleNextChapter}
+        onPreviousChapter={handlePreviousChapter}
+        hasNextChapter={currentChapterIndex < book.chapters.length - 1}
+        hasPreviousChapter={currentChapterIndex > 0}
       />
 
       {/* Guia Animado do Lápis Editorial */}
       <ReadingPencilGuide
-        containerRef={contentRef}
+        containerRef={activeChapterContainerRef}
         isPlaying={audioPlayback.isPlaying}
         currentTime={audioPlayback.currentTime}
         duration={audioPlayback.duration}
