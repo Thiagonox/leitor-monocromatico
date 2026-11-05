@@ -155,6 +155,7 @@ export interface GenerateLayeredRequest {
   topic: string;
   depth?: string;
   chaptersCount?: number;
+  agentId?: string;
   apiKey?: string;
   model?: string;
   baseUrl?: string;
@@ -163,9 +164,36 @@ export interface GenerateLayeredRequest {
 export interface DeepenRequest {
   topic: string;
   contextText?: string;
+  agentId?: string;
   style?: string;
   level?: number;
   apiKey?: string;
+  model?: string;
+}
+
+export interface ChatMessage {
+  role: 'user' | 'assistant' | 'system';
+  content: string;
+}
+
+export interface ChatRequest {
+  messages: { role: 'user' | 'assistant'; content: string }[];
+  agentId?: string;
+  topic?: string;
+  contextText?: string;
+  apiKey?: string;
+  model?: string;
+}
+
+export interface ChatResponse {
+  status: string;
+  message: { role: 'assistant'; content: string };
+  agent: {
+    id: string;
+    name: string;
+    role: string;
+    badge: string;
+  };
   model?: string;
 }
 

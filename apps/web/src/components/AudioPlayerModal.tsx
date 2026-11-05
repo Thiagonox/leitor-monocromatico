@@ -12,7 +12,7 @@ import {
   SkipBack,
   SkipForward,
 } from 'lucide-react';
-import { requestTTS } from '../lib/api';
+import { requestTTS, resolveAudioUrl } from '../lib/api';
 
 export interface AudioPlaybackState {
   isPlaying: boolean;
@@ -97,6 +97,7 @@ export function AudioPlayerModal({
       setErrorMessage(null);
       setCurrentTime(0);
       setDuration(0);
+
       if (audioRef.current) {
         audioRef.current.pause();
         audioRef.current.currentTime = 0;
@@ -112,7 +113,8 @@ export function AudioPlayerModal({
         if (!active) return;
 
         if (res.status === 'ok' && res.audioUrl) {
-          setAudioUrl(res.audioUrl);
+          const directUrl = resolveAudioUrl(res.audioUrl);
+          setAudioUrl(directUrl);
           setIsCached(Boolean(res.cached));
         } else {
           setErrorMessage(res.message || 'Falha ao gerar áudio com heygen/heygen-voice-1-turbo:free');
@@ -138,11 +140,18 @@ export function AudioPlayerModal({
     if (!audioRef.current) return;
     try {
       audioRef.current.playbackRate = rate;
-      await audioRef.current.play();
-      setIsPlaying(true);
-      wasPlayingRef.current = true;
-    } catch (e) {
-      console.error('Falha ao reproduzir áudio:', e);
+      const playPromise = audioRef.current.play();
+      if (playPromise !== undefined) {
+        await playPromise;
+        setIsPlaying(true);
+        wasPlayingRef.current = true;
+      }
+    } catch (e: any) {
+      // Ignora AbortError que ocorre quando o carregamento é interrompido ou pausado
+      if (e?.name === 'AbortError') {
+        return;
+      }
+      console.warn('Interrupção ou aviso ao reproduzir áudio:', e?.message || e);
     }
   };
 
@@ -184,8 +193,8 @@ export function AudioPlayerModal({
   };
 
   return (
-    <div className="fixed bottom-3 left-3 right-3 sm:left-auto sm:right-6 sm:bottom-6 z-50 sm:w-full sm:max-w-md bg-[var(--bg-primary)] border border-[var(--border-strong)] rounded-lg shadow-2xl p-3 sm:p-4 font-sans text-[var(--text-primary)]">
-      {/* Elemento de Áudio HTML5 Nativo (Sem Fallbacks) */}
+    <div className="fixed bottom-0 left-0 right-0 sm:bottom-6 sm:right-6 sm:left-auto z-50 w-full sm:max-w-md bg-[var(--bg-surface)] border-t-2 sm:border border-[var(--border-strong)] sm:rounded-xl shadow-2xl p-3.5 pb-6 sm:pb-4 font-sans text-[var(--text-primary)] transition-all max-h-[90vh] overflow-y-auto box-border">
+      {/* Elemento de Áudio HTML5 Nativo com URL direta e streaming HTTP Range */}
       {audioUrl && (
         <audio
           ref={audioRef}
@@ -199,7 +208,9 @@ export function AudioPlayerModal({
               setDuration(audioRef.current.duration);
               if (wasPlayingRef.current) {
                 audioRef.current.playbackRate = rate;
-                audioRef.current.play().then(() => setIsPlaying(true)).catch(console.error);
+                audioRef.current.play().then(() => setIsPlaying(true)).catch((err) => {
+                  if (err?.name !== 'AbortError') console.warn('Aviso play onLoadedMetadata:', err);
+                });
               }
             }
           }}
@@ -216,15 +227,15 @@ export function AudioPlayerModal({
       )}
 
       {/* Cabeçalho do Player */}
-      <div className="flex items-center justify-between pb-2 sm:pb-3 border-b border-[var(--border-color)] mb-2.5">
-        <div className="flex items-center gap-1.5 sm:gap-2">
+      <div className="flex items-center justify-between pb-2 border-b border-[var(--border-color)] mb-2.5">
+        <div className="flex items-center gap-1.5 sm:gap-2 min-w-0">
           <Volume2 className="w-4 h-4 text-[var(--text-primary)] shrink-0" />
-          <span className="font-mono text-xs font-bold uppercase tracking-wider">
+          <span className="font-mono text-xs font-bold uppercase tracking-wider truncate">
             HeyGen Voice Turbo
           </span>
           {isCached && (
             <span
-              className="inline-flex items-center gap-1 px-1.5 py-0.5 rounded text-[10px] font-mono border border-[var(--border-strong)] bg-[var(--bg-secondary)] text-[var(--text-primary)]"
+              className="inline-flex items-center gap-1 px-1.5 py-0.5 rounded text-[10px] font-mono border border-[var(--border-strong)] bg-[var(--bg-secondary)] text-[var(--text-primary)] shrink-0"
               title="Áudio salvo no Bucket Railway S3 — carregamento instantâneo"
             >
               <Database className="w-2.5 h-2.5" />
@@ -237,51 +248,55 @@ export function AudioPlayerModal({
             handleStop();
             onClose();
           }}
-          className="p-1 rounded hover:bg-[var(--bg-secondary)] text-[var(--text-muted)] hover:text-[var(--text-primary)] transition-colors"
+          className="p-1.5 rounded hover:bg-[var(--bg-secondary)] text-[var(--text-muted)] hover:text-[var(--text-primary)] transition-colors shrink-0 ml-2"
+          aria-label="Fechar player de áudio"
         >
           <X className="w-4 h-4" />
         </button>
       </div>
 
+      {/* Título do Capítulo e Provedor */}
       <div className="flex items-center justify-between text-xs font-mono text-[var(--text-secondary)] mb-2 gap-2">
-        <span className="text-[11px] truncate flex-1 min-w-0" title={chapterTitle}>
+        <span className="text-[11px] truncate flex-1 min-w-0 font-medium" title={chapterTitle}>
           {chapterTitle || 'Capítulo'}
         </span>
-        <span className="text-[10px] text-[var(--text-muted)] shrink-0 hidden sm:inline">
-          heygen/heygen-voice-1-turbo:free
+        <span className="text-[9px] sm:text-[10px] text-[var(--text-muted)] shrink-0 hidden xs:inline font-mono opacity-80">
+          heygen-voice-1-turbo
         </span>
       </div>
 
       {/* Seletor de Voz */}
-      <div className="flex items-center gap-1.5 mb-2.5 text-xs font-mono flex-wrap">
-        <span className="text-[var(--text-muted)] text-[11px]">Voz:</span>
-        {VOICES.map((v) => (
-          <button
-            key={v.id}
-            onClick={() => setVoice(v.id)}
-            disabled={isLoading}
-            className={`px-2 py-0.5 rounded text-[10px] sm:text-[11px] border transition-colors ${
-              voice === v.id
-                ? 'border-[var(--border-strong)] bg-[var(--text-primary)] text-[var(--bg-primary)] font-bold'
-                : 'border-[var(--border-color)] text-[var(--text-secondary)] hover:bg-[var(--bg-secondary)]'
-            }`}
-          >
-            {v.name} <span className="text-[9px] opacity-75">({v.desc})</span>
-          </button>
-        ))}
+      <div className="flex items-center gap-2 mb-2.5 text-xs font-mono">
+        <span className="text-[var(--text-muted)] text-[11px] shrink-0">Voz:</span>
+        <div className="flex items-center gap-1.5 flex-wrap">
+          {VOICES.map((v) => (
+            <button
+              key={v.id}
+              onClick={() => setVoice(v.id)}
+              disabled={isLoading}
+              className={`px-2.5 py-1 rounded text-[10px] sm:text-[11px] border transition-colors ${
+                voice === v.id
+                  ? 'border-[var(--border-strong)] bg-[var(--text-primary)] text-[var(--bg-primary)] font-bold'
+                  : 'border-[var(--border-color)] bg-[var(--bg-surface)] text-[var(--text-secondary)] hover:bg-[var(--bg-secondary)]'
+              }`}
+            >
+              {v.name} <span className="text-[9px] opacity-75">({v.desc})</span>
+            </button>
+          ))}
+        </div>
       </div>
 
       {/* Estado de Carregamento */}
       {isLoading && (
-        <div className="py-4 text-center">
-          <div className="inline-block animate-spin rounded-full h-4 w-4 border-2 border-current border-t-transparent mb-2"></div>
+        <div className="py-3 text-center">
+          <div className="inline-block animate-spin rounded-full h-4 w-4 border-2 border-current border-t-transparent mb-1.5"></div>
           <p className="font-mono text-xs text-[var(--text-muted)]">
-            Gerando áudio via heygen/heygen-voice-1-turbo:free...
+            Gerando audiodescrição via heygen/heygen-voice-1-turbo:free...
           </p>
         </div>
       )}
 
-      {/* Erro do Provedor HeyGen (Sem Máscara ou Fallback) */}
+      {/* Erro do Provedor HeyGen */}
       {errorMessage && (
         <div className="py-2.5 px-3 mb-3 bg-red-950/20 border border-red-500/40 rounded text-xs font-mono text-red-400 flex items-start gap-2">
           <AlertCircle className="w-4 h-4 mt-0.5 flex-shrink-0" />
@@ -295,14 +310,15 @@ export function AudioPlayerModal({
       {!isLoading && !errorMessage && (
         <>
           {/* Barra de Progresso / Scrubber */}
-          <div className="space-y-1 mb-3">
+          <div className="space-y-1 mb-2.5">
             <input
               type="range"
               min={0}
               max={duration || 100}
+              step="0.1"
               value={currentTime}
               onChange={handleSeek}
-              className="w-full h-1 bg-[var(--border-color)] rounded-lg appearance-none cursor-pointer accent-[var(--text-primary)]"
+              className="w-full h-1.5 bg-[var(--border-color)] rounded-lg appearance-none cursor-pointer accent-[var(--text-primary)]"
             />
             <div className="flex justify-between text-[10px] font-mono text-[var(--text-muted)]">
               <span>{formatTime(currentTime)}</span>
@@ -311,7 +327,7 @@ export function AudioPlayerModal({
           </div>
 
           {/* Controles Principais */}
-          <div className="flex items-center justify-between gap-3 pt-1">
+          <div className="flex items-center justify-between gap-2 pt-0.5">
             <div className="flex items-center gap-1.5 sm:gap-2">
               {hasPreviousChapter && onPreviousChapter && (
                 <button
@@ -329,7 +345,7 @@ export function AudioPlayerModal({
               {isPlaying ? (
                 <button
                   onClick={handlePause}
-                  className="p-2.5 rounded-full bg-[var(--text-primary)] text-[var(--bg-primary)] hover:opacity-90 transition-opacity"
+                  className="p-2 sm:p-2.5 rounded-full bg-[var(--text-primary)] text-[var(--bg-primary)] hover:opacity-90 transition-opacity shadow-sm"
                   title="Pausar"
                 >
                   <Pause className="w-4 h-4" />
@@ -337,7 +353,7 @@ export function AudioPlayerModal({
               ) : (
                 <button
                   onClick={handlePlay}
-                  className="p-2.5 rounded-full bg-[var(--text-primary)] text-[var(--bg-primary)] hover:opacity-90 transition-opacity"
+                  className="p-2 sm:p-2.5 rounded-full bg-[var(--text-primary)] text-[var(--bg-primary)] hover:opacity-90 transition-opacity shadow-sm"
                   title="Reproduzir"
                 >
                   <Play className="w-4 h-4 ml-0.5" />
@@ -359,21 +375,21 @@ export function AudioPlayerModal({
 
               <button
                 onClick={handleStop}
-                className="p-2 rounded border border-[var(--border-color)] text-[var(--text-muted)] hover:text-[var(--text-primary)] hover:bg-[var(--bg-secondary)] transition-colors"
+                className="p-1.5 sm:p-2 rounded border border-[var(--border-color)] text-[var(--text-muted)] hover:text-[var(--text-primary)] hover:bg-[var(--bg-secondary)] transition-colors"
                 title="Parar e voltar ao início"
               >
-                <Square className="w-3.5 h-3.5" />
+                <Square className="w-3 h-3 sm:w-3.5 sm:h-3.5" />
               </button>
             </div>
 
-            {/* Velocidade de Reprodução */}
+            {/* Velocidade de Reprodução Compacta */}
             <div className="flex items-center gap-0.5 sm:gap-1 text-xs font-mono shrink-0">
-              <span className="text-[var(--text-muted)] text-[10px]">Vel:</span>
+              <span className="text-[var(--text-muted)] text-[10px] hidden sm:inline">Vel:</span>
               {[0.8, 1, 1.25, 1.5, 2].map((r) => (
                 <button
                   key={r}
                   onClick={() => handleRateChange(r)}
-                  className={`px-1 sm:px-1.5 py-0.5 rounded text-[10px] ${
+                  className={`px-1.5 py-0.5 rounded text-[10px] ${
                     rate === r
                       ? 'bg-[var(--text-primary)] text-[var(--bg-primary)] font-bold'
                       : 'text-[var(--text-secondary)] hover:bg-[var(--bg-secondary)]'

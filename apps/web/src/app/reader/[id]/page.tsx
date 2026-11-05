@@ -38,10 +38,12 @@ export default function ReaderPage({ params }: { params: Promise<{ id: string }>
 
   const [book, setBook] = useState<BookDoc | null>(null);
   const [currentChapterIndex, setCurrentChapterIndex] = useState(0);
+  const [audioChapterIndex, setAudioChapterIndex] = useState(0);
   const [loading, setLoading] = useState(true);
   const [tocOpen, setTocOpen] = useState(false);
   const [deepenOpen, setDeepenOpen] = useState(false);
   const [audioOpen, setAudioOpen] = useState(false);
+  const [typographyOpen, setTypographyOpen] = useState(false);
   const [fontSize, setFontSizeState] = useState(20);
   const [fontMode, setFontModeState] = useState<FontMode>('serif');
   const [selectedTextForDeepen, setSelectedTextForDeepen] = useState('');
@@ -61,9 +63,11 @@ export default function ReaderPage({ params }: { params: Promise<{ id: string }>
   const activeChapterContainerRef = useRef<HTMLElement | null>(null);
 
   // Mantém a referência do container do capítulo ativo para o lápis de leitura
+  // Se o áudio estiver reproduzindo, o lápis acompanha o capítulo de áudio; senão, o visual
   useEffect(() => {
-    activeChapterContainerRef.current = chapterRefs.current[currentChapterIndex] || contentRef.current;
-  }, [currentChapterIndex]);
+    const activeIdx = audioPlayback.isPlaying ? audioChapterIndex : currentChapterIndex;
+    activeChapterContainerRef.current = chapterRefs.current[activeIdx] || contentRef.current;
+  }, [audioPlayback.isPlaying, audioChapterIndex, currentChapterIndex]);
 
   // Carrega Livro
   useEffect(() => {
@@ -164,12 +168,12 @@ export default function ReaderPage({ params }: { params: Promise<{ id: string }>
     }
   };
 
-  // Avança para o próximo capítulo no áudio player e no scroll
-  const handleNextChapter = () => {
+  // Avança para o próximo capítulo no áudio player sem cortar a leitura
+  const handleAudioNextChapter = () => {
     if (!book) return;
-    if (currentChapterIndex < book.chapters.length - 1) {
-      const nextIdx = currentChapterIndex + 1;
-      setCurrentChapterIndex(nextIdx);
+    if (audioChapterIndex < book.chapters.length - 1) {
+      const nextIdx = audioChapterIndex + 1;
+      setAudioChapterIndex(nextIdx);
       const targetChapter = book.chapters[nextIdx];
       const el = document.getElementById(`chapter-${targetChapter.id || nextIdx}`);
       if (el) {
@@ -179,12 +183,12 @@ export default function ReaderPage({ params }: { params: Promise<{ id: string }>
     }
   };
 
-  // Volta para o capítulo anterior no áudio player e no scroll
-  const handlePreviousChapter = () => {
+  // Volta para o capítulo anterior no áudio player
+  const handleAudioPreviousChapter = () => {
     if (!book) return;
-    if (currentChapterIndex > 0) {
-      const prevIdx = currentChapterIndex - 1;
-      setCurrentChapterIndex(prevIdx);
+    if (audioChapterIndex > 0) {
+      const prevIdx = audioChapterIndex - 1;
+      setAudioChapterIndex(prevIdx);
       const targetChapter = book.chapters[prevIdx];
       const el = document.getElementById(`chapter-${targetChapter.id || prevIdx}`);
       if (el) {
@@ -196,6 +200,16 @@ export default function ReaderPage({ params }: { params: Promise<{ id: string }>
 
   const currentChapter: Chapter | undefined = book?.chapters[currentChapterIndex];
   const allCurrentChapterText = currentChapter?.sections.map((s) => s.content || '').join('\n\n') || '';
+
+  const audioChapter: Chapter | undefined = book?.chapters[audioChapterIndex];
+  const allAudioChapterText = audioChapter?.sections.map((s) => s.content || '').join('\n\n') || '';
+
+  const handleOpenAudio = () => {
+    if (!audioPlayback.isPlaying) {
+      setAudioChapterIndex(currentChapterIndex);
+    }
+    setAudioOpen(true);
+  };
 
   // Captura seleção de texto para aprofundar
   const handleOpenDeepen = () => {
@@ -234,15 +248,15 @@ export default function ReaderPage({ params }: { params: Promise<{ id: string }>
   }
 
   return (
-    <div className="min-h-screen bg-[var(--bg-primary)] text-[var(--text-primary)]">
+    <div className="min-h-screen bg-[var(--bg-primary)] text-[var(--text-primary)] w-full max-w-full overflow-x-hidden">
       {/* Barra de Ferramentas Superior Fixa */}
       <header className="sticky top-0 z-40 bg-[var(--bg-primary)]/95 backdrop-blur-sm border-b border-[var(--border-color)]">
-        <div className="max-w-4xl mx-auto px-4 h-14 flex items-center justify-between gap-2">
+        <div className="max-w-4xl mx-auto px-3 sm:px-4 h-14 flex items-center justify-between gap-1.5 sm:gap-2">
           {/* Voltar & Sumário */}
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-1.5 sm:gap-2 shrink-0">
             <Link
               href="/"
-              className="p-2 rounded hover:bg-[var(--bg-secondary)] text-[var(--text-primary)] transition-colors flex items-center gap-1.5 text-xs font-mono"
+              className="p-1.5 sm:p-2 rounded hover:bg-[var(--bg-secondary)] text-[var(--text-primary)] transition-colors flex items-center gap-1.5 text-xs font-mono"
               title="Voltar à Biblioteca"
             >
               <ArrowLeft className="w-4 h-4" />
@@ -251,7 +265,7 @@ export default function ReaderPage({ params }: { params: Promise<{ id: string }>
 
             <button
               onClick={() => setTocOpen(true)}
-              className="p-2 rounded hover:bg-[var(--bg-secondary)] text-[var(--text-primary)] transition-colors flex items-center gap-1.5 text-xs font-mono"
+              className="p-1.5 sm:p-2 rounded hover:bg-[var(--bg-secondary)] text-[var(--text-primary)] transition-colors flex items-center gap-1.5 text-xs font-mono"
               title="Abrir Sumário"
             >
               <List className="w-4 h-4" />
@@ -260,48 +274,52 @@ export default function ReaderPage({ params }: { params: Promise<{ id: string }>
           </div>
 
           {/* Título Central Dinâmico Truncado (Acompanha o Scroll) */}
-          <div className="hidden lg:block text-center flex-1 mx-4">
-            <span className="font-serif text-xs italic text-[var(--text-secondary)] line-clamp-1">
+          <div className="hidden lg:block text-center flex-1 mx-4 min-w-0">
+            <span className="font-serif text-xs italic text-[var(--text-secondary)] truncate block">
               {book.meta.title} — Cap. {currentChapter?.number}: {currentChapter?.title}
             </span>
           </div>
 
-          {/* Controles de Leitura */}
-          <div className="flex items-center gap-1.5 sm:gap-2">
+          {/* Controles de Leitura Responsivos */}
+          <div className="flex items-center gap-1 sm:gap-1.5 shrink-0">
             {/* Modo Camadas */}
             <Link
               href={`/reader/${book.meta.id}/camadas`}
-              className="px-2.5 py-1.5 rounded border border-[var(--border-color)] bg-[var(--bg-surface)] hover:bg-[var(--bg-secondary)] text-[var(--text-primary)] text-xs font-mono flex items-center gap-1"
+              className="p-1.5 sm:px-2.5 sm:py-1.5 rounded border border-[var(--border-color)] bg-[var(--bg-surface)] hover:bg-[var(--bg-secondary)] text-[var(--text-primary)] text-xs font-mono flex items-center gap-1 shrink-0"
               title="Alternar para Modo de Leitura em Camadas"
             >
-              <Layers className="w-3.5 h-3.5" />
+              <Layers className="w-4 h-4" />
               <span className="hidden sm:inline">Camadas</span>
             </Link>
 
-            {/* Aprofundar */}
+            {/* Aprofundar com Agentes IA */}
             <button
               onClick={handleOpenDeepen}
-              className="p-1.5 sm:px-2 sm:py-1.5 rounded border border-[var(--border-color)] bg-[var(--bg-surface)] hover:bg-[var(--bg-secondary)] text-[var(--text-primary)] text-xs font-mono flex items-center gap-1"
-              title="Aprofundar conceito selecionado com IA"
+              className="p-1.5 sm:px-2 sm:py-1.5 rounded border border-[var(--border-color)] bg-[var(--bg-surface)] hover:bg-[var(--bg-secondary)] text-[var(--text-primary)] text-xs font-mono flex items-center gap-1 shrink-0"
+              title="Aprofundar com Agentes Especializados (Prof. Elias, Lucas Hack, Lia, Dr. Viktor)"
             >
-              <Sparkles className="w-3.5 h-3.5" />
-              <span className="hidden md:inline">Aprofundar</span>
+              <Sparkles className="w-4 h-4" />
+              <span className="hidden md:inline">Agentes IA</span>
             </button>
 
-            {/* Ouvir */}
+            {/* Ouvir (HeyGen Turbo + Bucket S3) */}
             <button
-              onClick={() => setAudioOpen(true)}
-              className="p-1.5 sm:px-2 sm:py-1.5 rounded border border-[var(--border-color)] bg-[var(--bg-surface)] hover:bg-[var(--bg-secondary)] text-[var(--text-primary)] text-xs font-mono flex items-center gap-1"
-              title="Audiodescrição / Ouvir Capítulo"
+              onClick={handleOpenAudio}
+              className={`p-1.5 sm:px-2 sm:py-1.5 rounded border transition-colors flex items-center gap-1 text-xs font-mono shrink-0 ${
+                audioPlayback.isPlaying
+                  ? 'border-[var(--border-strong)] bg-[var(--text-primary)] text-[var(--bg-primary)] font-bold'
+                  : 'border-[var(--border-color)] bg-[var(--bg-surface)] hover:bg-[var(--bg-secondary)] text-[var(--text-primary)]'
+              }`}
+              title="Audiodescrição com IA do Capítulo (HeyGen Voice Turbo)"
             >
-              <Volume2 className="w-3.5 h-3.5" />
+              <Volume2 className="w-4 h-4" />
               <span className="hidden md:inline">Ouvir</span>
             </button>
 
             {/* Lápis Guia de Leitura */}
             <button
               onClick={() => setPencilEnabled(!pencilEnabled)}
-              className={`p-1.5 rounded transition-colors text-xs font-mono flex items-center gap-1 ${
+              className={`p-1.5 rounded transition-colors text-xs font-mono flex items-center gap-1 shrink-0 ${
                 pencilEnabled
                   ? 'bg-[var(--border-strong)] text-[var(--bg-primary)]'
                   : 'hover:bg-[var(--bg-secondary)] text-[var(--text-muted)]'
@@ -315,7 +333,7 @@ export default function ReaderPage({ params }: { params: Promise<{ id: string }>
             {/* Régua de Foco Ocular (Desktop) */}
             <button
               onClick={() => setRulerEnabled(!rulerEnabled)}
-              className={`hidden sm:flex p-1.5 rounded transition-colors text-xs font-mono items-center gap-1 ${
+              className={`hidden sm:flex p-1.5 rounded transition-colors text-xs font-mono items-center gap-1 shrink-0 ${
                 rulerEnabled
                   ? 'bg-[var(--border-strong)] text-[var(--bg-primary)]'
                   : 'hover:bg-[var(--bg-secondary)] text-[var(--text-muted)]'
@@ -326,17 +344,17 @@ export default function ReaderPage({ params }: { params: Promise<{ id: string }>
               <span className="hidden lg:inline">Régua</span>
             </button>
 
-            {/* Alternar Fonte */}
+            {/* Alternar Fonte (Desktop) */}
             <button
               onClick={toggleFont}
-              className="hidden sm:block p-1.5 rounded hover:bg-[var(--bg-secondary)] text-[var(--text-primary)] font-mono text-xs"
+              className="hidden sm:block p-1.5 rounded hover:bg-[var(--bg-secondary)] text-[var(--text-primary)] font-mono text-xs shrink-0"
               title={`Alternar Fonte (Atual: ${fontMode})`}
             >
               <Type className="w-4 h-4" />
             </button>
 
-            {/* Tamanho de Fonte */}
-            <div className="hidden md:flex items-center border border-[var(--border-color)] rounded bg-[var(--bg-surface)] text-xs font-mono">
+            {/* Tamanho de Fonte (Desktop) */}
+            <div className="hidden md:flex items-center border border-[var(--border-color)] rounded bg-[var(--bg-surface)] text-xs font-mono shrink-0">
               <button
                 onClick={() => changeFontSize(-2)}
                 className="px-2 py-1 hover:bg-[var(--bg-secondary)] border-r border-[var(--border-color)]"
@@ -351,6 +369,48 @@ export default function ReaderPage({ params }: { params: Promise<{ id: string }>
               >
                 A+
               </button>
+            </div>
+
+            {/* Menu Compacto de Tipografia (Mobile) */}
+            <div className="sm:hidden relative shrink-0">
+              <button
+                onClick={() => setTypographyOpen(!typographyOpen)}
+                className="p-1.5 border border-[var(--border-color)] bg-[var(--bg-surface)] hover:bg-[var(--bg-secondary)] rounded transition-colors text-[var(--text-primary)] flex items-center text-xs font-mono font-bold"
+                title="Ajustes de Tipografia e Fonte"
+              >
+                Aa
+              </button>
+              {typographyOpen && (
+                <div className="absolute right-0 top-full mt-2 w-48 p-2.5 bg-[var(--bg-surface)] border border-[var(--border-strong)] rounded-lg shadow-xl z-50 font-mono text-xs space-y-2">
+                  <div className="flex items-center justify-between">
+                    <span className="text-[11px] text-[var(--text-muted)]">Tipo:</span>
+                    <button
+                      onClick={toggleFont}
+                      className="px-2 py-0.5 border border-[var(--border-color)] rounded text-xs capitalize hover:bg-[var(--bg-secondary)]"
+                    >
+                      {fontMode}
+                    </button>
+                  </div>
+                  <div className="flex items-center justify-between">
+                    <span className="text-[11px] text-[var(--text-muted)]">Tamanho:</span>
+                    <div className="flex items-center border border-[var(--border-color)] rounded">
+                      <button
+                        onClick={() => changeFontSize(-2)}
+                        className="px-2 py-0.5 hover:bg-[var(--bg-secondary)] font-bold"
+                      >
+                        -
+                      </button>
+                      <span className="px-1.5 text-[10px]">{fontSize}px</span>
+                      <button
+                        onClick={() => changeFontSize(2)}
+                        className="px-2 py-0.5 hover:bg-[var(--bg-secondary)] font-bold"
+                      >
+                        +
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              )}
             </div>
 
             {/* Alternar Tema */}
@@ -512,14 +572,14 @@ export default function ReaderPage({ params }: { params: Promise<{ id: string }>
       <AudioPlayerModal
         isOpen={audioOpen}
         onClose={() => setAudioOpen(false)}
-        textToRead={allCurrentChapterText}
-        chapterTitle={`${book.meta.title} — Cap. ${currentChapter?.number}: ${currentChapter?.title}`}
-        chapterId={`${book.meta.id}-${currentChapter?.id}`}
+        textToRead={allAudioChapterText}
+        chapterTitle={`${book.meta.title} — Cap. ${audioChapter?.number || (audioChapterIndex + 1)}: ${audioChapter?.title || ''}`}
+        chapterId={`${book.meta.id}-${audioChapter?.id || audioChapterIndex}`}
         onPlaybackUpdate={setAudioPlayback}
-        onNextChapter={handleNextChapter}
-        onPreviousChapter={handlePreviousChapter}
-        hasNextChapter={currentChapterIndex < book.chapters.length - 1}
-        hasPreviousChapter={currentChapterIndex > 0}
+        onNextChapter={handleAudioNextChapter}
+        onPreviousChapter={handleAudioPreviousChapter}
+        hasNextChapter={audioChapterIndex < book.chapters.length - 1}
+        hasPreviousChapter={audioChapterIndex > 0}
       />
 
       {/* Guia Animado do Lápis Editorial (Acompanha a voz palavra por palavra no capítulo ativo) */}

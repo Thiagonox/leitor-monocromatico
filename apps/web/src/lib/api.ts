@@ -1,4 +1,13 @@
-import { BookDoc, CatalogItem, GenerateLayeredRequest, DeepenRequest, TTSRequest, DEFAULT_CATALOG } from '@mono-reader/shared';
+import {
+  BookDoc,
+  CatalogItem,
+  GenerateLayeredRequest,
+  DeepenRequest,
+  TTSRequest,
+  DEFAULT_CATALOG,
+  ChatRequest,
+  ChatResponse,
+} from '@mono-reader/shared';
 
 const API_BASE = process.env.NEXT_PUBLIC_API_URL || '';
 
@@ -111,6 +120,15 @@ export interface TTSResponse {
   message?: string;
 }
 
+export function resolveAudioUrl(url?: string | null): string {
+  if (!url) return '';
+  if (url.startsWith('http://') || url.startsWith('https://')) return url;
+  const base = process.env.NEXT_PUBLIC_API_URL || 'https://mono-readerapi-production.up.railway.app';
+  const cleanBase = base.replace(/\/$/, '');
+  const cleanUrl = url.startsWith('/') ? url : `/${url}`;
+  return `${cleanBase}${cleanUrl}`;
+}
+
 export async function requestTTS(payload: {
   text: string;
   voice?: string;
@@ -123,5 +141,28 @@ export async function requestTTS(payload: {
     body: JSON.stringify(payload)
   });
 
-  return await res.json();
+  const data: TTSResponse = await res.json();
+  if (data.status === 'ok' && data.audioUrl) {
+    data.audioUrl = resolveAudioUrl(data.audioUrl);
+  }
+  return data;
+}
+
+export async function sendAgentChatMessage(payload: ChatRequest): Promise<ChatResponse> {
+  const res = await fetch(`${API_BASE}/api/ai/chat`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(payload)
+  });
+
+  if (!res.ok) {
+    throw new Error(`Falha no chat com o agente: HTTP ${res.status}`);
+  }
+
+  const data = await res.json();
+  if (data.status !== 'ok' || !data.message) {
+    throw new Error(data.message || 'Resposta de agente inválida.');
+  }
+
+  return data;
 }

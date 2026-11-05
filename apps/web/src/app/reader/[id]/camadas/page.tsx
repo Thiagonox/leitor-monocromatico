@@ -27,6 +27,7 @@ export default function LayeredReaderPage({ params }: { params: Promise<{ id: st
 
   const [book, setBook] = useState<BookDoc | null>(null);
   const [currentChapterIndex, setCurrentChapterIndex] = useState(0);
+  const [audioChapterIndex, setAudioChapterIndex] = useState(0);
   const [activeLayer, setActiveLayer] = useState<number>(1);
   const [loading, setLoading] = useState(true);
   const [tocOpen, setTocOpen] = useState(false);
@@ -44,8 +45,9 @@ export default function LayeredReaderPage({ params }: { params: Promise<{ id: st
   const activeChapterContainerRef = useRef<HTMLElement | null>(null);
 
   useEffect(() => {
-    activeChapterContainerRef.current = chapterRefs.current[currentChapterIndex] || contentRef.current;
-  }, [currentChapterIndex]);
+    const activeIdx = audioPlayback.isPlaying ? audioChapterIndex : currentChapterIndex;
+    activeChapterContainerRef.current = chapterRefs.current[activeIdx] || contentRef.current;
+  }, [audioPlayback.isPlaying, audioChapterIndex, currentChapterIndex]);
 
   useEffect(() => {
     let active = true;
@@ -108,11 +110,11 @@ export default function LayeredReaderPage({ params }: { params: Promise<{ id: st
     }
   };
 
-  const handleNextChapter = () => {
+  const handleAudioNextChapter = () => {
     if (!book) return;
-    if (currentChapterIndex < book.chapters.length - 1) {
-      const nextIdx = currentChapterIndex + 1;
-      setCurrentChapterIndex(nextIdx);
+    if (audioChapterIndex < book.chapters.length - 1) {
+      const nextIdx = audioChapterIndex + 1;
+      setAudioChapterIndex(nextIdx);
       const targetChapter = book.chapters[nextIdx];
       const el = document.getElementById(`chapter-${targetChapter.id || nextIdx}`);
       if (el) {
@@ -122,11 +124,11 @@ export default function LayeredReaderPage({ params }: { params: Promise<{ id: st
     }
   };
 
-  const handlePreviousChapter = () => {
+  const handleAudioPreviousChapter = () => {
     if (!book) return;
-    if (currentChapterIndex > 0) {
-      const prevIdx = currentChapterIndex - 1;
-      setCurrentChapterIndex(prevIdx);
+    if (audioChapterIndex > 0) {
+      const prevIdx = audioChapterIndex - 1;
+      setAudioChapterIndex(prevIdx);
       const targetChapter = book.chapters[prevIdx];
       const el = document.getElementById(`chapter-${targetChapter.id || prevIdx}`);
       if (el) {
@@ -138,6 +140,16 @@ export default function LayeredReaderPage({ params }: { params: Promise<{ id: st
 
   const currentChapter: Chapter | undefined = book?.chapters[currentChapterIndex];
   const allCurrentChapterText = currentChapter?.sections.map((s) => s.content || '').join('\n\n') || '';
+
+  const audioChapter: Chapter | undefined = book?.chapters[audioChapterIndex];
+  const allAudioChapterText = audioChapter?.sections.map((s) => s.content || '').join('\n\n') || '';
+
+  const handleOpenAudio = () => {
+    if (!audioPlayback.isPlaying) {
+      setAudioChapterIndex(currentChapterIndex);
+    }
+    setAudioOpen(true);
+  };
 
   if (loading) {
     return (
@@ -162,7 +174,7 @@ export default function LayeredReaderPage({ params }: { params: Promise<{ id: st
   }
 
   return (
-    <div className="min-h-screen bg-[var(--bg-primary)] text-[var(--text-primary)]">
+    <div className="min-h-screen bg-[var(--bg-primary)] text-[var(--text-primary)] w-full max-w-full overflow-x-hidden">
       {/* Top Header */}
       <header className="sticky top-0 z-40 bg-[var(--bg-primary)]/95 backdrop-blur-sm border-b border-[var(--border-color)]">
         <div className="max-w-4xl mx-auto px-4 h-14 flex items-center justify-between gap-3">
@@ -206,9 +218,13 @@ export default function LayeredReaderPage({ params }: { params: Promise<{ id: st
             </button>
 
             <button
-              onClick={() => setAudioOpen(true)}
-              className="p-1.5 sm:px-2 sm:py-1.5 rounded hover:bg-[var(--bg-secondary)] text-[var(--text-primary)] transition-colors flex items-center gap-1 text-xs font-mono border border-[var(--border-color)]"
-              title="Audiodescrição com IA do Capítulo"
+              onClick={handleOpenAudio}
+              className={`p-1.5 sm:px-2 sm:py-1.5 rounded transition-colors flex items-center gap-1 text-xs font-mono border ${
+                audioPlayback.isPlaying
+                  ? 'border-[var(--border-strong)] bg-[var(--text-primary)] text-[var(--bg-primary)] font-bold'
+                  : 'border-[var(--border-color)] hover:bg-[var(--bg-secondary)] text-[var(--text-primary)]'
+              }`}
+              title="Audiodescrição com IA do Capítulo (HeyGen Voice Turbo)"
             >
               <Volume2 className="w-4 h-4" />
               <span className="hidden sm:inline">Ouvir</span>
@@ -417,14 +433,14 @@ export default function LayeredReaderPage({ params }: { params: Promise<{ id: st
       <AudioPlayerModal
         isOpen={audioOpen}
         onClose={() => setAudioOpen(false)}
-        textToRead={allCurrentChapterText}
-        chapterTitle={`${book.meta.title} — Cap. ${currentChapter?.number}: ${currentChapter?.title}`}
-        chapterId={`${book.meta.id}-${currentChapter?.id}`}
+        textToRead={allAudioChapterText}
+        chapterTitle={`${book.meta.title} — Cap. ${audioChapter?.number || (audioChapterIndex + 1)}: ${audioChapter?.title || ''}`}
+        chapterId={`${book.meta.id}-${audioChapter?.id || audioChapterIndex}`}
         onPlaybackUpdate={setAudioPlayback}
-        onNextChapter={handleNextChapter}
-        onPreviousChapter={handlePreviousChapter}
-        hasNextChapter={currentChapterIndex < book.chapters.length - 1}
-        hasPreviousChapter={currentChapterIndex > 0}
+        onNextChapter={handleAudioNextChapter}
+        onPreviousChapter={handleAudioPreviousChapter}
+        hasNextChapter={audioChapterIndex < book.chapters.length - 1}
+        hasPreviousChapter={audioChapterIndex > 0}
       />
 
       {/* Guia Animado do Lápis Editorial */}

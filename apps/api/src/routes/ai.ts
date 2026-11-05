@@ -5,12 +5,12 @@ import {
   generateLayeredFallbackPayload,
   getMasterRedacaoBook
 } from '../services/llm.js';
-import { BookDoc, Chapter } from '@mono-reader/shared';
+import { BookDoc, Chapter, AGENT_PERSONAS, AgentId } from '@mono-reader/shared';
 
 export const aiRouter = Router();
 
 aiRouter.post('/generate-layered', async (req: Request, res: Response) => {
-  const { topic, depth = 'enem_elite', chaptersCount = 3, apiKey, model, baseUrl } = req.body;
+  const { topic, depth = 'enem_elite', chaptersCount = 3, agentId = 'professor', apiKey, model, baseUrl } = req.body;
 
   if (!topic || typeof topic !== 'string' || !topic.trim()) {
     return res.status(400).json({ status: 'error', message: "O campo 'topic' é obrigatório." });
@@ -18,17 +18,18 @@ aiRouter.post('/generate-layered', async (req: Request, res: Response) => {
 
   const cleanTopic = topic.replace(/\[\[|\]\]/g, '').trim();
   const lower = cleanTopic.toLowerCase();
+  const validAgentId: AgentId = (agentId in AGENT_PERSONAS) ? (agentId as AgentId) : 'professor';
+  const agent = AGENT_PERSONAS[validAgentId];
 
-  // Se for o tema prioritário de redação / dissertativo / enem, entrega o acervo mestre oficial
+  // Se for o tema mestre padrão sem agente específico e sem personalização customizada, entrega o acervo oficial
   if (
-    lower.includes('redação') ||
-    lower.includes('redacao') ||
-    lower.includes('dissertativo') ||
-    lower.includes('enem') ||
-    lower.includes('competências') ||
-    lower.includes('competencias') ||
-    lower.includes('repertório') ||
-    lower.includes('repertorio')
+    agentId === 'professor' && (
+      lower === 'redação' ||
+      lower === 'redacao' ||
+      lower === 'redação enem' ||
+      lower === 'redacao enem' ||
+      lower.includes('manual vivo de redação')
+    )
   ) {
     const master = getMasterRedacaoBook();
     if (master) {
@@ -41,61 +42,59 @@ aiRouter.post('/generate-layered', async (req: Request, res: Response) => {
     }
   }
 
-  const systemPrompt = `Você é um professor e autor didático de excelência (no mesmo estilo claro, fluido e direto do 'Manual Vivo de Interpretação'). 
-Sua missão é gerar um livro de estudo completo, bem feito e FÁCIL DE DIGERIR para o leitor padrão, usando EXCLUSIVAMENTE estas duas estratégias pedagógicas:
-1. LEITURA EM CAMADAS (Layered Reading):
-   - Capítulo I: Camada 1 — Resumo Rápido: Panorama direto, simples e cristalino de todo o tema para reduzir a resistência inicial.
-   - Capítulo II: Camada 2 — Versão Intermediária com PROGRESSIVE DISCLOSURE.
-   - Capítulo III (e seguintes): Camada 3 — Texto Completo e Aprofundado: Explicação completa, conversada, detalhada e fluida de todos os pontos pedidos pelo usuário.
-2. PROGRESSIVE DISCLOSURE (Revelação Progressiva):
-   - Em vez de blocos pesados ou jargão acadêmico artificial, revele cada subtópico em pequenas partes fáceis de digerir seguindo SEMPRE a sequência:
-     • O Conceito (o que é, de forma simples e direta)
-     • O Exemplo (um caso concreto ou modelo prático real)
-     • A Aplicação (como usar na prática, na redação ou na prova)
-     • Depois o próximo conceito.
-REGRAS CRÍTICAS DE ESTILO:
-- NUNCA inclua contagem ou menção de minutos em títulos, subtítulos ou capítulos (ex: NUNCA escreva '(2 a 5 min)', '(10 a 15 min)', '2 min (Resumo)', etc.). Use títulos limpos, elegantes e didáticos.
-- PROIBIDO usar títulos rebuscados vazios como 'Gênese, Premissas Epistemológicas'. Escreva com clareza, profundidade real e didática impecável.
-Responda APENAS com um objeto JSON válido, sem markdown antes ou depois.`;
+  const systemPrompt = `${agent.systemPrompt}
+Sua missão agora é gerar um livro de estudo completo, bem feito e estruturado em LEITURA EM CAMADAS (Layered Reading) e PROGRESSIVE DISCLOSURE sobre o tema solicitado.
+Mantenha rigorosamente sua personalidade como ${agent.name} (${agent.role}) em todos os títulos, callouts, exemplos e epígrafes da obra!
 
-  const userPrompt = `Gere uma obra completa em JSON sobre o tema/pauta abaixo:
+ESTRATÉGIAS PEDAGÓGICAS OBRIGATÓRIAS:
+1. LEITURA EM CAMADAS:
+   - Capítulo I: Camada 1 — Resumo Rápido: Panorama direto e cristalino sob sua ótica para reduzir a resistência inicial.
+   - Capítulo II: Camada 2 — Versão Intermediária com PROGRESSIVE DISCLOSURE.
+   - Capítulo III (e seguintes): Camada 3 — Texto Completo e Aprofundado: Explicação completa no seu estilo inconfundível.
+2. PROGRESSIVE DISCLOSURE:
+   - Revele cada subtópico em partes fáceis de assimilar: O Conceito → O Exemplo Concreto → A Aplicação Prática.
+REGRAS CRÍTICAS:
+- NUNCA inclua contagem ou menção de minutos em títulos, subtítulos ou capítulos (ex: NUNCA escreva '(2 a 5 min)').
+- Responda APENAS com um objeto JSON válido, sem markdown antes ou depois.`;
+
+  const userPrompt = `Gere uma obra completa em JSON escrita por ${agent.name} sobre o tema/pauta abaixo:
 
 ${cleanTopic}
 
 Use exatamente esta estrutura JSON (NUNCA inclua contagem de minutos em títulos ou subtítulos):
 {
-  "title": "Título Claro, Direto e Didático da Obra",
-  "subtitle": "Guia Prático em Camadas & Progressive Disclosure",
-  "category": "Área do Conhecimento",
-  "description": "Resumo claro de 2 frases sobre o que o leitor vai aprender.",
+  "title": "Título Claro e Didático no Estilo de ${agent.name}",
+  "subtitle": "${agent.tagline}",
+  "category": "Estudo Estratégico",
+  "description": "Resumo claro de 2 frases sobre o que o leitor vai dominar.",
   "chapters": [
     {
       "number": "I",
-      "title": "Camada 1 — Resumo Rápido: Visão Geral Direta",
-      "epigraph": {"text": "Frase síntese inspiradora e clara sobre o tema.", "author": "Autor ou Referência"},
+      "title": "Camada 1 — Visão Panorâmica: O Essencial em Poucos Minutos",
+      "epigraph": {"text": "Frase de efeito marcante no tom de ${agent.name}.", "author": "${agent.name}"},
       "sections": [
-        {"type": "heading", "level": 3, "content": "1. O Panorama Essencial"},
-        {"type": "paragraph", "content": "Explicação curta, clara e direta..."},
-        {"type": "callout", "title": "Ideia Central", "content": "Resumo prático fácil de guardar..."}
+        {"type": "heading", "level": 3, "content": "1. O Ponto de Partida"},
+        {"type": "paragraph", "content": "Explicação fluida no seu tom característico..."},
+        {"type": "callout", "title": "Sacada Central", "content": "Destaque prático fundamental..."}
       ]
     },
     {
       "number": "II",
-      "title": "Camada 2 — Versão Intermediária: Conceito, Exemplo e Aplicação",
-      "epigraph": {"text": "Dividir para compreender sem esforço.", "author": "Progressive Disclosure"},
+      "title": "Camada 2 — Passo a Passo: Conceito, Exemplo e Aplicação",
+      "epigraph": {"text": "A teoria só tem valor quando vira resultado.", "author": "${agent.name}"},
       "sections": [
-        {"type": "heading", "level": 3, "content": "Bloco 1: [Nome do 1º Tópico]"},
-        {"type": "paragraph", "content": "O CONCEITO: explicação direta. O EXEMPLO: caso concreto. A APLICAÇÃO: como usar na prática."},
-        {"type": "callout", "title": "Aplicação Prática", "content": "Passo a passo direto..."}
+        {"type": "heading", "level": 3, "content": "Bloco 1: [Primeiro Fundamento]"},
+        {"type": "paragraph", "content": "O CONCEITO: explicação direta. O EXEMPLO: caso prático. A APLICAÇÃO: como usar."},
+        {"type": "callout", "title": "Regra de Ouro", "content": "Checklist de aplicação imediata..."}
       ]
     },
     {
       "number": "III",
-      "title": "Camada 3 — Texto Completo: Domínio Aprofundado Passo a Passo",
-      "epigraph": {"text": "Depois da base construída, a leitura profunda flui naturalmente.", "author": "Leitura em Camadas"},
+      "title": "Camada 3 — Domínio Completo: Imersão Aprofundada",
+      "epigraph": {"text": "A excelência é a repetição consciente do método certo.", "author": "${agent.name}"},
       "sections": [
-        {"type": "heading", "level": 3, "content": "1. Aprofundamento Completo"},
-        {"type": "paragraph", "content": "Desenvolvimento completo, claro, conversado e detalhado de todos os pontos..."}
+        {"type": "heading", "level": 3, "content": "1. O Aprofundamento Definitivo"},
+        {"type": "paragraph", "content": "Desenvolvimento completo, detalhado e conversado de todos os pontos..."}
       ]
     }
   ]
@@ -154,13 +153,13 @@ Use exatamente esta estrutura JSON (NUNCA inclua contagem de minutos em títulos
     meta: {
       id: bookId,
       title: parsedBook.title || cleanTopic.slice(0, 60),
-      subtitle: parsedBook.subtitle || "Leitura em Camadas & Progressive Disclosure",
-      author: parsedBook.author || "Manual Vivo · Leitura em Camadas",
+      subtitle: parsedBook.subtitle || agent.tagline,
+      author: agent.authorLabel,
       date: new Date().getFullYear().toString(),
       category: parsedBook.category || "Leitura em Camadas & Progressive Disclosure",
       chaptersCount: chapters.length,
       estimatedReadingTime: parsedBook.estimatedReadingTime || `Aprox. ${chapters.length * 8} min de leitura`,
-      description: parsedBook.description || "Conteúdo estruturado em camadas progressivas para assimilação natural e profunda.",
+      description: parsedBook.description || `Obra estruturada por ${agent.name} (${agent.role}): ${agent.description}`,
       isGeneratedByAI: true,
       createdAt: new Date().toISOString()
     },
@@ -177,36 +176,159 @@ Use exatamente esta estrutura JSON (NUNCA inclua contagem de minutos em títulos
   });
 });
 
+// Endpoint de Chat Conversacional com Agentes Especializados (Prof. Elias, Lucas "Hack", Lia, Dr. Viktor)
+aiRouter.post('/chat', async (req: Request, res: Response) => {
+  const {
+    messages = [],
+    agentId = 'professor',
+    topic = '',
+    contextText = '',
+    apiKey,
+    model,
+  } = req.body;
+
+  const validAgentId: AgentId = (agentId in AGENT_PERSONAS) ? (agentId as AgentId) : 'professor';
+  const agent = AGENT_PERSONAS[validAgentId];
+
+  let systemPrompt = agent.systemPrompt;
+  if (topic || contextText) {
+    systemPrompt += `\n\nCONTEXTO DE LEITURA ATUAL:\n`;
+    if (topic) systemPrompt += `- Tópico/Conceito em foco: "${topic}"\n`;
+    if (contextText) systemPrompt += `- Trecho do texto que o usuário está lendo: "${contextText.slice(0, 800)}"\n`;
+    systemPrompt += `Responda mantendo rigorosamente sua personalidade como ${agent.name} (${agent.role}), fazendo referência ao contexto de leitura quando apropriado.`;
+  }
+
+  const formattedMessages: { role: 'system' | 'user' | 'assistant'; content: string }[] = [
+    { role: 'system', content: systemPrompt },
+    ...messages
+      .map((m: any) => ({
+        role: m.role === 'assistant' ? 'assistant' : 'user',
+        content: String(m.content || ''),
+      }))
+      .slice(-10),
+  ];
+
+  try {
+    const { text, model: outModel } = await callOpenRouterLlm(formattedMessages, 2500, 0.7, 18000);
+    if (text) {
+      return res.json({
+        status: 'ok',
+        message: { role: 'assistant', content: text },
+        agent: {
+          id: agent.id,
+          name: agent.name,
+          role: agent.role,
+          badge: agent.badge,
+        },
+        model: outModel || 'OpenRouter',
+      });
+    }
+  } catch (e) {}
+
+  try {
+    const { text, model: outModel } = await callNvidiaLlm(formattedMessages, apiKey, model);
+    if (text) {
+      return res.json({
+        status: 'ok',
+        message: { role: 'assistant', content: text },
+        agent: {
+          id: agent.id,
+          name: agent.name,
+          role: agent.role,
+          badge: agent.badge,
+        },
+        model: outModel || 'Nvidia',
+      });
+    }
+  } catch (e) {}
+
+  // Fallback baseado na persona do agente
+  let fallbackText = '';
+  if (validAgentId === 'curseiro') {
+    fallbackText = `Fala mestre! Pega a visão sobre "${topic || 'este ponto'}":\n\n1. **O Pulo do Gato:** Em vez de perder tempo com teoria vazia, grava isto: a banca quer palavras-chave explícitas e causa-consequência.\n2. **Template Pronto:** *"Diante disso, nota-se que [fato], o que gera [impacto direto], evidenciando [tese].*\n3. **Armadilha:** Não inventa palavras rebuscadas se você não domina a regência. Clareza direta é nota 1000!`;
+  } else if (validAgentId === 'simplificador') {
+    fallbackText = `Pensa nisso como se estivéssemos tomando um café:\n\nImagina que "${topic || 'este tema'}" é como organizar as compras na geladeira. Você não joga o queijo em cima dos ovos. Quando você separa causa e efeito, o assunto fica natural e fácil de entender.\n\nViu só? Ficou bem mais leve!`;
+  } else if (validAgentId === 'corretor') {
+    fallbackText = `Atenção cirúrgica ao critério da banca sobre "${topic || 'este ponto'}":\n\nO erro mais comum aqui é o tangenciamento: falar do assunto de forma genérica sem atacar o recorte específico.\n\n- **Onde o candidato perde pontos:** Afirmações vazias sem comprovação documental ou nexo causal.\n- **Como blindar sua nota:** Nomeie o agente social, a ação concreta e o efeito prático.`;
+  } else {
+    fallbackText = `Como observamos no rigor conceitual pelo Prof. Elias:\n\nAo examinar "${topic || 'este conceito'}", devemos observar as relações de causa material e efeito estrutural. Em vez de aceitar o conceito isoladamente, compreenda-o como parte de um paradigma mais amplo.\n\nNas avaliações de excelência, a articulação coerente entre a premissa e a evidência concreta é o que distingue uma argumentação ordinária de uma exposição magistral.`;
+  }
+
+  return res.json({
+    status: 'ok',
+    message: { role: 'assistant', content: fallbackText },
+    agent: {
+      id: agent.id,
+      name: agent.name,
+      role: agent.role,
+      badge: agent.badge,
+    },
+    model: 'Motor de Persona Fallback',
+  });
+});
+
 aiRouter.post('/deepen', async (req: Request, res: Response) => {
-  const { topic, contextText = '', style = 'didatico', level = 1, apiKey, model } = req.body;
+  const { topic, contextText = '', agentId = 'professor', style = 'didatico', level = 1, apiKey, model } = req.body;
 
   if (!topic) {
     return res.status(400).json({ status: 'error', message: "O campo 'topic' é obrigatório." });
   }
 
-  const prompt = `Aprofunde com máxima clareza, rigor e didática o seguinte conceito no contexto de leitura:
+  const validAgentId: AgentId = (agentId in AGENT_PERSONAS) ? (agentId as AgentId) : 'professor';
+  const agent = AGENT_PERSONAS[validAgentId];
+
+  const prompt = `Aprofunde o seguinte conceito no contexto da leitura atual:
 Conceito: "${topic}"
 Contexto atual: "${contextText.slice(0, 500)}"
-Estilo: ${style} (Nível de aprofundamento: ${level})
 
-Estruture a resposta com:
-1. Definição Essencial e Intuição Central (analogia cotidiana)
-2. Mecanismo Explicativo (causas, relações conceituais, contexto histórico/científico)
-3. Aplicação Concreta (exemplo real em exames, redações ou na prática)
-4. Armadilhas Comuns / Distratores a Evitar`;
+Mantenha sua identidade inconfundível como ${agent.name} (${agent.role}, ${agent.badge}).
+Estruture sua explicação conforme sua metodologia e tom característico.`;
 
-  const { text, error } = await callNvidiaLlm([
-    { role: 'system', content: 'Você é um professor e autor didático de excelência.' },
+  const messages: { role: 'system' | 'user' | 'assistant'; content: string }[] = [
+    { role: 'system', content: agent.systemPrompt },
     { role: 'user', content: prompt }
-  ], apiKey, model);
+  ];
 
+  try {
+    const { text, model: outModel } = await callOpenRouterLlm(messages, 2500, 0.7, 18000);
+    if (text) {
+      return res.json({
+        status: 'ok',
+        content: text,
+        agent: { id: agent.id, name: agent.name, role: agent.role, badge: agent.badge },
+        model: outModel
+      });
+    }
+  } catch (e) {}
+
+  const { text, error } = await callNvidiaLlm(messages, apiKey, model);
   if (text) {
-    return res.json({ status: 'ok', content: text, model });
+    return res.json({
+      status: 'ok',
+      content: text,
+      agent: { id: agent.id, name: agent.name, role: agent.role, badge: agent.badge },
+      model
+    });
   }
 
-  // Fallback
-  const fallback = `### ${topic}\n\n**Definição Essencial:** Este conceito representa um ponto nodal na compreensão profunda do tema. Em linguagem direta, estabelece as relações entre causas materiais e impactos práticos.\n\n**Mecanismo:** Ao analisar criticamente, percebe-se que as premissas deste conceito conectam a teoria à realidade sem recorrer a fórmulas decoradas.\n\n**Aplicação Prática:** Em avaliações e redações, utilize este conceito como evidência sólida para sustentar argumentos sem cometer generalizações indevidas.`;
-  return res.json({ status: 'ok', content: fallback, model: 'Motor Didático Fallback' });
+  // Fallback de persona
+  let fallback = '';
+  if (validAgentId === 'curseiro') {
+    fallback = `### ${topic} — O Macete do Curseiro\n\n**O Pulo do Gato:** Em vez de perder horas decorando teorias, foca nisto: se a prova pedir ${topic}, você joga o conceito de causa e efeito imediato.\n\n**Template Aplicável:** *"Diante da problemática de ${topic}, verifica-se um quadro de inação institucional, demandando intervenção imediata."*\n\n**Não Caia Nessa:** Nunca use ${topic} sem articular com o tema principal.`;
+  } else if (validAgentId === 'simplificador') {
+    fallback = `### ${topic} — Descomplicando Sem Mistério\n\n**Pensa comigo:** Imagina que ${topic} é como o motor de um carro. Se a gasolina não chega na quantidade certa, o carro engasga.\n\n**O que significa na prática:** É simplesmente a engrenagem que conecta o problema ao seu resultado. Simples assim, sem jargão enrolado!`;
+  } else if (validAgentId === 'corretor') {
+    fallback = `### ${topic} — O Diagnóstico da Banca\n\n**Raio-X:** O conceito de ${topic} é avaliado sob a ótica da consistência e não do volume de palavras.\n\n**Falha Comum:** Citar autores sem explicar como eles se relacionam com ${topic}.\n\n**Como Blindar:** Justifique cada adjetivo atribuído a ${topic} com um fato concreto.`;
+  } else {
+    fallback = `### ${topic} — Fundamentação pelo Prof. Elias\n\n**Definição Essencial:** Este conceito representa um ponto nodal na compreensão profunda do tema. Em linguagem direta, estabelece as relações entre causas materiais e impactos práticos.\n\n**Mecanismo Lógico:** Ao analisar criticamente, percebe-se que as premissas deste conceito conectam a teoria à realidade sem recorrer a fórmulas decoradas.\n\n**Aplicação Prática:** Em avaliações e redações, utilize este conceito como evidência sólida para sustentar argumentos sem cometer generalizações indevidas.`;
+  }
+
+  return res.json({
+    status: 'ok',
+    content: fallback,
+    agent: { id: agent.id, name: agent.name, role: agent.role, badge: agent.badge },
+    model: 'Motor Didático Fallback'
+  });
 });
 
 import {
