@@ -162,7 +162,7 @@ export function AudioPlayerModal({
   };
 
   return (
-    <div className="fixed bottom-6 right-6 z-50 w-full max-w-md bg-[var(--bg-primary)] border border-[var(--border-strong)] rounded-lg shadow-2xl p-4 font-sans text-[var(--text-primary)]">
+    <div className="fixed bottom-3 left-3 right-3 sm:left-auto sm:right-6 sm:bottom-6 z-50 sm:w-full sm:max-w-md bg-[var(--bg-primary)] border border-[var(--border-strong)] rounded-lg shadow-2xl p-3 sm:p-4 font-sans text-[var(--text-primary)]">
       {/* Elemento de Áudio HTML5 Nativo (Sem Fallbacks) */}
       {audioUrl && (
         <audio
@@ -180,9 +180,9 @@ export function AudioPlayerModal({
       )}
 
       {/* Cabeçalho do Player */}
-      <div className="flex items-center justify-between pb-3 border-b border-[var(--border-color)] mb-3">
-        <div className="flex items-center gap-2">
-          <Volume2 className="w-4 h-4 text-[var(--text-primary)]" />
+      <div className="flex items-center justify-between pb-2 sm:pb-3 border-b border-[var(--border-color)] mb-2.5">
+        <div className="flex items-center gap-1.5 sm:gap-2">
+          <Volume2 className="w-4 h-4 text-[var(--text-primary)] shrink-0" />
           <span className="font-mono text-xs font-bold uppercase tracking-wider">
             HeyGen Voice Turbo
           </span>
@@ -207,24 +207,24 @@ export function AudioPlayerModal({
         </button>
       </div>
 
-      <div className="flex items-center justify-between text-xs font-mono text-[var(--text-secondary)] mb-2">
-        <span className="text-[11px] truncate max-w-[200px]">
+      <div className="flex items-center justify-between text-xs font-mono text-[var(--text-secondary)] mb-2 gap-2">
+        <span className="text-[11px] truncate flex-1 min-w-0" title={chapterTitle}>
           {chapterTitle || 'Capítulo'}
         </span>
-        <span className="text-[10px] text-[var(--text-muted)]">
+        <span className="text-[10px] text-[var(--text-muted)] shrink-0 hidden sm:inline">
           heygen/heygen-voice-1-turbo:free
         </span>
       </div>
 
       {/* Seletor de Voz */}
-      <div className="flex items-center gap-2 mb-3 text-xs font-mono">
+      <div className="flex items-center gap-1.5 mb-2.5 text-xs font-mono flex-wrap">
         <span className="text-[var(--text-muted)] text-[11px]">Voz:</span>
         {VOICES.map((v) => (
           <button
             key={v.id}
             onClick={() => setVoice(v.id)}
             disabled={isLoading}
-            className={`px-2 py-0.5 rounded text-[11px] border transition-colors ${
+            className={`px-2 py-0.5 rounded text-[10px] sm:text-[11px] border transition-colors ${
               voice === v.id
                 ? 'border-[var(--border-strong)] bg-[var(--text-primary)] text-[var(--bg-primary)] font-bold'
                 : 'border-[var(--border-color)] text-[var(--text-secondary)] hover:bg-[var(--bg-secondary)]'
@@ -305,13 +305,13 @@ export function AudioPlayerModal({
             </div>
 
             {/* Velocidade de Reprodução */}
-            <div className="flex items-center gap-1 text-xs font-mono">
+            <div className="flex items-center gap-0.5 sm:gap-1 text-xs font-mono shrink-0">
               <span className="text-[var(--text-muted)] text-[10px]">Vel:</span>
               {[0.8, 1, 1.25, 1.5, 2].map((r) => (
                 <button
                   key={r}
                   onClick={() => handleRateChange(r)}
-                  className={`px-1.5 py-0.5 rounded text-[10px] ${
+                  className={`px-1 sm:px-1.5 py-0.5 rounded text-[10px] ${
                     rate === r
                       ? 'bg-[var(--text-primary)] text-[var(--bg-primary)] font-bold'
                       : 'text-[var(--text-secondary)] hover:bg-[var(--bg-secondary)]'

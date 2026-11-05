@@ -26,13 +26,13 @@ export function ThemeToggle() {
   return (
     <button
       onClick={toggleTheme}
-      className="p-2 border border-[var(--border-color)] bg-[var(--bg-surface)] hover:bg-[var(--bg-secondary)] rounded transition-colors text-[var(--text-primary)] flex items-center gap-1.5 text-xs font-mono"
+      className="p-1.5 sm:p-2 border border-[var(--border-color)] bg-[var(--bg-surface)] hover:bg-[var(--bg-secondary)] rounded transition-colors text-[var(--text-primary)] flex items-center gap-1.5 text-xs font-mono"
       title={`Tema atual: ${theme}. Clique para alternar (E-Ink → Dark → Light)`}
     >
-      {theme === 'eink' && <BookOpen className="w-4 h-4" />}
-      {theme === 'dark' && <Moon className="w-4 h-4" />}
-      {theme === 'light' && <Sun className="w-4 h-4" />}
-      <span className="capitalize">{theme}</span>
+      {theme === 'eink' && <BookOpen className="w-3.5 h-3.5 sm:w-4 sm:h-4" />}
+      {theme === 'dark' && <Moon className="w-3.5 h-3.5 sm:w-4 sm:h-4" />}
+      {theme === 'light' && <Sun className="w-3.5 h-3.5 sm:w-4 sm:h-4" />}
+      <span className="capitalize hidden sm:inline">{theme}</span>
     </button>
   );
 }

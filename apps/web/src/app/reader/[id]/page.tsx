@@ -232,10 +232,10 @@ export default function ReaderPage({ params }: { params: Promise<{ id: string }>
               <span className="hidden lg:inline">Lápis</span>
             </button>
 
-            {/* Régua de Foco Ocular */}
+            {/* Régua de Foco Ocular (Desktop) */}
             <button
               onClick={() => setRulerEnabled(!rulerEnabled)}
-              className={`p-1.5 rounded transition-colors text-xs font-mono flex items-center gap-1 ${
+              className={`hidden sm:flex p-1.5 rounded transition-colors text-xs font-mono items-center gap-1 ${
                 rulerEnabled
                   ? 'bg-[var(--border-strong)] text-[var(--bg-primary)]'
                   : 'hover:bg-[var(--bg-secondary)] text-[var(--text-muted)]'
@@ -249,14 +249,14 @@ export default function ReaderPage({ params }: { params: Promise<{ id: string }>
             {/* Alternar Fonte */}
             <button
               onClick={toggleFont}
-              className="p-1.5 rounded hover:bg-[var(--bg-secondary)] text-[var(--text-primary)] font-mono text-xs"
+              className="hidden sm:block p-1.5 rounded hover:bg-[var(--bg-secondary)] text-[var(--text-primary)] font-mono text-xs"
               title={`Alternar Fonte (Atual: ${fontMode})`}
             >
               <Type className="w-4 h-4" />
             </button>
 
             {/* Tamanho de Fonte */}
-            <div className="flex items-center border border-[var(--border-color)] rounded bg-[var(--bg-surface)] text-xs font-mono">
+            <div className="hidden md:flex items-center border border-[var(--border-color)] rounded bg-[var(--bg-surface)] text-xs font-mono">
               <button
                 onClick={() => changeFontSize(-2)}
                 className="px-2 py-1 hover:bg-[var(--bg-secondary)] border-r border-[var(--border-color)]"

@@ -58,9 +58,22 @@ export function pcmToWav(
   return Buffer.concat([header, cleanPcm]);
 }
 
-// Hash determinístico para cache no Bucket Railway
+// Hash determinístico para cache no Bucket Railway (canônico por capítulo para garantir cache compartilhado entre todos os usuários)
 export function getAudioCacheKey(text: string, voice: string = 'nadine', chapterId?: string): string {
-  const content = `heygen-voice-1-turbo:${voice}:${chapterId || ''}:${text.trim()}`;
+  if (chapterId && chapterId.trim()) {
+    const cleanChapter = chapterId.trim().toLowerCase();
+    const content = `heygen-voice-1-turbo:${voice}:${cleanChapter}`;
+    return crypto.createHash('sha256').update(content).digest('hex').slice(0, 24);
+  }
+
+  // Fallback quando não há chapterId: normaliza quebras de linha e múltiplos espaços
+  const normalized = (text || '')
+    .replace(/[*#_`~>\[\]\r]/g, ' ')
+    .replace(/\s+/g, ' ')
+    .trim()
+    .slice(0, 4000);
+
+  const content = `heygen-voice-1-turbo:${voice}:${normalized}`;
   return crypto.createHash('sha256').update(content).digest('hex').slice(0, 24);
 }
 

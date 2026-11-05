@@ -160,11 +160,11 @@ export default function LayeredReaderPage({ params }: { params: Promise<{ id: st
                     : 'border-[var(--border-color)] hover:bg-[var(--bg-secondary)] text-[var(--text-primary)]'
                 }`}
               >
-                <div className="font-mono text-xs font-bold uppercase tracking-wider mb-0.5">
+                <div className="font-mono text-[11px] sm:text-xs font-bold uppercase tracking-wider mb-0.5 truncate">
                   {layer.id}. {layer.title}
                 </div>
                 <div
-                  className={`text-[11px] font-sans line-clamp-1 ${
+                  className={`text-[11px] font-sans line-clamp-1 hidden sm:block ${
                     isActive ? 'opacity-90' : 'text-[var(--text-muted)]'
                   }`}
                 >
