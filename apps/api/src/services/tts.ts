@@ -1,7 +1,5 @@
-import fs from 'fs';
-import path from 'path';
 import crypto from 'crypto';
-import https from 'https';
+import path from 'path';
 import { Readable } from 'stream';
 import {
   S3Client,
@@ -10,9 +8,7 @@ import {
   GetObjectCommand,
 } from '@aws-sdk/client-s3';
 import { CONFIG } from '../config.js';
-import { callNvidiaLlm } from './llm.js';
 
-// Inicializa o cliente S3 para o Bucket nativo do Railway
 let s3ClientInstance: S3Client | null = null;
 
 export function getS3Client(): S3Client {
@@ -29,16 +25,45 @@ export function getS3Client(): S3Client {
   return s3ClientInstance;
 }
 
-// Gera hash único para cache com base no conteúdo e modo
-export function getAudioCacheKey(text: string, mode: string = 'audiodescricao', chapterId?: string): string {
-  const content = `${mode}:${chapterId || ''}:${text.trim()}`;
+// Converte PCM linear 16-bit 44.1kHz mono em arquivo WAV RIFF universal
+export function pcmToWav(
+  pcmBuffer: Buffer,
+  sampleRate: number = 44100,
+  numChannels: number = 1,
+  bitsPerSample: number = 16
+): Buffer {
+  const byteRate = (sampleRate * numChannels * bitsPerSample) / 8;
+  const blockAlign = (numChannels * bitsPerSample) / 8;
+  const dataSize = pcmBuffer.length;
+  const header = Buffer.alloc(44);
+
+  header.write('RIFF', 0);
+  header.writeUInt32LE(36 + dataSize, 4);
+  header.write('WAVE', 8);
+  header.write('fmt ', 12);
+  header.writeUInt32LE(16, 16);
+  header.writeUInt16LE(1, 20); // PCM format
+  header.writeUInt16LE(numChannels, 22);
+  header.writeUInt32LE(sampleRate, 24);
+  header.writeUInt32LE(byteRate, 28);
+  header.writeUInt16LE(blockAlign, 32);
+  header.writeUInt16LE(bitsPerSample, 34);
+  header.write('data', 36);
+  header.writeUInt32LE(dataSize, 40);
+
+  return Buffer.concat([header, pcmBuffer]);
+}
+
+// Hash determinístico para cache no Bucket Railway
+export function getAudioCacheKey(text: string, voice: string = 'nadine', chapterId?: string): string {
+  const content = `heygen-voice-1-turbo:${voice}:${chapterId || ''}:${text.trim()}`;
   return crypto.createHash('sha256').update(content).digest('hex').slice(0, 24);
 }
 
-// Verifica se o áudio já existe no Bucket S3 do Railway
+// Verifica se o áudio do HeyGen já existe no Bucket S3 do Railway
 export async function isAudioInBucket(cacheKey: string): Promise<boolean> {
   const client = getS3Client();
-  const s3Key = `${cacheKey}.mp3`;
+  const s3Key = `${cacheKey}.wav`;
 
   try {
     const head = await client.send(
@@ -49,7 +74,6 @@ export async function isAudioInBucket(cacheKey: string): Promise<boolean> {
     );
     return Boolean(head.ContentLength && head.ContentLength > 0);
   } catch (err: any) {
-    // 404 / NotFound significa que ainda não foi gerado
     if (err.name === 'NotFound' || err.$metadata?.httpStatusCode === 404) {
       return false;
     }
@@ -58,28 +82,29 @@ export async function isAudioInBucket(cacheKey: string): Promise<boolean> {
   }
 }
 
-// Salva o buffer MP3 diretamente no Bucket S3 do Railway
-export async function saveAudioToBucket(cacheKey: string, mp3Buffer: Buffer): Promise<void> {
+// Salva áudio WAV no Bucket S3
+export async function saveAudioToBucket(cacheKey: string, audioBuffer: Buffer): Promise<void> {
   const client = getS3Client();
-  const s3Key = `${cacheKey}.mp3`;
+  const s3Key = `${cacheKey}.wav`;
 
   await client.send(
     new PutObjectCommand({
       Bucket: CONFIG.BUCKET_NAME,
       Key: s3Key,
-      Body: mp3Buffer,
-      ContentType: 'audio/mpeg',
+      Body: audioBuffer,
+      ContentType: 'audio/wav',
       Metadata: {
+        model: 'heygen/heygen-voice-1-turbo:free',
         cacheKey,
         createdAt: new Date().toISOString(),
       },
     })
   );
 
-  console.log(`[Bucket Upload OK] Áudio salvo no Bucket Railway: s3://${CONFIG.BUCKET_NAME}/${s3Key} (${mp3Buffer.length} bytes)`);
+  console.log(`[Bucket Upload OK] Áudio HeyGen salvo no Bucket Railway: s3://${CONFIG.BUCKET_NAME}/${s3Key} (${audioBuffer.length} bytes)`);
 }
 
-// Obtém stream de áudio do Bucket S3 com suporte a HTTP Range (seeking)
+// Obtém stream de áudio do Bucket S3
 export async function getAudioFromBucket(
   filename: string,
   range?: string
@@ -106,7 +131,7 @@ export async function getAudioFromBucket(
       stream: resp.Body as Readable,
       contentLength: resp.ContentLength,
       contentRange: resp.ContentRange,
-      contentType: resp.ContentType || 'audio/mpeg',
+      contentType: resp.ContentType || 'audio/wav',
       status: range ? 206 : 200,
     };
   } catch (err: any) {
@@ -115,135 +140,70 @@ export async function getAudioFromBucket(
   }
 }
 
-// Gera um roteiro didático de audiodescrição usando IA (LLM)
-export async function generateAiAudioDescriptionScript(
-  chapterTitle: string,
-  rawText: string
-): Promise<string> {
-  const prompt = `Você é um professor e especialista em audiodescrição didática e acessibilidade pedagógica para o Leitor Monocromático.
-Sua missão é transformar o conteúdo escrito deste capítulo em uma narrativa falada, fluida e envolvente para audiodescrição.
+// Geração EXCLUSIVA via heygen/heygen-voice-1-turbo:free (SEM QUALQUER FALLBACK)
+export async function synthesizeHeyGenAudio(
+  text: string,
+  voice: string = 'nadine',
+  userApiKey?: string
+): Promise<{ audioBuffer: Buffer; model: string; voice: string }> {
+  const cleanText = text
+    .replace(/[*#_`~>\[\]]/g, '')
+    .replace(/\s+/g, ' ')
+    .trim()
+    .slice(0, 4000);
 
-Diretrizes obrigatórias:
-1. Apresente o capítulo com voz acolhedora e pedagógica.
-2. Explique os conceitos centrais, exemplos e aplicações de forma clara, como se estivesse conversando diretamente com o estudante.
-3. Não leia códigos de formatação ou caracteres estranhos (nada de asteriscos, hashtags ou colchetes).
-4. Use frases com bom ritmo de fala, com pausas naturais para compreensão.
-5. Seja conciso e direto: sintetize o essencial entre 2 e 4 minutos de fala (máximo de 2500 caracteres de roteiro).
-
-Capítulo: "${chapterTitle}"
-Conteúdo base:
-${rawText.slice(0, 4500)}
-
-Retorne APENAS o roteiro de fala corrido em português:`;
-
-  try {
-    const res = await callNvidiaLlm([
-      {
-        role: 'system',
-        content: 'Você é um narrador pedagógico especializado em audiodescrição clara, humana e didática.',
-      },
-      {
-        role: 'user',
-        content: prompt,
-      },
-    ]);
-
-    if (res.text && res.text.trim().length > 50) {
-      return res.text
-        .replace(/[*#_`~>\[\]]/g, '')
-        .replace(/\n+/g, ' ')
-        .trim();
-    }
-  } catch (err) {
-    console.warn('[TTS] Falha ao gerar roteiro via LLM, usando síntese direta:', err);
+  if (!cleanText) {
+    throw new Error('Texto vazio para audiodescrição HeyGen.');
   }
 
-  // Fallback de roteiro se o LLM falhar
-  return `Audiodescrição do capítulo: ${chapterTitle}. ${rawText.slice(0, 1500).replace(/[*#_`~>\[\]]/g, '').replace(/\n+/g, ' ')}`;
-}
+  const model = 'heygen/heygen-voice-1-turbo:free';
+  const apiKey = userApiKey || CONFIG.DEFAULT_HEYGEN_API_KEY;
 
-// Faz download de um trecho curto de áudio MP3 (Google TTS Engine)
-function fetchMp3Chunk(textChunk: string): Promise<Buffer> {
-  return new Promise((resolve, reject) => {
-    const encoded = encodeURIComponent(textChunk.trim());
-    const url = `https://translate.google.com/translate_tts?ie=UTF-8&tl=pt-BR&client=tw-ob&q=${encoded}`;
+  if (!apiKey) {
+    throw new Error('Chave de API do HeyGen/OpenRouter não configurada. Configure HEYGEN_API_KEY no Railway.');
+  }
 
-    const req = https.get(
-      url,
-      {
-        headers: {
-          'User-Agent':
-            'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
-          Referer: 'https://translate.google.com/',
-        },
-      },
-      (res) => {
-        if (res.statusCode !== 200) {
-          return reject(new Error(`TTS chunk status code ${res.statusCode}`));
-        }
-        const chunks: Buffer[] = [];
-        res.on('data', (d) => chunks.push(d));
-        res.on('end', () => resolve(Buffer.concat(chunks)));
-        res.on('error', reject);
-      }
-    );
+  const endpoint = 'https://openrouter.ai/api/v1/audio/speech';
+  const payload = {
+    model,
+    input: cleanText,
+    voice: voice || 'nadine',
+    response_format: 'pcm',
+  };
 
-    req.on('error', reject);
-    req.setTimeout(12000, () => {
-      req.destroy();
-      reject(new Error('TTS chunk timeout'));
-    });
+  console.log(`[HeyGen TTS] Chamando exclusivamente ${model} (voz: ${voice}, chars: ${cleanText.length})...`);
+
+  const resp = await fetch(endpoint, {
+    method: 'POST',
+    headers: {
+      Authorization: `Bearer ${apiKey}`,
+      'Content-Type': 'application/json',
+      'HTTP-Referer': 'https://mono-readerweb-production.up.railway.app',
+      'X-Title': 'Leitor Monocromatico HeyGen Audio',
+    },
+    body: JSON.stringify(payload),
   });
-}
 
-// Divide texto em sentenças pequenas (máx ~160 caracteres)
-function splitTextIntoSentences(text: string, maxLen: number = 160): string[] {
-  const cleaned = text.replace(/[*#_`~>\[\]]/g, '').replace(/\s+/g, ' ').trim();
-  const rawParts = cleaned.match(/[^.!?]+[.!?]+|[^.!?]+$/g) || [cleaned];
-  const chunks: string[] = [];
-
-  for (const part of rawParts) {
-    const trimmed = part.trim();
-    if (!trimmed) continue;
-
-    if (trimmed.length <= maxLen) {
-      chunks.push(trimmed);
-    } else {
-      const words = trimmed.split(' ');
-      let current = '';
-      for (const word of words) {
-        if ((current + ' ' + word).trim().length <= maxLen) {
-          current = (current + ' ' + word).trim();
-        } else {
-          if (current) chunks.push(current);
-          current = word;
-        }
-      }
-      if (current) chunks.push(current);
-    }
+  if (!resp.ok) {
+    const errorText = await resp.text();
+    console.error(`[HeyGen TTS Error] HTTP ${resp.status}:`, errorText);
+    throw new Error(`Erro do provedor HeyGen (${resp.status}): ${errorText}`);
   }
 
-  return chunks;
-}
+  const arrayBuf = await resp.arrayBuffer();
+  const rawBuf = Buffer.from(arrayBuf);
 
-// Sintetiza texto completo em MP3 Buffer
-export async function synthesizeMp3Buffer(text: string): Promise<Buffer> {
-  const sentences = splitTextIntoSentences(text.slice(0, 3500));
-  const audioBuffers: Buffer[] = [];
-
-  for (const sentence of sentences) {
-    if (!sentence || sentence.length < 2) continue;
-    try {
-      const buf = await fetchMp3Chunk(sentence);
-      audioBuffers.push(buf);
-    } catch (err) {
-      console.warn(`[TTS] Erro no trecho: "${sentence.slice(0, 30)}..."`, err);
-    }
+  if (rawBuf.length === 0) {
+    throw new Error('O provedor HeyGen retornou um áudio vazio.');
   }
 
-  if (audioBuffers.length === 0) {
-    throw new Error('Nenhum áudio pôde ser gerado a partir do texto.');
-  }
+  // Se o OpenRouter retornar PCM puro, converte para WAV universal
+  const isAlreadyWav = rawBuf.length > 4 && rawBuf.subarray(0, 4).toString() === 'RIFF';
+  const finalWavBuffer = isAlreadyWav ? rawBuf : pcmToWav(rawBuf, 44100, 1, 2);
 
-  return Buffer.concat(audioBuffers);
+  return {
+    audioBuffer: finalWavBuffer,
+    model,
+    voice,
+  };
 }

@@ -214,17 +214,16 @@ import {
   isAudioInBucket,
   saveAudioToBucket,
   getAudioFromBucket,
-  generateAiAudioDescriptionScript,
-  synthesizeMp3Buffer,
+  synthesizeHeyGenAudio,
 } from '../services/tts.js';
 import path from 'path';
 
 aiRouter.post('/tts', async (req: Request, res: Response) => {
   const {
     text,
-    chapterTitle = 'Capítulo',
+    voice = 'nadine',
     chapterId,
-    mode = 'audiodescricao', // 'audiodescricao' ou 'direct'
+    apiKey,
   } = req.body;
 
   if (!text) {
@@ -232,51 +231,43 @@ aiRouter.post('/tts', async (req: Request, res: Response) => {
   }
 
   try {
-    const cacheKey = getAudioCacheKey(text, mode, chapterId);
+    const cacheKey = getAudioCacheKey(text, voice, chapterId);
     const cached = await isAudioInBucket(cacheKey);
 
     if (cached) {
-      console.log(`[Railway Bucket HIT] Áudio encontrado no Bucket: ${cacheKey}.mp3`);
+      console.log(`[Railway Bucket HIT] Áudio HeyGen encontrado no Bucket: ${cacheKey}.wav`);
       return res.json({
         status: 'ok',
         cached: true,
         cacheKey,
-        audioUrl: `/api/ai/audio/${cacheKey}.mp3`,
-        mode,
+        audioUrl: `/api/ai/audio/${cacheKey}.wav`,
+        model: 'heygen/heygen-voice-1-turbo:free',
+        voice,
       });
     }
 
-    console.log(`[Railway Bucket MISS] Gerando novo áudio via IA (${mode}) para "${chapterTitle}"...`);
+    console.log(`[Railway Bucket MISS] Gerando áudio exclusivamente com heygen/heygen-voice-1-turbo:free (voz: ${voice})...`);
 
-    let speechText = text;
-    let generatedScript: string | undefined = undefined;
+    // Geração EXCLUSIVA HeyGen (SEM QUALQUER FALLBACK)
+    const { audioBuffer, model } = await synthesizeHeyGenAudio(text, voice, apiKey);
 
-    if (mode === 'audiodescricao') {
-      // 1. Gera o roteiro didático de audiodescrição com o LLM
-      generatedScript = await generateAiAudioDescriptionScript(chapterTitle, text);
-      speechText = generatedScript;
-    }
-
-    // 2. Sintetiza a voz em MP3
-    const mp3Buffer = await synthesizeMp3Buffer(speechText);
-
-    // 3. Salva no Bucket S3 nativo do Railway
-    await saveAudioToBucket(cacheKey, mp3Buffer);
+    // Salva no Bucket S3 nativo do Railway
+    await saveAudioToBucket(cacheKey, audioBuffer);
 
     return res.json({
       status: 'ok',
       cached: false,
       cacheKey,
-      audioUrl: `/api/ai/audio/${cacheKey}.mp3`,
-      script: generatedScript,
-      durationEstimateSec: Math.round(speechText.split(' ').length / 2.5),
-      mode,
+      audioUrl: `/api/ai/audio/${cacheKey}.wav`,
+      model,
+      voice,
     });
   } catch (err: any) {
-    console.error('[TTS Bucket Error]', err);
-    return res.status(500).json({
+    console.error('[HeyGen TTS Error]', err.message);
+    return res.status(502).json({
       status: 'error',
-      message: 'Falha ao processar audiodescrição no bucket: ' + (err?.message || String(err)),
+      model: 'heygen/heygen-voice-1-turbo:free',
+      message: err?.message || String(err),
     });
   }
 });

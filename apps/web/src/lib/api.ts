@@ -106,17 +106,16 @@ export interface TTSResponse {
   cached?: boolean;
   cacheKey?: string;
   audioUrl?: string;
-  script?: string;
-  durationEstimateSec?: number;
-  mode?: string;
+  model?: string;
+  voice?: string;
   message?: string;
 }
 
 export async function requestTTS(payload: {
   text: string;
-  chapterTitle?: string;
+  voice?: string;
   chapterId?: string;
-  mode?: 'audiodescricao' | 'direct';
+  apiKey?: string;
 }): Promise<TTSResponse> {
   const res = await fetch(`${API_BASE}/api/ai/tts`, {
     method: 'POST',

@@ -1,8 +1,8 @@
 'use client';
 
 import React, { useState, useEffect, useRef } from 'react';
-import { Volume2, Play, Pause, Square, X, Sparkles, Database, FileText, ChevronDown, ChevronUp } from 'lucide-react';
-import { requestTTS, TTSResponse } from '../lib/api';
+import { Volume2, Play, Pause, Square, X, Database, AlertCircle } from 'lucide-react';
+import { requestTTS } from '../lib/api';
 
 interface AudioPlayerModalProps {
   isOpen: boolean;
@@ -11,6 +11,11 @@ interface AudioPlayerModalProps {
   chapterTitle?: string;
   chapterId?: string;
 }
+
+const VOICES = [
+  { id: 'nadine', label: 'Nadine (Feminina)' },
+  { id: 'marcus', label: 'Marcus (Masculina)' },
+];
 
 export function AudioPlayerModal({
   isOpen,
@@ -26,9 +31,7 @@ export function AudioPlayerModal({
   const [duration, setDuration] = useState(0);
   const [audioUrl, setAudioUrl] = useState<string | null>(null);
   const [isCached, setIsCached] = useState<boolean | null>(null);
-  const [aiScript, setAiScript] = useState<string | null>(null);
-  const [showScript, setShowScript] = useState(false);
-  const [mode, setMode] = useState<'audiodescricao' | 'direct'>('audiodescricao');
+  const [voice, setVoice] = useState('nadine');
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
   const audioRef = useRef<HTMLAudioElement | null>(null);
@@ -44,7 +47,7 @@ export function AudioPlayerModal({
     }
   }, [isOpen]);
 
-  // Carrega ou busca no bucket cache quando o modal abre ou o modo muda
+  // Carrega ou busca no bucket cache quando o modal abre ou a voz muda
   useEffect(() => {
     if (!isOpen || !textToRead) return;
 
@@ -61,9 +64,8 @@ export function AudioPlayerModal({
       try {
         const res = await requestTTS({
           text: textToRead,
-          chapterTitle,
+          voice,
           chapterId,
-          mode,
         });
 
         if (!active) return;
@@ -71,13 +73,12 @@ export function AudioPlayerModal({
         if (res.status === 'ok' && res.audioUrl) {
           setAudioUrl(res.audioUrl);
           setIsCached(Boolean(res.cached));
-          setAiScript(res.script || null);
         } else {
-          setErrorMessage(res.message || 'Falha ao carregar áudio');
+          setErrorMessage(res.message || 'Falha ao gerar áudio com heygen/heygen-voice-1-turbo:free');
         }
       } catch (err: any) {
         if (!active) return;
-        setErrorMessage(err?.message || 'Erro de conexão com o serviço de áudio');
+        setErrorMessage(err?.message || 'Erro ao conectar ao serviço HeyGen TTS');
       } finally {
         if (active) setIsLoading(false);
       }
@@ -88,7 +89,7 @@ export function AudioPlayerModal({
     return () => {
       active = false;
     };
-  }, [isOpen, chapterId, mode, chapterTitle]);
+  }, [isOpen, chapterId, voice, textToRead]);
 
   if (!isOpen) return null;
 
@@ -140,7 +141,7 @@ export function AudioPlayerModal({
 
   return (
     <div className="fixed bottom-6 right-6 z-50 w-full max-w-md bg-[var(--bg-primary)] border border-[var(--border-strong)] rounded-lg shadow-2xl p-4 font-sans text-[var(--text-primary)]">
-      {/* Elemento de Áudio HTML5 Nativo */}
+      {/* Elemento de Áudio HTML5 Nativo (Sem Fallbacks) */}
       {audioUrl && (
         <audio
           ref={audioRef}
@@ -161,15 +162,15 @@ export function AudioPlayerModal({
         <div className="flex items-center gap-2">
           <Volume2 className="w-4 h-4 text-[var(--text-primary)]" />
           <span className="font-mono text-xs font-bold uppercase tracking-wider">
-            Audiodescrição com IA
+            HeyGen Voice Turbo
           </span>
           {isCached && (
             <span
               className="inline-flex items-center gap-1 px-1.5 py-0.5 rounded text-[10px] font-mono border border-[var(--border-strong)] bg-[var(--bg-secondary)] text-[var(--text-primary)]"
-              title="Áudio salvo no bucket Railway — carregamento instantâneo sem reprocessamento"
+              title="Áudio salvo no Bucket Railway S3 — carregamento instantâneo"
             >
               <Database className="w-2.5 h-2.5" />
-              Cache
+              Bucket S3
             </span>
           )}
         </div>
@@ -184,54 +185,52 @@ export function AudioPlayerModal({
         </button>
       </div>
 
-      {chapterTitle && (
-        <p className="font-serif text-xs italic text-[var(--text-secondary)] mb-2 line-clamp-1">
-          {chapterTitle}
-        </p>
-      )}
-
-      {/* Seletor de Modo: Audiodescrição com IA vs Narração Direta */}
-      <div className="flex items-center gap-1.5 mb-3 bg-[var(--bg-surface)] p-1 rounded border border-[var(--border-color)] text-[11px] font-mono">
-        <button
-          onClick={() => setMode('audiodescricao')}
-          disabled={isLoading}
-          className={`flex-1 py-1 px-2 rounded flex items-center justify-center gap-1 transition-colors ${
-            mode === 'audiodescricao'
-              ? 'bg-[var(--text-primary)] text-[var(--bg-primary)] font-bold'
-              : 'text-[var(--text-secondary)] hover:text-[var(--text-primary)]'
-          }`}
-        >
-          <Sparkles className="w-3 h-3" />
-          Audiodescrição Didática (IA)
-        </button>
-        <button
-          onClick={() => setMode('direct')}
-          disabled={isLoading}
-          className={`flex-1 py-1 px-2 rounded flex items-center justify-center gap-1 transition-colors ${
-            mode === 'direct'
-              ? 'bg-[var(--text-primary)] text-[var(--bg-primary)] font-bold'
-              : 'text-[var(--text-secondary)] hover:text-[var(--text-primary)]'
-          }`}
-        >
-          Leitura Integral
-        </button>
+      <div className="flex items-center justify-between text-xs font-mono text-[var(--text-secondary)] mb-2">
+        <span className="text-[11px] truncate max-w-[200px]">
+          {chapterTitle || 'Capítulo'}
+        </span>
+        <span className="text-[10px] text-[var(--text-muted)]">
+          heygen/heygen-voice-1-turbo:free
+        </span>
       </div>
 
-      {/* Estado de Carregamento ou Erro */}
+      {/* Seletor de Voz */}
+      <div className="flex items-center gap-2 mb-3 text-xs font-mono">
+        <span className="text-[var(--text-muted)] text-[11px]">Voz:</span>
+        {VOICES.map((v) => (
+          <button
+            key={v.id}
+            onClick={() => setVoice(v.id)}
+            disabled={isLoading}
+            className={`px-2 py-0.5 rounded text-[11px] border transition-colors ${
+              voice === v.id
+                ? 'border-[var(--border-strong)] bg-[var(--text-primary)] text-[var(--bg-primary)] font-bold'
+                : 'border-[var(--border-color)] text-[var(--text-secondary)] hover:bg-[var(--bg-secondary)]'
+            }`}
+          >
+            {v.label}
+          </button>
+        ))}
+      </div>
+
+      {/* Estado de Carregamento */}
       {isLoading && (
         <div className="py-4 text-center">
           <div className="inline-block animate-spin rounded-full h-4 w-4 border-2 border-current border-t-transparent mb-2"></div>
           <p className="font-mono text-xs text-[var(--text-muted)]">
-            {mode === 'audiodescricao'
-              ? 'IA elaborando roteiro e sintetizando voz...'
-              : 'Sintetizando áudio no bucket cache...'}
+            Gerando áudio via heygen/heygen-voice-1-turbo:free...
           </p>
         </div>
       )}
 
+      {/* Erro do Provedor HeyGen (Sem Máscara ou Fallback) */}
       {errorMessage && (
-        <div className="py-2 px-3 mb-3 bg-red-900/10 border border-red-500/30 rounded text-xs text-red-400 font-mono">
-          {errorMessage}
+        <div className="py-2.5 px-3 mb-3 bg-red-950/20 border border-red-500/40 rounded text-xs font-mono text-red-400 flex items-start gap-2">
+          <AlertCircle className="w-4 h-4 mt-0.5 flex-shrink-0" />
+          <div className="overflow-hidden">
+            <p className="font-bold mb-0.5">Erro no HeyGen Turbo:</p>
+            <p className="text-[11px] opacity-90 break-words">{errorMessage}</p>
+          </div>
         </div>
       )}
 
@@ -301,28 +300,6 @@ export function AudioPlayerModal({
               ))}
             </div>
           </div>
-
-          {/* Visualizar Roteiro da IA (Progressive Disclosure) */}
-          {aiScript && (
-            <div className="mt-3 pt-2 border-t border-[var(--border-color)]">
-              <button
-                onClick={() => setShowScript(!showScript)}
-                className="flex items-center justify-between w-full text-[11px] font-mono text-[var(--text-muted)] hover:text-[var(--text-primary)]"
-              >
-                <span className="flex items-center gap-1">
-                  <FileText className="w-3 h-3" />
-                  Roteiro de Audiodescrição (IA)
-                </span>
-                {showScript ? <ChevronUp className="w-3 h-3" /> : <ChevronDown className="w-3 h-3" />}
-              </button>
-
-              {showScript && (
-                <div className="mt-2 p-2.5 rounded bg-[var(--bg-surface)] border border-[var(--border-color)] text-xs font-serif leading-relaxed text-[var(--text-secondary)] max-h-36 overflow-y-auto">
-                  {aiScript}
-                </div>
-              )}
-            </div>
-          )}
         </>
       )}
     </div>
