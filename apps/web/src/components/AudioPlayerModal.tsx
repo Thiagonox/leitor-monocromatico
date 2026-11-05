@@ -21,8 +21,8 @@ interface AudioPlayerModalProps {
 }
 
 const VOICES = [
-  { id: 'nadine', label: 'Nadine (Feminina)' },
-  { id: 'marcus', label: 'Marcus (Masculina)' },
+  { id: 'nadine', name: 'Nadine', desc: 'Feminina' },
+  { id: 'marcus', name: 'Marcus', desc: 'Masculina' },
 ];
 
 export function AudioPlayerModal({
@@ -230,7 +230,7 @@ export function AudioPlayerModal({
                 : 'border-[var(--border-color)] text-[var(--text-secondary)] hover:bg-[var(--bg-secondary)]'
             }`}
           >
-            {v.label}
+            {v.name} <span className="text-[9px] opacity-75">({v.desc})</span>
           </button>
         ))}
       </div>

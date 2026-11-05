@@ -60,9 +60,11 @@ export function pcmToWav(
 
 // Hash determinístico para cache no Bucket Railway (canônico por capítulo para garantir cache compartilhado entre todos os usuários)
 export function getAudioCacheKey(text: string, voice: string = 'nadine', chapterId?: string): string {
+  const cleanVoice = (voice || 'nadine').trim().toLowerCase();
+
   if (chapterId && chapterId.trim()) {
     const cleanChapter = chapterId.trim().toLowerCase();
-    const content = `heygen-voice-1-turbo:${voice}:${cleanChapter}`;
+    const content = `heygen-voice-1-turbo:${cleanVoice}:${cleanChapter}`;
     return crypto.createHash('sha256').update(content).digest('hex').slice(0, 24);
   }
 
@@ -73,7 +75,7 @@ export function getAudioCacheKey(text: string, voice: string = 'nadine', chapter
     .trim()
     .slice(0, 4000);
 
-  const content = `heygen-voice-1-turbo:${voice}:${normalized}`;
+  const content = `heygen-voice-1-turbo:${cleanVoice}:${normalized}`;
   return crypto.createHash('sha256').update(content).digest('hex').slice(0, 24);
 }
 

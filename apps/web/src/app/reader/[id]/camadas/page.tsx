@@ -126,7 +126,7 @@ export default function LayeredReaderPage({ params }: { params: Promise<{ id: st
             </button>
           </div>
 
-          <div className="text-center font-mono text-xs text-[var(--text-secondary)] line-clamp-1 max-w-[200px] sm:max-w-sm">
+          <div className="hidden md:block text-center font-mono text-xs text-[var(--text-secondary)] line-clamp-1 max-w-sm">
             Cap. {currentChapter.number}: {currentChapter.title}
           </div>
 
