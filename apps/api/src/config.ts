@@ -11,7 +11,7 @@ export const CONFIG = {
   DEFAULT_NVIDIA_API_KEY: process.env.NVIDIA_API_KEY || "",
   DEFAULT_MODEL: process.env.AI_MODEL || "z-ai/glm-5.3-flash",
   DEFAULT_BASE_URL: process.env.AI_BASE_URL || "https://integrate.api.nvidia.com/v1",
-  DEFAULT_HEYGEN_API_KEY: process.env.HEYGEN_API_KEY || "",
+  DEFAULT_HEYGEN_API_KEY: process.env.HEYGEN_API_KEY || process.env.OPENROUTER_API_KEY || "",
   DEFAULT_HEYGEN_MODEL: process.env.HEYGEN_MODEL || "heygen/heygen-voice-1-turbo:free",
   OPENROUTER_TEXT_MODELS: [
     "nvidia/nemotron-3.5-lightning:free",
