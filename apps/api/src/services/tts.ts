@@ -32,9 +32,13 @@ export function pcmToWav(
   numChannels: number = 1,
   bitsPerSample: number = 16
 ): Buffer {
-  const byteRate = (sampleRate * numChannels * bitsPerSample) / 8;
-  const blockAlign = (numChannels * bitsPerSample) / 8;
-  const dataSize = pcmBuffer.length;
+  const bytesPerSample = Math.max(1, Math.floor(bitsPerSample / 8));
+  const blockAlign = numChannels * bytesPerSample;
+  const validLength = pcmBuffer.length - (pcmBuffer.length % blockAlign);
+  const cleanPcm = validLength === pcmBuffer.length ? pcmBuffer : pcmBuffer.subarray(0, validLength);
+
+  const byteRate = sampleRate * blockAlign;
+  const dataSize = cleanPcm.length;
   const header = Buffer.alloc(44);
 
   header.write('RIFF', 0);
@@ -42,7 +46,7 @@ export function pcmToWav(
   header.write('WAVE', 8);
   header.write('fmt ', 12);
   header.writeUInt32LE(16, 16);
-  header.writeUInt16LE(1, 20); // PCM format
+  header.writeUInt16LE(1, 20); // PCM format (1)
   header.writeUInt16LE(numChannels, 22);
   header.writeUInt32LE(sampleRate, 24);
   header.writeUInt32LE(byteRate, 28);
@@ -51,7 +55,7 @@ export function pcmToWav(
   header.write('data', 36);
   header.writeUInt32LE(dataSize, 40);
 
-  return Buffer.concat([header, pcmBuffer]);
+  return Buffer.concat([header, cleanPcm]);
 }
 
 // Hash determinístico para cache no Bucket Railway
@@ -197,9 +201,9 @@ export async function synthesizeHeyGenAudio(
     throw new Error('O provedor HeyGen retornou um áudio vazio.');
   }
 
-  // Se o OpenRouter retornar PCM puro, converte para WAV universal
+  // Se o OpenRouter retornar PCM puro, converte para WAV universal 16-bit 44.1kHz mono
   const isAlreadyWav = rawBuf.length > 4 && rawBuf.subarray(0, 4).toString() === 'RIFF';
-  const finalWavBuffer = isAlreadyWav ? rawBuf : pcmToWav(rawBuf, 44100, 1, 2);
+  const finalWavBuffer = isAlreadyWav ? rawBuf : pcmToWav(rawBuf, 44100, 1, 16);
 
   return {
     audioBuffer: finalWavBuffer,

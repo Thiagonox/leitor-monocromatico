@@ -56,8 +56,11 @@ export function AudioPlayerModal({
     async function loadAudio() {
       setIsLoading(true);
       setErrorMessage(null);
+      setCurrentTime(0);
+      setDuration(0);
       if (audioRef.current) {
         audioRef.current.pause();
+        audioRef.current.currentTime = 0;
       }
       setIsPlaying(false);
 
