@@ -390,6 +390,7 @@ export default function ReaderPage({ params }: { params: Promise<{ id: string }>
         onClose={() => setAudioOpen(false)}
         textToRead={allChapterText}
         chapterTitle={`${book.meta.title} — Cap. ${currentChapter.number}: ${currentChapter.title}`}
+        chapterId={`${book.meta.id}-${currentChapter.id}`}
       />
     </div>
   );

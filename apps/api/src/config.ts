@@ -8,6 +8,7 @@ const __dirname = path.dirname(__filename);
 export const CONFIG = {
   PORT: process.env.API_PORT ? parseInt(process.env.API_PORT, 10) : 3001,
   DATA_DIR: process.env.DATA_DIR || path.resolve(__dirname, '../../../data'),
+  AUDIO_CACHE_DIR: process.env.AUDIO_CACHE_DIR || path.resolve(__dirname, '../../../data/audio-cache'),
   DEFAULT_NVIDIA_API_KEY: process.env.NVIDIA_API_KEY || "",
   DEFAULT_MODEL: process.env.AI_MODEL || "z-ai/glm-5.3-flash",
   DEFAULT_BASE_URL: process.env.AI_BASE_URL || "https://integrate.api.nvidia.com/v1",

@@ -209,18 +209,115 @@ Estruture a resposta com:
   return res.json({ status: 'ok', content: fallback, model: 'Motor Didático Fallback' });
 });
 
+import {
+  getAudioCacheKey,
+  isAudioCached,
+  getAudioFilePath,
+  generateAiAudioDescriptionScript,
+  synthesizeAndCacheAudio,
+  ensureCacheDir,
+} from '../services/tts.js';
+import fs from 'fs';
+import path from 'path';
+
 aiRouter.post('/tts', async (req: Request, res: Response) => {
-  const { text, voice = 'nadine' } = req.body;
+  const {
+    text,
+    chapterTitle = 'Capítulo',
+    chapterId,
+    mode = 'audiodescricao', // 'audiodescricao' ou 'direct'
+  } = req.body;
 
   if (!text) {
     return res.status(400).json({ status: 'error', message: "O campo 'text' é obrigatório." });
   }
 
-  // Retorna status e metadados para reprodução no cliente (HTML5 SpeechSynthesis ou HeyGen)
-  return res.json({
-    status: 'ok',
-    voice,
-    textLength: text.length,
-    message: 'Áudio processado para reprodução no leitor.'
-  });
+  try {
+    const cacheKey = getAudioCacheKey(text, mode, chapterId);
+    const cached = isAudioCached(cacheKey);
+
+    if (cached) {
+      console.log(`[TTS Cache HIT] Servindo áudio existente: ${cacheKey}.mp3`);
+      return res.json({
+        status: 'ok',
+        cached: true,
+        cacheKey,
+        audioUrl: `/api/ai/audio/${cacheKey}.mp3`,
+        mode,
+      });
+    }
+
+    console.log(`[TTS Cache MISS] Gerando novo áudio via IA (${mode}) para "${chapterTitle}"...`);
+
+    let speechText = text;
+    let generatedScript: string | undefined = undefined;
+
+    if (mode === 'audiodescricao') {
+      // 1. Gera o roteiro didático de audiodescrição com o LLM
+      generatedScript = await generateAiAudioDescriptionScript(chapterTitle, text);
+      speechText = generatedScript;
+    }
+
+    // 2. Sintetiza a voz em MP3 e salva no bucket/volume persistente
+    const { durationEstimateSec } = await synthesizeAndCacheAudio(speechText, cacheKey);
+
+    return res.json({
+      status: 'ok',
+      cached: false,
+      cacheKey,
+      audioUrl: `/api/ai/audio/${cacheKey}.mp3`,
+      script: generatedScript,
+      durationEstimateSec,
+      mode,
+    });
+  } catch (err: any) {
+    console.error('[TTS Error]', err);
+    return res.status(500).json({
+      status: 'error',
+      message: 'Falha ao processar audiodescrição: ' + (err?.message || String(err)),
+    });
+  }
+});
+
+// Endpoint que serve o áudio com suporte a streaming e HTTP Range (pause, seek, scrubber)
+aiRouter.get('/audio/:filename', (req: Request, res: Response) => {
+  const rawFilename = req.params.filename;
+  const filenameStr = Array.isArray(rawFilename) ? rawFilename[0] : (rawFilename || '');
+  const sanitized = path.basename(filenameStr);
+  const cacheDir = ensureCacheDir();
+  const filePath = path.join(cacheDir, sanitized);
+
+  if (!fs.existsSync(filePath)) {
+    return res.status(404).json({ status: 'error', message: 'Áudio não encontrado no bucket.' });
+  }
+
+  const stat = fs.statSync(filePath);
+  const fileSize = stat.size;
+  const range = req.headers.range;
+
+  if (range) {
+    const parts = range.replace(/bytes=/, '').split('-');
+    const start = parseInt(parts[0], 10);
+    const end = parts[1] ? parseInt(parts[1], 10) : fileSize - 1;
+    const chunksize = end - start + 1;
+    const file = fs.createReadStream(filePath, { start, end });
+    const head = {
+      'Content-Range': `bytes ${start}-${end}/${fileSize}`,
+      'Accept-Ranges': 'bytes',
+      'Content-Length': chunksize,
+      'Content-Type': 'audio/mpeg',
+      'Cache-Control': 'public, max-age=31536000, immutable',
+    };
+    res.writeHead(206, head);
+    file.pipe(res);
+  } else {
+    const head = {
+      'Content-Length': fileSize,
+      'Content-Type': 'audio/mpeg',
+      'Cache-Control': 'public, max-age=31536000, immutable',
+      'Accept-Ranges': 'bytes',
+    };
+    res.writeHead(200, head);
+    fs.createReadStream(filePath).pipe(res);
+  }
 });

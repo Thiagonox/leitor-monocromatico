@@ -101,7 +101,23 @@ export async function deepenTopic(payload: DeepenRequest): Promise<{ content: st
   return { content: data.content || '', model: data.model };
 }
 
-export async function requestTTS(payload: TTSRequest): Promise<{ status: string; message?: string }> {
+export interface TTSResponse {
+  status: string;
+  cached?: boolean;
+  cacheKey?: string;
+  audioUrl?: string;
+  script?: string;
+  durationEstimateSec?: number;
+  mode?: string;
+  message?: string;
+}
+
+export async function requestTTS(payload: {
+  text: string;
+  chapterTitle?: string;
+  chapterId?: string;
+  mode?: 'audiodescricao' | 'direct';
+}): Promise<TTSResponse> {
   const res = await fetch(`${API_BASE}/api/ai/tts`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
