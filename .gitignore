@@ -1,0 +1,10 @@
+node_modules/
+.next/
+dist/
+*.log
+.DS_Store
+legacy/
+.env
+.env.local
+.env.*.local
+test.txt
