@@ -10,6 +10,7 @@
     "start": "node dist/server.js"
   },
   "dependencies": {
+    "@aws-sdk/client-s3": "^3.1162.0",
     "@mono-reader/shared": "workspace:*",
     "cors": "^2.8.5",
     "dotenv": "^16.4.7",

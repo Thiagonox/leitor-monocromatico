@@ -2,16 +2,31 @@ import fs from 'fs';
 import path from 'path';
 import crypto from 'crypto';
 import https from 'https';
+import { Readable } from 'stream';
+import {
+  S3Client,
+  PutObjectCommand,
+  HeadObjectCommand,
+  GetObjectCommand,
+} from '@aws-sdk/client-s3';
 import { CONFIG } from '../config.js';
 import { callNvidiaLlm } from './llm.js';
 
-// Garante que o diretório de cache persistente exista
-export function ensureCacheDir(): string {
-  const cacheDir = process.env.AUDIO_CACHE_DIR || CONFIG.AUDIO_CACHE_DIR;
-  if (!fs.existsSync(cacheDir)) {
-    fs.mkdirSync(cacheDir, { recursive: true });
+// Inicializa o cliente S3 para o Bucket nativo do Railway
+let s3ClientInstance: S3Client | null = null;
+
+export function getS3Client(): S3Client {
+  if (!s3ClientInstance) {
+    s3ClientInstance = new S3Client({
+      endpoint: CONFIG.BUCKET_ENDPOINT,
+      region: CONFIG.BUCKET_REGION,
+      credentials: {
+        accessKeyId: CONFIG.BUCKET_ACCESS_KEY_ID,
+        secretAccessKey: CONFIG.BUCKET_SECRET_ACCESS_KEY,
+      },
+    });
   }
-  return cacheDir;
+  return s3ClientInstance;
 }
 
 // Gera hash único para cache com base no conteúdo e modo
@@ -20,17 +35,84 @@ export function getAudioCacheKey(text: string, mode: string = 'audiodescricao', 
   return crypto.createHash('sha256').update(content).digest('hex').slice(0, 24);
 }
 
-// Verifica se o áudio já está no bucket/cache
-export function isAudioCached(cacheKey: string): boolean {
-  const cacheDir = ensureCacheDir();
-  const filePath = path.join(cacheDir, `${cacheKey}.mp3`);
-  return fs.existsSync(filePath) && fs.statSync(filePath).size > 0;
+// Verifica se o áudio já existe no Bucket S3 do Railway
+export async function isAudioInBucket(cacheKey: string): Promise<boolean> {
+  const client = getS3Client();
+  const s3Key = `${cacheKey}.mp3`;
+
+  try {
+    const head = await client.send(
+      new HeadObjectCommand({
+        Bucket: CONFIG.BUCKET_NAME,
+        Key: s3Key,
+      })
+    );
+    return Boolean(head.ContentLength && head.ContentLength > 0);
+  } catch (err: any) {
+    // 404 / NotFound significa que ainda não foi gerado
+    if (err.name === 'NotFound' || err.$metadata?.httpStatusCode === 404) {
+      return false;
+    }
+    console.warn(`[Bucket Head Error] key ${s3Key}:`, err.message);
+    return false;
+  }
 }
 
-// Caminho do arquivo no cache
-export function getAudioFilePath(cacheKey: string): string {
-  const cacheDir = ensureCacheDir();
-  return path.join(cacheDir, `${cacheKey}.mp3`);
+// Salva o buffer MP3 diretamente no Bucket S3 do Railway
+export async function saveAudioToBucket(cacheKey: string, mp3Buffer: Buffer): Promise<void> {
+  const client = getS3Client();
+  const s3Key = `${cacheKey}.mp3`;
+
+  await client.send(
+    new PutObjectCommand({
+      Bucket: CONFIG.BUCKET_NAME,
+      Key: s3Key,
+      Body: mp3Buffer,
+      ContentType: 'audio/mpeg',
+      Metadata: {
+        cacheKey,
+        createdAt: new Date().toISOString(),
+      },
+    })
+  );
+
+  console.log(`[Bucket Upload OK] Áudio salvo no Bucket Railway: s3://${CONFIG.BUCKET_NAME}/${s3Key} (${mp3Buffer.length} bytes)`);
+}
+
+// Obtém stream de áudio do Bucket S3 com suporte a HTTP Range (seeking)
+export async function getAudioFromBucket(
+  filename: string,
+  range?: string
+): Promise<{
+  stream: Readable;
+  contentLength?: number;
+  contentRange?: string;
+  contentType: string;
+  status: number;
+} | null> {
+  const client = getS3Client();
+  const sanitized = path.basename(filename);
+
+  try {
+    const resp = await client.send(
+      new GetObjectCommand({
+        Bucket: CONFIG.BUCKET_NAME,
+        Key: sanitized,
+        Range: range,
+      })
+    );
+
+    return {
+      stream: resp.Body as Readable,
+      contentLength: resp.ContentLength,
+      contentRange: resp.ContentRange,
+      contentType: resp.ContentType || 'audio/mpeg',
+      status: range ? 206 : 200,
+    };
+  } catch (err: any) {
+    console.warn(`[Bucket Get Error] ${sanitized}:`, err.message);
+    return null;
+  }
 }
 
 // Gera um roteiro didático de audiodescrição usando IA (LLM)
@@ -58,16 +140,15 @@ Retorne APENAS o roteiro de fala corrido em português:`;
     const res = await callNvidiaLlm([
       {
         role: 'system',
-        content: 'Você é um narrador pedagógico especializado em audiodescrição clara, humana e didática.'
+        content: 'Você é um narrador pedagógico especializado em audiodescrição clara, humana e didática.',
       },
       {
         role: 'user',
-        content: prompt
-      }
+        content: prompt,
+      },
     ]);
 
     if (res.text && res.text.trim().length > 50) {
-      // Remove resíduos de formatação markdown para a voz ficar limpa
       return res.text
         .replace(/[*#_`~>\[\]]/g, '')
         .replace(/\n+/g, ' ')
@@ -115,7 +196,7 @@ function fetchMp3Chunk(textChunk: string): Promise<Buffer> {
   });
 }
 
-// Divide texto em sentenças pequenas (máx ~160 caracteres) para síntese perfeita sem cortes abruptos
+// Divide texto em sentenças pequenas (máx ~160 caracteres)
 function splitTextIntoSentences(text: string, maxLen: number = 160): string[] {
   const cleaned = text.replace(/[*#_`~>\[\]]/g, '').replace(/\s+/g, ' ').trim();
   const rawParts = cleaned.match(/[^.!?]+[.!?]+|[^.!?]+$/g) || [cleaned];
@@ -128,7 +209,6 @@ function splitTextIntoSentences(text: string, maxLen: number = 160): string[] {
     if (trimmed.length <= maxLen) {
       chunks.push(trimmed);
     } else {
-      // Divide por vírgulas ou palavras se a frase for longa
       const words = trimmed.split(' ');
       let current = '';
       for (const word of words) {
@@ -146,26 +226,11 @@ function splitTextIntoSentences(text: string, maxLen: number = 160): string[] {
   return chunks;
 }
 
-// Sintetiza texto completo em MP3 e persiste no volume/bucket do Railway
-export async function synthesizeAndCacheAudio(
-  text: string,
-  cacheKey: string
-): Promise<{ filePath: string; durationEstimateSec: number }> {
-  const cacheDir = ensureCacheDir();
-  const targetPath = path.join(cacheDir, `${cacheKey}.mp3`);
-
-  // Se já existir, retorna imediatamente do bucket
-  if (fs.existsSync(targetPath) && fs.statSync(targetPath).size > 0) {
-    return {
-      filePath: targetPath,
-      durationEstimateSec: Math.round(text.split(' ').length / 2.5),
-    };
-  }
-
+// Sintetiza texto completo em MP3 Buffer
+export async function synthesizeMp3Buffer(text: string): Promise<Buffer> {
   const sentences = splitTextIntoSentences(text.slice(0, 3500));
   const audioBuffers: Buffer[] = [];
 
-  // Baixa os chunks em série para respeitar rate limits e garantir ordenação perfeita
   for (const sentence of sentences) {
     if (!sentence || sentence.length < 2) continue;
     try {
@@ -180,13 +245,5 @@ export async function synthesizeAndCacheAudio(
     throw new Error('Nenhum áudio pôde ser gerado a partir do texto.');
   }
 
-  const finalMp3 = Buffer.concat(audioBuffers);
-  fs.writeFileSync(targetPath, finalMp3);
-
-  console.log(`[TTS Cache] Áudio salvo no bucket Railway: ${targetPath} (${finalMp3.length} bytes)`);
-
-  return {
-    filePath: targetPath,
-    durationEstimateSec: Math.round(text.split(' ').length / 2.5),
-  };
+  return Buffer.concat(audioBuffers);
 }
