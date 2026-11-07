@@ -7,8 +7,9 @@
     "date": "2026",
     "language": "pt-BR",
     "category": "Língua Portuguesa & Prática de Leitura",
-    "estimatedReadingTime": "Aprox. 86 min de aula",
-    "description": "Uma verdadeira imersão didática em forma de conversa viva: aprenda compreensão vs interpretação, tese, inferência, gêneros, multimodalidade, variação linguística, implícitos, estratégias persuasivas e conectivos com dezenas de exemplos cotidianos, notícias, redações e questões práticas explicadas passo a passo."
+    "estimatedReadingTime": "Aprox. 105 min de aula",
+    "description": "Uma verdadeira imersão didática em forma de conversa viva: aprenda compreensão vs interpretação, tese, inferência, gêneros, multimodalidade, variação linguística, implícitos, estratégias persuasivas e conectivos com dezenas de exemplos cotidianos, notícias, redações e questões práticas explicadas passo a passo.",
+    "chaptersCount": 15
   },
   "settings": {
     "defaultFont": "serif",
@@ -1109,6 +1110,194 @@
         {
           "type": "paragraph",
           "content": "A partir de hoje, você não é mais um leitor passivo que apenas engole palavras na página. Você é um detetive crítico, lúcido e atento, capaz de ler as entrelinhas, desmascarar manipulações e apreciar a imensa e viva beleza da Língua Portuguesa. Boas leituras, excelentes estudos e muito sucesso na sua caminhada!"
+        }
+      ]
+    },
+    {
+      "id": "capitulo-14",
+      "number": "XIV",
+      "title": "A Função Social dos Textos: O Papel Cívico, Comunicativo e Transformador da Linguagem",
+      "epigraph": {
+        "text": "A linguagem não é um instrumento neutro de transmissão de dados; ela é uma forma de ação social que funda realidades, estabelece direitos e transforma a convivência humana.",
+        "author": "Mikhail Bakhtin, Marxismo e Filosofia da Linguagem"
+      },
+      "sections": [
+        {
+          "type": "heading",
+          "level": 2,
+          "content": "Para Além das Palavras: O Texto como Ação no Mundo"
+        },
+        {
+          "type": "paragraph",
+          "content": "Olá! Seja bem-vindo a uma das discussões mais nobres de toda a prova de Linguagens e do nosso cotidiano cívico: a Função Social dos Textos. Muitas pessoas crescem na escola acreditando que um texto serve apenas para ser lido, pontuado e corrigido pelo professor de português. Mas pare e pense por um instante: quando um cientista publica uma pesquisa sobre vacinas, quando uma comunidade de bairro redige um abaixo-assinado exigindo saneamento básico, ou quando um jornalista denuncia um crime ambiental, o que esses textos estão fazendo?"
+        },
+        {
+          "type": "paragraph",
+          "content": "Eles não estão apenas 'comunicando'; eles estão agindo diretamente na sociedade. Cada texto existente nasce para cumprir uma função social específica: instruir, denunciar, legislar, emocionar, convocar à reflexão ou garantir direitos. No ENEM e nos principais exames do país, uma questão raramente vai te perguntar se o texto está bonito; ela vai te perguntar: 'Qual é o impacto que esse texto busca produzir na vida em sociedade?'"
+        },
+        {
+          "type": "heading",
+          "level": 3,
+          "content": "1. O Que É, Tecnicamente, a Função Social de um Texto?"
+        },
+        {
+          "type": "paragraph",
+          "content": "A função social é o propósito real que justifica a existência de um gênero textual em determinado meio. Um boleto bancário tem como função social cobrar uma dívida de forma legal e padronizada. Uma certidão de nascimento tem como função social garantir a existência civil e os direitos fundamentais de um cidadão perante o Estado. Uma bula de remédio existe para salvaguardar a saúde pública, orientando dosagens e contraindicações de forma acessível e técnica."
+        },
+        {
+          "type": "paragraph",
+          "content": "Quando você lê um texto numa prova, você precisa se fazer três perguntas imediatas: 1) Quem escreveu e para quem?; 2) Onde esse texto circula (na rua, no Diário Oficial, no feed do Instagram, numa revista médica)?; 3) Qual transformação prática esse texto espera alcançar no comportamento ou no entendimento do leitor?"
+        },
+        {
+          "type": "callout",
+          "title": "Dica de Ouro do Professor: O Foco na Práxis",
+          "content": "Se uma questão falar sobre 'função social', procure nas alternativas verbos de ação cidadã: 'conscientizar', 'denunciar uma desigualdade', 'promover a inclusão', 'regulamentar uma conduta', 'preservar a memória histórica' ou 'reivindicar um direito coletivo'."
+        },
+        {
+          "type": "heading",
+          "level": 3,
+          "content": "2. Exemplos Práticos de Funções Sociais em Conflito"
+        },
+        {
+          "type": "paragraph",
+          "content": "Imagine uma campanha publicitária governamental contra o assédio no transporte público com os dizeres: 'Não é não. Respeite o espaço da mulher'. Qual é a função social desse cartaz? Não é vender um produto, mas sim atuar como um instrumento pedagógico e coercitivo de combate à violência de gênero, educando a coletividade e encorajando denúncias por canais oficiais como o 180."
+        },
+        {
+          "type": "paragraph",
+          "content": "Agora imagine um artigo de opinião assinado por um urbanista discutindo a mobilidade em uma metrópole. A função social desse texto é intervir no debate público, pressionar as autoridades municipais a investirem em ciclovias e trens de qualidade e mobilizar a opinião dos cidadãos eleitores. O texto deixa de ser um mero exercício gramatical e torna-se uma ferramenta de democracia participativa."
+        },
+        {
+          "type": "quote",
+          "content": "Não há palavra desprovida de interesse social; todo enunciado participa das lutas cotidianas pela definição da justiça e da verdade.",
+          "author": "Mikhail Bakhtin"
+        },
+        {
+          "type": "heading",
+          "level": 3,
+          "content": "3. Síntese Didática: A Bússola da Função Social"
+        },
+        {
+          "type": "paragraph",
+          "content": "Para nunca mais errar: sempre que analisar qualquer texto, identifique se ele atua no eixo Jurídico-Normativo (leis, decretos), Jornalístico-Informativo (notícias, reportagens), Científico-Acadêmico (artigos, relatórios), Publicitário-Persuasivo (campanhas, anúncios) ou Artístico-Literário (poemas, crônicas). O gênero é a embalagem; a função social é o que ele opera no mundo real."
+        }
+      ],
+      "quiz": [
+        {
+          "prompt": "Qual é a principal função social de uma campanha institucional de vacinação promovida pelo Ministério da Saúde?",
+          "options": [
+            {
+              "letter": "A",
+              "text": "Aumentar a venda de seringas e insumos médicos em farmácias privadas."
+            },
+            {
+              "letter": "B",
+              "text": "Conscientizar a população sobre a importância da imunização coletiva e prevenir surtos epidemiológicos."
+            },
+            {
+              "letter": "C",
+              "text": "Demonstrar a superioridade da prosa poética sobre a linguagem científica descritiva."
+            },
+            {
+              "letter": "D",
+              "text": "Promover debates filosóficos abstratos sobre a natureza imutável das enfermidades humanas."
+            }
+          ],
+          "correctLetter": "B",
+          "explanation": "A função social de campanhas institucionais de saúde é de caráter cívico e preventivo: informar, conscientizar e mobilizar a comunidade para manter a cobertura vacinal em níveis protetivos coletivos."
+        }
+      ]
+    },
+    {
+      "id": "capitulo-15",
+      "number": "XV",
+      "title": "Texto e Contexto Histórico: Como as Condições de Produção Moldam o Sentido",
+      "epigraph": {
+        "text": "O texto não flutua no vácuo das ideias puras; ele é filho do seu tempo, banhado pelas contradições, tensões e esperanças da sociedade que o gestou.",
+        "author": "Antonio Candido, Literatura e Sociedade"
+      },
+      "sections": [
+        {
+          "type": "heading",
+          "level": 2,
+          "content": "A Janela do Tempo: Por Que Nenhum Texto Pode Ser Lido Fora de Sua Época"
+        },
+        {
+          "type": "paragraph",
+          "content": "Imagine que você encontra um jornal antigo amarelado de 1888 com a seguinte manchete em letras garrafais: 'Assinada a Lei Áurea: a Princesa Isabel extingue formalmente o cativeiro no Brasil'. Se você ler essa manchete ignorando todo o contexto da escravidão, o movimento abolicionista liderado por André Rebouças e Luiz Gama, e a subsequente falta de reforma agrária para os libertos, você terá apenas uma leitura rasa e incompleta."
+        },
+        {
+          "type": "paragraph",
+          "content": "Todo texto nasce enraizado em um momento histórico específico. Ele responde a anseios, censuras, tecnologias e disputas políticas da sua época. Quando o grande crítico Antonio Candido nos ensina que a literatura e a linguagem são atos sociais, ele nos lembra que compreender a data, o lugar e as forças históricas que cercam o autor é o segredo para destravar os sentidos mais profundos de qualquer obra."
+        },
+        {
+          "type": "heading",
+          "level": 3,
+          "content": "1. Condições de Produção: Quem Fala, Quando Fala e Sob Quais Limites?"
+        },
+        {
+          "type": "paragraph",
+          "content": "Na linguística discursiva, chamamos isso de 'Condições de Produção do Discurso'. Elas abrangem: 1) O momento histórico (estamos numa ditadura com censura prévia ou num período de euforia democrática?); 2) O meio tecnológico (o texto foi escrito com pena e tinta, impresso em tipografia de chumbo ou postado num tuíte em segundos?); 3) As forças sociais em jogo (quais classes e grupos tinham voz naquele momento?)."
+        },
+        {
+          "type": "paragraph",
+          "content": "Veja o exemplo marcante da música brasileira durante a Ditadura Militar (1964-1985). Quando Chico Buarque compôs 'Cálice', ele cantava: 'Pai, afasta de mim esse cálice'. Quem olha sem contexto histórico vê apenas uma referência bíblica ao sofrimento de Jesus no Horto das Oliveiras. Mas quando você conhece o contexto dos anos de chumbo, percebe a genialidade do jogo homófono com o imperativo 'Cale-se!'. O contexto histórico transforma uma oração religiosa em um grito heroico contra a censura e a opressão política!"
+        },
+        {
+          "type": "callout",
+          "title": "Aviso Crucial: Evite o Anacronismo!",
+          "content": "O anacronismo é o pecado mortal da interpretação: é julgar um texto de dois séculos atrás usando as regras morais, tecnológicas e conceituais do ano de hoje. Analise sempre o texto à luz dos horizontes de possibilidade da época em que foi concebido."
+        },
+        {
+          "type": "heading",
+          "level": 3,
+          "content": "2. O Contexto Histórico nas Questões do ENEM e Vestibulares"
+        },
+        {
+          "type": "paragraph",
+          "content": "O ENEM adora cruzar textos literários, charges de época e crônicas com momentos marcantes da história brasileira: a Era Vargas e a propaganda estatal, a Semana de 22 e o centenário da Independência, a urbanização acelerada dos anos 50 com a Bossa Nova e o Plano de Metas de JK, e as Diretas Já nos anos 80."
+        },
+        {
+          "type": "paragraph",
+          "content": "Sua postura analítica deve ser sempre relacional: não encare a literatura e a história como duas caixas isoladas na sua cabeça. O romance 'Vidas Secas' de Graciliano Ramos, publicado em 1938, é ao mesmo tempo uma obra-prima de prosa minimalista e um documento humano lancinante da miséria estrutural e do coronelismo do Nordeste durante as transformações do Estado Novo."
+        },
+        {
+          "type": "quote",
+          "content": "O texto literário é um espelho dinâmico: ele reflete o seu tempo ao mesmo tempo em que ajuda a construir os novos horizontes da história.",
+          "author": "Antonio Candido"
+        },
+        {
+          "type": "heading",
+          "level": 3,
+          "content": "3. Conclusão da Jornada: O Leitor Pleno e Consciente"
+        },
+        {
+          "type": "paragraph",
+          "content": "Ao dominar esses dois pilares — a função social e o contexto histórico —, você conclui esta grande jornada de Interpretação Textual não apenas como alguém que acerta questões difíceis, mas como um leitor maduro, capaz de decodificar as intenções invisíveis que movem a política, a arte e a cultura da nossa sociedade."
+        }
+      ],
+      "quiz": [
+        {
+          "prompt": "Por que o conhecimento do contexto histórico dos anos 1970 no Brasil é fundamental para a correta interpretação de certas canções populares da época?",
+          "options": [
+            {
+              "letter": "A",
+              "text": "Porque a ausência de instrumentos elétricos exigia letras sem rima nem ritmo sonoro."
+            },
+            {
+              "letter": "B",
+              "text": "Porque a censura do regime militar forçava compositores a usar metáforas, duplos sentidos e alegorias de protesto."
+            },
+            {
+              "letter": "C",
+              "text": "Porque era proibido cantar em língua portuguesa nos festivais oficiais de música."
+            },
+            {
+              "letter": "D",
+              "text": "Porque todos os temas poéticos eram obrigatoriamente científicos e positivistas."
+            }
+          ],
+          "correctLetter": "B",
+          "explanation": "Sob a vigência da censura prévia institucionalizada, os artistas precisavam criar recursos alegóricos sofisticados (como trocadilhos e duplos sentidos) para denunciar a repressão sem que a obra fosse sumariamente vetada pelos censores."
         }
       ]
     }

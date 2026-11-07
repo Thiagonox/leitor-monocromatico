@@ -1,0 +1,800 @@
+{
+  "meta": {
+    "id": "generos-textuais",
+    "title": "Manual Vivo de Gêneros Textuais: Do Jornalismo às Artes e à Ciência",
+    "subtitle": "Guia Definitivo de Notícia, Reportagem, Editorial, Artigo de Opinião, Crônica, Propaganda, Charge, Cartum, Poema, Resenha e Texto Científico",
+    "author": "Prof. Antigravity & Estudos Vivos da Linguagem",
+    "date": "2026",
+    "language": "pt-BR",
+    "category": "Língua Portuguesa & Gêneros do Discurso",
+    "chaptersCount": 11,
+    "estimatedReadingTime": "Aprox. 95 min de aula",
+    "description": "Curso completo, estruturado e aprofundado sobre os 11 gêneros textuais mais cobrados no ENEM e vestibulares. Aprenda as marcas linguísticas, estrutura composicional, intencionalidade discursiva, suportes e diferenças cruciais com dezenas de exemplos reais dissecados passo a passo."
+  },
+  "settings": {
+    "defaultFont": "serif",
+    "defaultTheme": "eink",
+    "defaultWidth": "680px"
+  },
+  "chapters": [
+    {
+      "id": "capitulo-1",
+      "number": "I",
+      "title": "A Notícia: O Relato do Fato Imediato e a Pirâmide Invertida",
+      "epigraph": {
+        "text": "A notícia é o primeiro rascunho da história: rápida, direta e comprometida com a fidelidade ao acontecimento factual.",
+        "author": "Philip Graham, The Washington Post"
+      },
+      "sections": [
+        {
+          "type": "heading",
+          "level": 2,
+          "content": "A Urgência do Acontecimento: O Que Define uma Notícia?"
+        },
+        {
+          "type": "paragraph",
+          "content": "Olá! Seja bem-vindo à nossa aula sobre o gênero mais dinâmico do jornalismo diário: a Notícia. No ecossistema da informação, a notícia é como um alerta de radar. Sua missão primordial é relatar um fato inédito, relevante e de interesse coletivo com o máximo de agilidade, clareza e objetividade aparente."
+        },
+        {
+          "type": "paragraph",
+          "content": "Imagine que houve uma tempestade sem precedentes que inundou as principais avenidas de uma metrópole nesta madrugada. O cidadão que acorda às 6h da manhã não quer ler uma tese filosófica de vinte páginas sobre o ciclo da água; ele precisa saber imediatamente: onde alagou? O trânsito está parado? As escolas vão abrir? Esse é o DNA da notícia: factual, contemporânea e de utilidade imediata."
+        },
+        {
+          "type": "heading",
+          "level": 3,
+          "content": "1. A Estrutura Clássica: A Pirâmide Invertida"
+        },
+        {
+          "type": "paragraph",
+          "content": "Ao contrário de um romance policial, em que a informação mais importante fica guardada para a última página, a notícia faz exatamente o oposto: ela organiza o conteúdo segundo a técnica da Pirâmide Invertida. A informação mais bombástica e decisiva vem logo no topo (na base da pirâmide), enquanto os detalhes circunstanciais e secundários aparecem nos parágrafos finais."
+        },
+        {
+          "type": "paragraph",
+          "content": "Essa técnica surgiu historicamente no século XIX com a invenção do telégrafo. Como a conexão telegráfica podia ser interrompida a qualquer momento durante guerras e transmissões marítimas, os repórteres eram instruídos a passar os fatos vitais nas primeiras palavras."
+        },
+        {
+          "type": "callout",
+          "title": "A Regra dos Seis Elementos do Lead",
+          "content": "O primeiro parágrafo de uma notícia chama-se Lead (do inglês 'conduzir'). Ele deve responder rigorosamente a 6 perguntas fundamentais: 1) O QUE aconteceu?; 2) QUEM participou?; 3) QUANDO ocorreu?; 4) ONDE se deu o fato?; 5) COMO se desenrolou?; 6) POR QUÊ (a causa aparente)."
+        },
+        {
+          "type": "heading",
+          "level": 3,
+          "content": "2. Marcas Linguísticas da Notícia"
+        },
+        {
+          "type": "paragraph",
+          "content": "Como a notícia busca transmitir imparcialidade e credibilidade, ela adota recursos linguísticos muito nítidos: verbos no pretérito perfeito do indicativo na 3ª pessoa ('iniciou', 'declarou', 'atingiu'), ausência de adjetivação valorativa ou emocional (evita-se 'a terrível enchente', preferindo 'a enchente que acumulou 120 milímetros'), discurso direto de fontes oficiais entre aspas e emprego da norma culta em linguagem direta e concisa."
+        },
+        {
+          "type": "quote",
+          "content": "O leitor de notícias quer saber a verdade dos fatos antes de formar o seu próprio julgamento.",
+          "author": "Alberto Dines"
+        }
+      ],
+      "quiz": [
+        {
+          "prompt": "Por que o primeiro parágrafo de uma notícia jornalística tradicional deve conter as respostas para as seis perguntas essenciais (o que, quem, quando, onde, como e por quê)?",
+          "options": [
+            {
+              "letter": "A",
+              "text": "Para economizar espaço gráfico na impressão e omitir os dados complementares."
+            },
+            {
+              "letter": "B",
+              "text": "Para fornecer ao leitor o núcleo informativo do acontecimento de maneira ágil e hierarquizada."
+            },
+            {
+              "letter": "C",
+              "text": "Para substituir o trabalho de apuração do repórter de campo por dados estatísticos fictícios."
+            },
+            {
+              "letter": "D",
+              "text": "Para confundir o leitor com múltiplos pontos de vista contraditórios e inconclusivos."
+            }
+          ],
+          "correctLetter": "B",
+          "explanation": "A estrutura do lead orienta a leitura rápida, garantindo que o leitor compreenda os dados essenciais do acontecimento logo no primeiro contato com o texto."
+        }
+      ]
+    },
+    {
+      "id": "capitulo-2",
+      "number": "II",
+      "title": "A Reportagem: O Aprofundamento do Fato, Múltiplas Vozes e Humanização",
+      "epigraph": {
+        "text": "Se a notícia é o relâmpago que avisa sobre a tempestade, a reportagem é o estudo paciente da terra molhada, dos rios que transbordaram e das vidas transformadas.",
+        "author": "Eliane Brum, A Vida que Ninguém Vê"
+      },
+      "sections": [
+        {
+          "type": "heading",
+          "level": 2,
+          "content": "A Grande Reportagem: Quando o Fato Ganha Rosto e Contexto"
+        },
+        {
+          "type": "paragraph",
+          "content": "Muitos estudantes confundem Notícia e Reportagem, tratando as duas como se fossem o mesmo gênero. Mas a diferença entre elas é colossal. Enquanto a notícia relata um fato factual pontual de hoje ('Trabalhadores rurais são resgatados em fazenda no interior'), a reportagem investiga as causas profundas desse fato ('O Mapa do Trabalho Análogo à Escravidão no Século XXI: Rotas, Vítimas, Mecanismos Econômicos e Histórias de Sobreviventes')."
+        },
+        {
+          "type": "paragraph",
+          "content": "A reportagem não tem pressa de dar um alerta de última hora; sua missão é mergulhar na complexidade. O repórter viaja até o local, entrevista trabalhadores, sociólogos, fiscais do trabalho e empresários, consulta dados estatísticos históricos, faz fotos detalhadas e constrói uma narrativa densa e humanizada."
+        },
+        {
+          "type": "heading",
+          "level": 3,
+          "content": "1. Características Estruturais da Reportagem"
+        },
+        {
+          "type": "paragraph",
+          "content": "1) Polifonia (Múltiplas Vozes): a reportagem raramente tem uma voz só. Ela contrapõe a fala da comunidade, do poder público, da ciência e dos órgãos fiscalizadores;\n2) Liberdade Composicional: não é obrigada a seguir a pirâmide invertida. Pode começar com a história dramática de uma família específica, recuar para a contextualização histórica e só depois apresentar os números gerais;\n3) Assinatura do Repórter: enquanto a notícia pode vir com créditos genéricos da redação ou agência de notícias, a reportagem expressa o trabalho investigativo autoral do repórter."
+        },
+        {
+          "type": "callout",
+          "title": "Dica de Ouro: Notícia vs. Reportagem em Provas",
+          "content": "Identifique a extensão e o objetivo: se o texto for curto, direto, focado no acontecimento imediato (hoje/ontem), é Notícia. Se tiver histórias de vida, dados comparativos de várias décadas, infográficos e reflexão social ampla, trata-se de uma Reportagem."
+        },
+        {
+          "type": "heading",
+          "level": 3,
+          "content": "2. Recursos Estilísticos e Humanização"
+        },
+        {
+          "type": "paragraph",
+          "content": "Na reportagem contemporânea, usa-se com frequência técnicas do chamado 'Jornalismo Literário': descrições vívidas de cenários ('o chão de terra batida sob um sol de 40 graus'), reconstrução de diálogos em discurso direto, metáforas bem calibradas e ritmo narrativo envolvente que gera empatia imediata no leitor."
+        },
+        {
+          "type": "quote",
+          "content": "Reportar é escutar o que o mundo tenta silenciar.",
+          "author": "Caco Barcellos"
+        }
+      ],
+      "quiz": [
+        {
+          "prompt": "Qual é a principal distinção discursiva entre a notícia e a grande reportagem?",
+          "options": [
+            {
+              "letter": "A",
+              "text": "A notícia é sempre opinativa e pessoal, enquanto a reportagem é obrigatoriamente rimada."
+            },
+            {
+              "letter": "B",
+              "text": "A notícia relata um fato factual recente de forma concisa, ao passo que a reportagem investiga causas, contextos e múltiplas perspectivas aprofundadas."
+            },
+            {
+              "letter": "C",
+              "text": "A reportagem não pode utilizar dados estatísticos, limitando-se a registrar lendas populares."
+            },
+            {
+              "letter": "D",
+              "text": "A notícia é exclusiva de jornais impressos, enquanto a reportagem só existe em redes sociais digitais."
+            }
+          ],
+          "correctLetter": "B",
+          "explanation": "A notícia tem foco na factualidade imediata e síntese, enquanto a reportagem aprofunda as raízes do tema, trazendo investigações, depoimentos e análises históricas."
+        }
+      ]
+    },
+    {
+      "id": "capitulo-3",
+      "number": "III",
+      "title": "O Editorial: A Voz Institucional e a Tomada de Posição do Veículo",
+      "epigraph": {
+        "text": "O editorial não expressa a opinião de um indivíduo isolado, mas a postura ética, política e ideológica de toda a instituição jornalística.",
+        "author": "Manuel Carlos Chaparro, Pragmática do Jornalismo"
+      },
+      "sections": [
+        {
+          "type": "heading",
+          "level": 2,
+          "content": "A Voz Sem Assinatura: Quem Fala no Editorial?"
+        },
+        {
+          "type": "paragraph",
+          "content": "Você já abriu um grande jornal impresso ou portal de notícias e reparou numa página central com um texto opinativo forte, sóbrio e sem o nome de nenhum autor embaixo? Esse texto é o Editorial. Ele representa a manifestação oficial e solene da diretoria e do corpo editorial daquele veículo de comunicação diante de um fato de grande relevância nacional ou internacional."
+        },
+        {
+          "type": "paragraph",
+          "content": "Quando um jornal publica um editorial com o título 'A Urgência da Responsabilidade Fiscal' ou 'Em Defesa dos Direitos Fundamentais e da Democracia', não é o repórter fulano nem o colunista beltrano quem está falando: é a própria empresa jornalística que assume publicamente uma postura perante a sociedade."
+        },
+        {
+          "type": "heading",
+          "level": 3,
+          "content": "1. Estrutura Composicional do Editorial"
+        },
+        {
+          "type": "paragraph",
+          "content": "O editorial é um texto puramente dissertativo-argumentativo estruturado em três momentos lógicos bem delineados:\n1) Apresentação do Fato Motivador: o editorial parte de um acontecimento recente (ex: a aprovação de uma nova lei no Congresso ou um desastre ecológico);\n2) Tomada de Posição e Argumentação: o veículo expõe sua tese de forma assertiva, utilizando argumentos de autoridade, dados comparativos e princípios jurídicos/econômicos para justificar por que aprova ou desaprova aquela medida;\n3) Conclusão Exortativa: encerra com uma convocação aos poderes públicos e à sociedade para adotarem determinado rumo de ação."
+        },
+        {
+          "type": "callout",
+          "title": "Atenção Crítica: A Ausência de Assinatura Individual",
+          "content": "Em provas, lembre-se: o editorial é apócrifo do ponto de vista do redator individual, mas plenamente atribuível à instituição. O uso da 1ª pessoa do plural ('Entendemos que...', 'Esperamos que as autoridades...') ou de construções impessoais ('É indispensável que...') são suas marcas linguísticas definitivas."
+        },
+        {
+          "type": "quote",
+          "content": "Pelo editorial se conhece a espinha dorsal de um jornal.",
+          "author": "Cláudio Abramo"
+        }
+      ],
+      "quiz": [
+        {
+          "prompt": "Por que o gênero editorial tradicionalmente não traz a assinatura individual de um jornalista específico?",
+          "options": [
+            {
+              "letter": "A",
+              "text": "Porque o jornalista que o escreveu prefere manter o anonimato por receio de processos jurídicos."
+            },
+            {
+              "letter": "B",
+              "text": "Porque o texto expressa a posição institucional coletiva e a linha ideológica oficial do próprio veículo de comunicação."
+            },
+            {
+              "letter": "C",
+              "text": "Porque se trata de um texto gerado por sorteio automático entre os assinantes do jornal."
+            },
+            {
+              "letter": "D",
+              "text": "Porque o editorial é um texto puramente ficcional sem qualquer conexão com a realidade fática."
+            }
+          ],
+          "correctLetter": "B",
+          "explanation": "O editorial expressa a linha de pensamento oficial da empresa jornalística como um todo, transcendendo a opinião subjetiva de qualquer repórter isolado."
+        }
+      ]
+    },
+    {
+      "id": "capitulo-4",
+      "number": "IV",
+      "title": "O Artigo de Opinião: Autoria Declarada, Tese Contundente e Persuasão Cidadã",
+      "epigraph": {
+        "text": "Ter uma opinião não basta; é preciso sustentá-la com argumentos inatacáveis perante o tribunal do debate público.",
+        "author": "Chaim Perelman, Tratado da Argumentação"
+      },
+      "sections": [
+        {
+          "type": "heading",
+          "level": 2,
+          "content": "O Indivíduo no Debate Público: O Que Caracteriza o Artigo de Opinião?"
+        },
+        {
+          "type": "paragraph",
+          "content": "Se no editorial a voz é institucional e sem assinatura individual, no Artigo de Opinião acontece exatamente o inverso: aqui, um autor específico (um jurista, filósofo, médico, líder comunitário, professor ou cidadão engajado) assina o texto com nome, sobrenome e muitas vezes seu cargo ou credencial acadêmica, assumindo integral responsabilidade pelas teses defendidas."
+        },
+        {
+          "type": "paragraph",
+          "content": "O articulista escolhe um tema polêmico, controverso e em debate na sociedade — como a regulamentação das redes sociais, a redução da jornada de trabalho ou a transição para energias renováveis — e constrói uma defesa apaixonada, lógica e articulada do seu ponto de vista, buscando ativamente convencer o leitor a concordar com ele."
+        },
+        {
+          "type": "heading",
+          "level": 3,
+          "content": "1. Mecanismos Argumentativos e Persuasivos"
+        },
+        {
+          "type": "paragraph",
+          "content": "O artigo de opinião utiliza um arsenal completo de estratégias persuasivas:\n- Tese explícita logo no primeiro ou segundo parágrafo;\n- Contra-argumentação: o autor antecipa os argumentos dos seus opositores ('Muitos argumentam que... No entanto, esse raciocínio desmorona quando...') para derrubá-los em seguida;\n- Operadores de concessão e refutação: uso estratégico de 'embora', 'conquanto', 'contudo', 'em contrapartida';\n- Marcas de primeira pessoa (singular 'afirmo', 'tenho visto' ou plural inclusivo 'devemos reconhecer')."
+        },
+        {
+          "type": "callout",
+          "title": "Diferença Fatal: Artigo de Opinião vs. Editorial",
+          "content": "Artigo de Opinião tem autor assinado (João da Silva, Economista) e defende a visão pessoal daquele autor. Editorial não tem assinatura de pessoa física e defende a posição institucional da empresa de comunicação."
+        },
+        {
+          "type": "quote",
+          "content": "O artigo de opinião é o oxigênio da democracia: onde todos podem expor suas razões com clareza e civilidade.",
+          "author": "Norberto Bobbio"
+        }
+      ],
+      "quiz": [
+        {
+          "prompt": "Qual é a principal função da contra-argumentação em um artigo de opinião?",
+          "options": [
+            {
+              "letter": "A",
+              "text": "Admitir que o autor não sabe qual posição adotar e encerrar o texto sem resposta."
+            },
+            {
+              "letter": "B",
+              "text": "Antecipar as objeções dos adversários para enfraquecê-las e reforçar a consistência da própria tese."
+            },
+            {
+              "letter": "C",
+              "text": "Preencher o limite de linhas exigido pela diagramação da página impressa."
+            },
+            {
+              "letter": "D",
+              "text": "Substituir a linguagem formal por gírias e expressões regionais desconhecidas."
+            }
+          ],
+          "correctLetter": "B",
+          "explanation": "A contra-argumentação demonstra maturidade analítica: ao prever as críticas e refutá-las com dados ou lógica, o articulista blinda sua tese principal."
+        }
+      ]
+    },
+    {
+      "id": "capitulo-5",
+      "number": "V",
+      "title": "A Crônica: O Flagrante do Cotidiano, Filosofia da Calçada e Sensibilidade Lírica",
+      "epigraph": {
+        "text": "A crônica é uma conversa entre amigos na esquina da vida: pega uma xícara de café, uma cena corriqueira de ônibus e extrai dali a poesia do universo.",
+        "author": "Rubem Braga, Para Gostar de Ler"
+      },
+      "sections": [
+        {
+          "type": "heading",
+          "level": 2,
+          "content": "A Flor que Nasce no Asfalto: O Encanto da Crônica Brasileira"
+        },
+        {
+          "type": "paragraph",
+          "content": "Se o jornalismo tradicional é feito de estatísticas duras, decretos oficiais e acidentes, a Crônica é o suspiro de sensibilidade que habita a última página do jornal. Nascida no folhetim do século XIX, a crônica encontrou no Brasil a sua pátria mais brilhante e acolhedora, com mestres monumentais como Machado de Assis, Rubem Braga, Clarice Lispector, Fernando Sabino e Luis Fernando Verissimo."
+        },
+        {
+          "type": "paragraph",
+          "content": "O que faz um cronista? O cronista sai na rua, olha para uma cena que qualquer pessoa acharia banal — um cachorro esperando na porta da padaria, duas senhoras conversando na fila do banco sobre receitas de bolo, uma criança tentando alcançar uma fruta numa árvore da praça — e transforma esse pequeno instante passageiro em uma profunda reflexão sobre o tempo, a solidão, o amor ou a ternura humana."
+        },
+        {
+          "type": "heading",
+          "level": 3,
+          "content": "1. As Variações do Gênero: Narrativa, Poética e Humorística"
+        },
+        {
+          "type": "paragraph",
+          "content": "A crônica é um gênero híbrido que transita livremente entre a literatura e o jornalismo diário:\n- Crônica Narrativa: conta uma historinha breve com início, meio, clímax e desfecho inesperado;\n- Crônica Poética ou Lírica: foca nas impressões sensoriais, nas lembranças da infância e na nostalgia do tempo que passa;\n- Crônica de Humor ou Costumes: usa a ironia bem-humorada para criticar os pequenos vícios e manias da sociedade urbana contemporânea."
+        },
+        {
+          "type": "callout",
+          "title": "Marcas do Gênero: Proximidade e Coloquialidade",
+          "content": "A crônica conversa diretamente com o leitor ('Você já reparou que...', 'Pois é, meu caro leitor...'). Ela usa uma linguagem leve, acessível, repleta de oralidade cultivada, aproximando autor e leitor em uma cumplicidade afetuosa."
+        },
+        {
+          "type": "quote",
+          "content": "Minha única arma é o tempo que passa devagar nos meus olhos de cronista.",
+          "author": "Rubem Braga"
+        }
+      ],
+      "quiz": [
+        {
+          "prompt": "O que diferencia essencialmente a matéria-prima de uma crônica da matéria-prima de uma reportagem investigativa?",
+          "options": [
+            {
+              "letter": "A",
+              "text": "A crônica parte de fatos cotidianos simples e da subjetividade poética do autor, enquanto a reportagem investiga acontecimentos de grande porte com rigor documental."
+            },
+            {
+              "letter": "B",
+              "text": "A crônica é restrita ao registro de normas tributárias, enquanto a reportagem só trata de esportes radicais."
+            },
+            {
+              "letter": "C",
+              "text": "A crônica precisa ser rimada em sonetos de 14 versos métricos decassílabos."
+            },
+            {
+              "letter": "D",
+              "text": "A reportagem não tem compromisso com a verdade, enquanto a crônica é um processo penal registrado em cartório."
+            }
+          ],
+          "correctLetter": "A",
+          "explanation": "A crônica tem como vocação poética flagrar a beleza e a filosofia nos pequenos episódios da vida diária, diferentemente da apuração sistemática da reportagem."
+        }
+      ]
+    },
+    {
+      "id": "capitulo-6",
+      "number": "VI",
+      "title": "A Propaganda e a Publicidade: O Apelo ao Desejo e a Conscientização Social",
+      "epigraph": {
+        "text": "A publicidade vende um estilo de vida, uma sensação de pertencimento e uma promessa de completude antes mesmo de entregar o produto material.",
+        "author": "Roland Barthes, Mitologias"
+      },
+      "sections": [
+        {
+          "type": "heading",
+          "level": 2,
+          "content": "Palavras que Movem Vontades: O Discurso Publicitário"
+        },
+        {
+          "type": "paragraph",
+          "content": "Todos os dias somos bombardeados por milhares de mensagens publicitárias: cartazes nos pontos de ônibus, anúncios nos vídeos do YouTube, banners em sites de notícias e slogans no rádio. Mas você sabe a diferença técnica entre Publicidade e Propaganda?"
+        },
+        {
+          "type": "paragraph",
+          "content": "Na teoria da comunicação: a Publicidade tem finalidade comercial imediata (vender um tênis, um plano de celular ou um lanche). A Propaganda tem como objetivo propagar uma ideia, doutrina, valor ideológico ou comportamento cívico (uma campanha antitabagismo, o incentivo ao voto consciente ou o combate ao desperdício de água potável). Nos vestibulares, ambas são estudadas sob a ótica da persuasão multimodal."
+        },
+        {
+          "type": "heading",
+          "level": 3,
+          "content": "1. A Mecânica da Persuasão: O Modelo AIDA"
+        },
+        {
+          "type": "paragraph",
+          "content": "Uma peça publicitária eficaz é construída para conduzir a mente do interlocutor por quatro etapas sucessivas:\n1) Atenção: fisga o olhar com uma imagem impactante, uma pergunta intrigante ou uma quebra de expectativa;\n2) Interesse: mostra uma conexão direta com uma dor, necessidade ou desejo do leitor;\n3) Desejo: apresenta a solução como algo atraente, moderno ou socialmente admirável;\n4) Ação: o famoso Call to Action ('Compre já', 'Cadastre-se', 'Doe sangue', 'Proteja quem você ama')."
+        },
+        {
+          "type": "callout",
+          "title": "Recursos Linguísticos Característicos",
+          "content": "Preste muita atenção ao uso de verbos no Modo Imperativo ('Vem pra cá', 'Pense no futuro', 'Desacelere'), trocadilhos com palavras polissêmicas, jogos de rimas memoráveis e a relação indissociável entre a imagem visual e o texto verbal."
+        },
+        {
+          "type": "quote",
+          "content": "A publicidade é a arte de transformar o supérfluo em algo aparentemente indispensável.",
+          "author": "Vance Packard"
+        }
+      ],
+      "quiz": [
+        {
+          "prompt": "Por que o modo verbal imperativo é predominante nos textos publicitários e de propaganda institucional?",
+          "options": [
+            {
+              "letter": "A",
+              "text": "Porque indica dúvida e incerteza sobre o valor real do produto divulgado."
+            },
+            {
+              "letter": "B",
+              "text": "Porque expressa ordens, convites, conselhos e convoca o interlocutor para uma ação imediata."
+            },
+            {
+              "letter": "C",
+              "text": "Porque é a única conjugação verbal autorizada pelo Código de Defesa do Consumidor."
+            },
+            {
+              "letter": "D",
+              "text": "Porque remete exclusivamente a eventos históricos ocorridos no passado remoto."
+            }
+          ],
+          "correctLetter": "B",
+          "explanation": "O imperativo atua na função conativa ou apelativa da linguagem, direcionando a conduta do leitor ('compre', 'doe', 'previna-se', 'compartilhe')."
+        }
+      ]
+    },
+    {
+      "id": "capitulo-7",
+      "number": "VII",
+      "title": "A Charge e o Cartum: O Traço Crítico, Temporalidade, Caricatura e Ironia Visual",
+      "epigraph": {
+        "text": "O humor visual é uma arma cirúrgica: com três linhas de nanquim e uma palavra exata, o desenhista desmonta discursos solenes e expõe as hipocrisias do poder.",
+        "author": "Henfil, Cartas a Henfil"
+      },
+      "sections": [
+        {
+          "type": "heading",
+          "level": 2,
+          "content": "A Arte do Riso Ácido: Charge versus Cartum"
+        },
+        {
+          "type": "paragraph",
+          "content": "O ENEM e os vestibulares de elite (Fuvest, Unicamp, Vunesp) são apaixonados por humor gráfico. Não há uma prova sequer que não traga uma charge ou um cartum para ser interpretado. E a pergunta que não quer calar é: qual é a diferença entre uma Charge e um Cartum?"
+        },
+        {
+          "type": "paragraph",
+          "content": "A regra de ouro é a Temporalidade:\n- A Charge é efêmera e pontual: ela critica uma pessoa pública específica (um ministro, um prefeito, um jogador de futebol) em um acontecimento daquela semana (uma CPI, a aprovação de uma lei, um jogo). Se você ler uma charge de 1992 sem saber o que estava acontecendo no Brasil naquela semana, você provavelmente não vai entender a piada;\n- O Cartum é atemporal e universal: ele critica traços da natureza humana e da sociedade em geral (o consumismo desenfreado, a solidão nas grandes cidades, a dependência das telas, a vaidade). Um cartum feito nos anos 1960 continua perfeitamente compreensível e atual hoje!"
+        },
+        {
+          "type": "heading",
+          "level": 3,
+          "content": "1. Como Ler uma Imagem Crítica: Os Códigos Não Verbais"
+        },
+        {
+          "type": "paragraph",
+          "content": "Ao analisar uma charge ou cartum em uma prova, você não pode olhar só para o balãozinho de fala. Você precisa decodificar os elementos gráficos:\n1) A Caricatura: quais traços físicos foram exagerados? Um nariz enorme, dentes pontiagudos, olheiras profundas? O exagero visual carrega o julgamento moral do autor;\n2) Expressão Facial e Corporal: a postura curvada de submissão ou o peito estufado de arrogância;\n3) A Metáfora Visual: desenhar um político afundando numa poça de lama ou um trabalhador carregando uma pedra gigantesca chamada 'impostos';\n4) A Relação Texto-Imagem: o texto verbal muitas vezes contradiz o que a imagem mostra, gerando uma ironia contundente."
+        },
+        {
+          "type": "callout",
+          "title": "Dica de Ouro do Professor: Onde Está a Ironia?",
+          "content": "O humor na charge raramente é inocente para fazer rir; ele é um humor de denúncia. Pergunte-se sempre: 'O que o autor está ridicularizando ou desmascarando aqui?'."
+        },
+        {
+          "type": "quote",
+          "content": "A charge não faz cócegas; ela alfineta a consciência.",
+          "author": "Ziraldo"
+        }
+      ],
+      "quiz": [
+        {
+          "prompt": "Um desenho que critica o uso excessivo de smartphones em jantares familiares sem citar nenhuma figura pública específica é categorizado tecnicamente como:",
+          "options": [
+            {
+              "letter": "A",
+              "text": "Charge política circunstancial."
+            },
+            {
+              "letter": "B",
+              "text": "Cartum atemporal de temática comportamental universal."
+            },
+            {
+              "letter": "C",
+              "text": "Reportagem científica de campo."
+            },
+            {
+              "letter": "D",
+              "text": "Editorial apócrifo de circulação interna."
+            }
+          ],
+          "correctLetter": "B",
+          "explanation": "Por tratar de um comportamento humano universal e atemporal, sem atrelar a crítica a um evento político pontual ou a personalidades públicas nominadas, trata-se de um Cartum."
+        }
+      ]
+    },
+    {
+      "id": "capitulo-8",
+      "number": "VIII",
+      "title": "O Poema: A Forma, a Métrica, a Quebra de Linha, as Figuras e a Densidade Sonora",
+      "epigraph": {
+        "text": "A poesia não diz o que as coisas são; ela acende uma faísca entre as palavras para que o mundo seja visto pela primeira vez.",
+        "author": "Manoel de Barros, Memórias Inventadas"
+      },
+      "sections": [
+        {
+          "type": "heading",
+          "level": 2,
+          "content": "A Palavra em Estado de Graça: O Que Faz um Texto Ser Poema?"
+        },
+        {
+          "type": "paragraph",
+          "content": "Enquanto a prosa organiza o pensamento em linhas contínuas de margem a margem formando parágrafos, o Poema tem uma relação estética e espacial única com a página em branco. No poema, a quebra de linha (o Verso) é deliberada: onde o verso acaba, o silêncio também fala."
+        },
+        {
+          "type": "paragraph",
+          "content": "Mas atenção à confusão comum: Poema é o gênero textual, o objeto físico feito de versos e estrofes. Poesia é o estado de espírito, a carga estética e sensível que pode estar presente num poema, num filme de cinema, numa pintura ou numa conversa na beira da praia."
+        },
+        {
+          "type": "heading",
+          "level": 3,
+          "content": "1. Elementos da Estrutura Poética"
+        },
+        {
+          "type": "paragraph",
+          "content": "1) Verso: cada linha individual de um poema;\n2) Estrofe: o conjunto ou bloco de versos separados por um espaço em branco;\n3) Métrica: a contagem de sílabas poéticas (diferente da sílaba gramatical, pois na poesia as vogais em contato se fundem pela elisão e a contagem cessa na última sílaba tônica);\n4) Rima: a semelhança sonora no final ou interior dos versos;\n5) Ritmo e Musicalidade: a alternância regular entre sílabas fortes e fracas que cria o andamento melódico do poema."
+        },
+        {
+          "type": "heading",
+          "level": 3,
+          "content": "2. Versos Livres e Versos Brancos: A Liberdade Moderna"
+        },
+        {
+          "type": "paragraph",
+          "content": "Nos séculos passados (Classicismo, Parnasianismo), exigia-se rigidez métrica absoluta — como no Soneto, com seus dois quartetos e dois tercetos de versos decassílabos rimados. Porém, a partir do Modernismo de 1922, a poesia conquistou os Versos Livres (sem número fixo de sílabas métricas) e os Versos Brancos (sem rimas obrigatórias), provando que a poesia reside na densidade das imagens e das figuras de linguagem, e não numa gaiola de regras fixas."
+        },
+        {
+          "type": "callout",
+          "title": "O Efeito do Enjambement (Cavalgamento)",
+          "content": "Quando a frase iniciada num verso não termina nele e escorrega para o verso seguinte para completar o sentido, chamamos de Enjambement. Esse recurso cria um suspense rítmico e desacelera o fôlego da leitura."
+        },
+        {
+          "type": "quote",
+          "content": "E agora, José? / A festa acabou, / a luz apagou, / o povo sumiu, / a noite esfriou...",
+          "author": "Carlos Drummond de Andrade"
+        }
+      ],
+      "quiz": [
+        {
+          "prompt": "O que caracteriza os 'versos livres' consolidados pelos poetas modernistas brasileiros a partir da Semana de Arte Moderna de 1922?",
+          "options": [
+            {
+              "letter": "A",
+              "text": "A exigência de que todos os versos tenham exatamente dez sílabas poéticas decassílabas."
+            },
+            {
+              "letter": "B",
+              "text": "A libertação das amarras da métrica rígida e predeterminada, valorizando o ritmo orgânico das ideias."
+            },
+            {
+              "letter": "C",
+              "text": "A proibição do uso de qualquer metáfora ou adjetivo na construção lírica."
+            },
+            {
+              "letter": "D",
+              "text": "A obrigatoriedade de rimar todas as palavras com termos de origem latina."
+            }
+          ],
+          "correctLetter": "B",
+          "explanation": "Os versos livres rompem com o padrão formal de contagem de sílabas rígidas, permitindo que a respiração e o ritmo interno do pensamento determinem a extensão de cada verso."
+        }
+      ]
+    },
+    {
+      "id": "capitulo-9",
+      "number": "IX",
+      "title": "A Resenha Crítica: Resumo Descritivo versus Parecer Crítico e Argumentativo",
+      "epigraph": {
+        "text": "Resenhar não é apenas contar a história de um livro ou filme; é iluminar as intenções do autor e oferecer ao leitor as chaves para que ele decida se vale a pena viver aquela experiência.",
+        "author": "Antonio Candido"
+      },
+      "sections": [
+        {
+          "type": "heading",
+          "level": 2,
+          "content": "Avaliar com Fundamento: O Que É uma Resenha Crítica?"
+        },
+        {
+          "type": "paragraph",
+          "content": "Todos os dias nós consultamos resenhas: quando olhamos as avaliações de um filme no Letterboxd, a crítica de um livro em um suplemento literário ou a análise de um videogame num canal especializado. Mas nos ambientes acadêmicos e nas provas de redação (como Unicamp e UEL), a Resenha Crítica é um gênero de altíssimo rigor intelectual."
+        },
+        {
+          "type": "paragraph",
+          "content": "Existe um erro clássico cometido por milhares de candidatos: fazer apenas um 'resumo' e achar que fez uma resenha. Vamos aprender a diferença de uma vez por todas:\n- O Resumo apenas sintetiza os pontos principais de uma obra de forma neutra, sem dar opinião pessoal alguma ('O livro conta a história do personagem X que viaja para Y e enfrenta o conflito Z');\n- A Resenha Crítica descreve brevemente a obra, mas gasta a maior parte do texto analisando, julgando, comparando e emitindo um parecer crítico fundamentado ('A obra consegue prender o leitor pelo ritmo ágil, embora peque no desenvolvimento superficial dos coadjuvantes')."
+        },
+        {
+          "type": "heading",
+          "level": 3,
+          "content": "1. A Estrutura Ideal de uma Resenha Crítica"
+        },
+        {
+          "type": "paragraph",
+          "content": "Uma resenha exemplar divide-se em quatro blocos lógicos essenciais:\n1) Cabeçalho / Identificação: ficha técnica completa da obra analisada (título, autor, editora/diretor, ano de lançamento, número de páginas);\n2) Apresentação Panorâmica: contextualiza o autor no cenário cultural contemporâneo;\n3) Síntese Não Detalhada (Sem Spoilers): resume o enredo ou os eixos teóricos sem entregar o clímax;\n4) Avaliação Crítica Fundamentada: o coração da resenha. Aqui você aponta os pontos fortes, as fragilidades, as inovações estéticas e conclui recomendando (ou não) a obra para determinado público-alvo."
+        },
+        {
+          "type": "callout",
+          "title": "Aviso Crucial: Adjetivo Vazio Não É Crítica!",
+          "content": "Em uma resenha de nível superior, nunca diga apenas 'o filme é legal' ou 'o livro é chato'. Justifique tecnicamente: 'A fotografia soturna reforça a angústia psicológica do protagonista', ou 'O excesso de diálogos expositivos prejudica a fluidez da montagem cinematográfica'."
+        },
+        {
+          "type": "quote",
+          "content": "A crítica literária não destrói a obra de arte; ela acende as luzes da sala para que todos a vejam em detalhes.",
+          "author": "Anatol Rosenfeld"
+        }
+      ],
+      "quiz": [
+        {
+          "prompt": "Qual é a diferença fundamental entre um simples resumo e uma resenha crítica?",
+          "options": [
+            {
+              "letter": "A",
+              "text": "O resumo traz obrigatoriamente a opinião pessoal do autor, enquanto a resenha é estritamente descritiva e impessoal."
+            },
+            {
+              "letter": "B",
+              "text": "O resumo sintetiza fielmente o conteúdo sem julgamento de valor, ao passo que a resenha crítica alia a síntese a uma avaliação analítica e fundamentada da obra."
+            },
+            {
+              "letter": "C",
+              "text": "A resenha só pode ser escrita pelo próprio autor que criou a obra original."
+            },
+            {
+              "letter": "D",
+              "text": "O resumo exige rimas métricas ao final de cada período sintático."
+            }
+          ],
+          "correctLetter": "B",
+          "explanation": "A resenha crítica transcende a mera descrição do enredo; seu valor reside no julgamento estético e na argumentação que fundamenta os méritos e deméritos da obra analisada."
+        }
+      ]
+    },
+    {
+      "id": "capitulo-10",
+      "number": "X",
+      "title": "O Texto Científico e Acadêmico: Impessoalidade, Rigor Metodológico e a Busca da Verdade",
+      "epigraph": {
+        "text": "Na ciência, a linguagem precisa ser límpida como a água de uma nascente: sem ornamentos que distorçam a observação dos fatos.",
+        "author": "Karl Popper, A Lógica da Pesquisa Científica"
+      },
+      "sections": [
+        {
+          "type": "heading",
+          "level": 2,
+          "content": "O Templo da Razão: As Exigências do Texto Acadêmico"
+        },
+        {
+          "type": "paragraph",
+          "content": "Quando um cientista descobre uma nova molécula contra o câncer ou um historiador desenterra documentos inéditos sobre o período colonial, como eles comunicam suas descobertas para a comunidade de pares ao redor do mundo? Eles redigem um Artigo Científico (Paper)."
+        },
+        {
+          "type": "paragraph",
+          "content": "O texto científico é o gênero da sobriedade máxima. Ele rejeita qualquer afetação emocional, gírias, metáforas poéticas ambíguas ou deduções sem provas materiais. Cada parágrafo deve ser passível de verificação empírica ou lógica por qualquer outro pesquisador em qualquer laboratório do planeta."
+        },
+        {
+          "type": "heading",
+          "level": 3,
+          "content": "1. Estrutura Canônica: O Padrão IMRDC"
+        },
+        {
+          "type": "paragraph",
+          "content": "A imensa maioria das publicações científicas de prestígio internacional adota a consagrada estrutura IMRDC:\n1) Introdução: delimita o problema de pesquisa, o estado da arte e os objetivos;\n2) Metodologia / Materiais e Métodos: detalha com precisão cirúrgica como os experimentos foram conduzidos (amostragem, reagentes, protocolos éticos);\n3) Resultados: apresenta os dados brutos e estatísticos em tabelas e gráficos sem interpretações prévias;\n4) Discussão: interpreta os resultados obtidos à luz da literatura existente;\n5) Conclusão: sintetiza as respostas encontradas e aponta limitações para futuras pesquisas."
+        },
+        {
+          "type": "callout",
+          "title": "Marcas Linguísticas da Ciência",
+          "content": "Uso da norma-padrão rigorosa, vocabulário técnico unívoco (cada termo tem um sentido preciso e não ambíguo), impessoalidade (verbos na 3ª pessoa ou voz passiva: 'verificou-se que...', 'foram analisadas 500 amostras') e presença de citações diretas e indiretas com base em normas como ABNT ou APA."
+        },
+        {
+          "type": "quote",
+          "content": "A clareza da linguagem científica é o reflexo da honestidade intelectual do pesquisador.",
+          "author": "Marie Curie"
+        }
+      ],
+      "quiz": [
+        {
+          "prompt": "Por que a impessoalidade e a precisão terminológica são regras capitais na redação de artigos científicos acadêmicos?",
+          "options": [
+            {
+              "letter": "A",
+              "text": "Para evitar que o leitor compreenda a pesquisa e reserve o conhecimento apenas a iniciados."
+            },
+            {
+              "letter": "B",
+              "text": "Para assegurar a objetividade dos dados e permitir que outros pesquisadores possam replicar e validar a metodologia empregada."
+            },
+            {
+              "letter": "C",
+              "text": "Porque a ciência não permite o emprego de verbos no tempo presente do indicativo."
+            },
+            {
+              "letter": "D",
+              "text": "Para garantir que o texto possa ser transformado diretamente em roteiro de novela televisiva."
+            }
+          ],
+          "correctLetter": "B",
+          "explanation": "A impessoalidade e o rigor de termos garantem a neutralidade e a reprodutibilidade dos experimentos, que são os pilares do método científico moderno."
+        }
+      ]
+    },
+    {
+      "id": "capitulo-11",
+      "number": "XI",
+      "title": "A Comunicação na Era Digital: Posts, E-mails, Fóruns e a Hibridização dos Gêneros",
+      "epigraph": {
+        "text": "Na internet, os gêneros textuais não desapareceram; eles se misturaram, ganharam hiperlinks, memes e uma velocidade vertiginosa que redefiniu a cidadania contemporânea.",
+        "author": "Marcuschi, Gêneros Textuais e Ensino"
+      },
+      "sections": [
+        {
+          "type": "heading",
+          "level": 2,
+          "content": "A Fronteira Aberta: O Hipertexto e os Gêneros Digitais"
+        },
+        {
+          "type": "paragraph",
+          "content": "Chegamos ao último capítulo do nosso manual de Gêneros Textuais com os olhos voltados para o presente e o futuro. Nos últimos trinta anos, a revolução digital transformou radicalmente o modo como lemos e escrevemos. O papel impresso deu lugar à tela iluminada, e o texto estático transformou-se em Hipertexto — um tecido vivo interligado por links, vídeos incorporados, comentários em tempo real e reações em emojis."
+        },
+        {
+          "type": "paragraph",
+          "content": "Novos gêneros surgiram ou se reinventaram: o e-mail formal de trabalho, o podcast de entrevistas em profundidade, o fio (thread) explicativo no X/Twitter, o post de divulgação científica em carrossel no Instagram e o fórum comunitário de suporte técnico. No ENEM, a competência 1 da matriz de referência cobra explicitamente a compreensão das tecnologias da informação e da comunicação."
+        },
+        {
+          "type": "heading",
+          "level": 3,
+          "content": "1. O Fenômeno da Hibridização e a Transmodalidade"
+        },
+        {
+          "type": "paragraph",
+          "content": "A grande sacada dos gêneros digitais é a Hibridização: a fusão de diferentes linguagens no mesmo suporte. Um único meme de internet reúne elementos da charge política, da linguagem coloquial instantânea e da fotografia documental para produzir um comentário crítico que se espalha em escala global em poucos minutos."
+        },
+        {
+          "type": "callout",
+          "title": "Dica de Ouro: Adequação ao Contexto Digital",
+          "content": "A internet não é terra sem lei linguística. O leitor atento sabe que escrever um e-mail corporativo exige formalidade e clareza, enquanto participar de um grupo informal admite abreviações. O segredo da maestria comunicativa é a Adequação Contextual!"
+        },
+        {
+          "type": "quote",
+          "content": "Os gêneros textuais são dinâmicos e plásticos: mudam com a sociedade porque são a própria respiração da cultura humana.",
+          "author": "Luiz Antônio Marcuschi"
+        }
+      ],
+      "quiz": [
+        {
+          "prompt": "O que caracteriza o conceito de 'hipertexto' típico dos ambientes digitais contemporâneos?",
+          "options": [
+            {
+              "letter": "A",
+              "text": "Um texto extremamente longo que não pode ser lido em menos de cem horas contínuas."
+            },
+            {
+              "letter": "B",
+              "text": "Uma estrutura de leitura não linear que integra diferentes blocos de informação por meio de links, sons, imagens e caminhos autônomos de navegação."
+            },
+            {
+              "letter": "C",
+              "text": "Um documento escrito exclusivamente em código binário legível apenas por processadores eletrônicos."
+            },
+            {
+              "letter": "D",
+              "text": "A proibição expressa de usar palavras em língua portuguesa em portais da internet."
+            }
+          ],
+          "correctLetter": "B",
+          "explanation": "O hipertexto possibilita uma leitura multidirecional e dinâmica, em que o próprio leitor constrói seu trajeto navegando entre nós conceituais, links e mídias integradas."
+        }
+      ]
+    }
+  ]
+}
