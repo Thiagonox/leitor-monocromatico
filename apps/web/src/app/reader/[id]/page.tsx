@@ -11,9 +11,8 @@ import {
   Type,
   Pencil,
   Eye,
-  Loader2,
 } from 'lucide-react';
-import { fetchBook, requestContinueStream } from '@/lib/api';
+import { fetchBook } from '@/lib/api';
 import {
   getBookProgress,
   setBookProgress,
@@ -50,9 +49,6 @@ export default function ReaderPage({ params }: { params: Promise<{ id: string }>
   const resolvedParams = use(params);
 
   const [book, setBook] = useState<BookDoc | null>(null);
-  const [extraSections, setExtraSections] = useState<Section[]>([]);
-  const [continuationStep, setContinuationStep] = useState(1);
-  const [isGeneratingMore, setIsGeneratingMore] = useState(false);
 
   const [currentChapterIndex, setCurrentChapterIndex] = useState(0);
   const [visibleBlockIndex, setVisibleBlockIndex] = useState(0);
@@ -82,8 +78,7 @@ export default function ReaderPage({ params }: { params: Promise<{ id: string }>
   const contentRef = useRef<HTMLDivElement | null>(null);
   const blockRefs = useRef<(HTMLElement | null)[]>([]);
   const activeBlockContainerRef = useRef<HTMLElement | null>(null);
-  const sentinelRef = useRef<HTMLDivElement | null>(null);
-  const loadingMoreRef = useRef(false);
+  const lastUserScrollRef = useRef(0);
 
   // Remove qualquer Service Worker legado de PWA que possa ter ficado em cache no navegador
   useEffect(() => {
@@ -137,28 +132,8 @@ export default function ReaderPage({ params }: { params: Promise<{ id: string }>
       });
     });
 
-    // Seções geradas dinamicamente pelo Scroll Infinito Contínuo
-    extraSections.forEach((sec: Section) => {
-      const text = (sec.content || '').trim();
-      if (!text) return;
-      const prefix = sec.title ? `${sec.title}. ` : '';
-      list.push({
-        blockIndex: idx,
-        id: `${book.meta.id}-b-${idx}`,
-        chapterIndex: book.chapters.length - 1,
-        type: sec.type as any,
-        level: sec.level,
-        title: sec.title,
-        content: text,
-        author: sec.author,
-        spokenText: `${prefix}${text}`,
-        label: sec.title || text.slice(0, 52),
-      });
-      idx++;
-    });
-
     return list;
-  }, [book, extraSections]);
+  }, [book]);
 
   const audioBlocks: AudioBlockItem[] = useMemo(() => {
     return streamBlocks.map((b) => ({
@@ -172,22 +147,49 @@ export default function ReaderPage({ params }: { params: Promise<{ id: string }>
   // Aponta o Lápis de Leitura diretamente para o bloco ativo
   useEffect(() => {
     const targetIdx = audioOpen ? activeAudioBlockIndex : visibleBlockIndex;
-    activeBlockContainerRef.current = blockRefs.current[targetIdx] || contentRef.current;
+    activeBlockContainerRef.current =
+      document.getElementById(`reader-block-${targetIdx}`) ||
+      blockRefs.current[targetIdx] ||
+      contentRef.current;
   }, [audioOpen, activeAudioBlockIndex, visibleBlockIndex, streamBlocks.length]);
 
-  // Auto-scroll suave quando o áudio gapless avança para um novo bloco
+  // Monitora interação direta do usuário com scroll para não intervir na rolagem manual
+  useEffect(() => {
+    const markUserScroll = () => {
+      lastUserScrollRef.current = Date.now();
+    };
+    window.addEventListener('wheel', markUserScroll, { passive: true });
+    window.addEventListener('touchmove', markUserScroll, { passive: true });
+    window.addEventListener(
+      'keydown',
+      (e) => {
+        if (['ArrowUp', 'ArrowDown', 'PageUp', 'PageDown', 'Space'].includes(e.code)) {
+          markUserScroll();
+        }
+      },
+      { passive: true }
+    );
+  }, []);
+
+  // Auto-scroll suave para o bloco ativo APENAS na transição de bloco e SE o usuário não estiver rolando
   useEffect(() => {
     if (!audioPlayback.isPlaying) return;
-    const el = blockRefs.current[activeAudioBlockIndex];
+    // Se o usuário interagiu com o scroll nos últimos 4 segundos, respeita e não puxa a tela
+    if (Date.now() - lastUserScrollRef.current < 4000) return;
+
+    const el =
+      document.getElementById(`reader-block-${activeAudioBlockIndex}`) ||
+      blockRefs.current[activeAudioBlockIndex];
     if (el) {
       const rect = el.getBoundingClientRect();
       const viewH = window.innerHeight;
-      if (rect.top < 90 || rect.bottom > viewH - 180) {
+      // Só rola se o bloco estiver fora da área visível confortável
+      if (rect.top < 60 || rect.bottom > viewH - 120) {
         const y = rect.top + window.pageYOffset - viewH * 0.32;
         window.scrollTo({ top: Math.max(0, y), behavior: 'smooth' });
       }
     }
-  }, [activeAudioBlockIndex, audioPlayback.isPlaying]);
+  }, [activeAudioBlockIndex]);
 
   // Carrega Obra Inicial
   useEffect(() => {
@@ -219,55 +221,6 @@ export default function ReaderPage({ params }: { params: Promise<{ id: string }>
     const sFont = getStoredFont();
     setFontModeState(sFont);
   }, []);
-
-  // Expansão Automática de Scroll Infinito Contínuo (Gera novos blocos ao rolar até o fim)
-  const loadMoreInfiniteBlocks = useCallback(async () => {
-    if (!book || loadingMoreRef.current) return;
-    loadingMoreRef.current = true;
-    setIsGeneratingMore(true);
-
-    try {
-      const tailBlocks = streamBlocks.slice(-3).map((b) => b.spokenText).join('\n\n');
-      const res = await requestContinueStream({
-        bookTitle: book.meta.title,
-        bookSubtitle: book.meta.subtitle,
-        previousContext: tailBlocks,
-        continuationStep,
-      });
-
-      if (res.sections && res.sections.length > 0) {
-        setExtraSections((prev) => [...prev, ...res.sections]);
-        setContinuationStep((prev) => prev + 1);
-      }
-    } catch (err) {
-      console.warn('Aviso ao expandir fluxo infinito:', err);
-    } finally {
-      setIsGeneratingMore(false);
-      loadingMoreRef.current = false;
-    }
-  }, [book, continuationStep, streamBlocks]);
-
-  // IntersectionObserver para acionar o Scroll Infinito antes que o usuário chegue ao fim
-  useEffect(() => {
-    if (!book || loading || !sentinelRef.current) return;
-
-    const observer = new IntersectionObserver(
-      (entries) => {
-        for (const entry of entries) {
-          if (entry.isIntersecting && !loadingMoreRef.current) {
-            loadMoreInfiniteBlocks();
-          }
-        }
-      },
-      {
-        rootMargin: '0px 0px 900px 0px',
-        threshold: 0,
-      }
-    );
-
-    observer.observe(sentinelRef.current);
-    return () => observer.disconnect();
-  }, [book, loading, loadMoreInfiniteBlocks]);
 
   // Observa qual bloco está visível na tela durante a leitura
   useEffect(() => {
@@ -731,14 +684,15 @@ export default function ReaderPage({ params }: { params: Promise<{ id: string }>
           })}
         </article>
 
-        {/* Sentinela Invisível de Scroll Infinito Contínuo */}
-        <div ref={sentinelRef} className="py-12 flex items-center justify-center">
-          {isGeneratingMore && (
-            <div className="flex items-center gap-2 text-xs font-mono text-[var(--text-muted)]">
-              <Loader2 className="w-3.5 h-3.5 animate-spin" />
-              <span>Expandindo leitura contínua automaticamente...</span>
-            </div>
-          )}
+        {/* Conclusão Elegante e Definitiva da Obra (Final é Final) */}
+        <div className="py-20 text-center border-t border-[var(--border-color)] mt-16 space-y-3">
+          <div className="text-2xl text-[var(--text-muted)] font-serif select-none">❦</div>
+          <p className="font-serif text-base italic text-[var(--text-secondary)]">
+            Fim do Livro • {book.meta.title}
+          </p>
+          <div className="text-xs font-mono text-[var(--text-muted)]">
+            {streamBlocks.length} blocos completados
+          </div>
         </div>
       </main>
 
@@ -758,18 +712,19 @@ export default function ReaderPage({ params }: { params: Promise<{ id: string }>
         onActiveBlockChange={setActiveAudioBlockIndex}
         bookTitle={book.meta.title}
         onPlaybackUpdate={setAudioPlayback}
-        onNearEnd={loadMoreInfiniteBlocks}
       />
 
       {/* Guia Animado do Lápis Editorial (Sincronizado Bloco a Bloco a 60fps) */}
       <ReadingPencilGuide
+        activeBlockId={`reader-block-${audioOpen ? activeAudioBlockIndex : visibleBlockIndex}`}
+        activeBlockKey={audioOpen ? activeAudioBlockIndex : visibleBlockIndex}
         containerRef={activeBlockContainerRef}
         isPlaying={audioPlayback.isPlaying}
         currentTime={audioPlayback.currentTime}
         duration={audioPlayback.duration}
         isLoading={audioPlayback.isLoading}
+        playbackRate={audioPlayback.playbackRate || 1}
         enabled={pencilEnabled}
-        activeBlockKey={audioOpen ? activeAudioBlockIndex : visibleBlockIndex}
       />
 
       {/* Régua de Foco Ocular */}

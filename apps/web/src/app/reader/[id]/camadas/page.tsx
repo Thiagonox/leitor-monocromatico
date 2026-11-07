@@ -8,9 +8,8 @@ import {
   List,
   Volume2,
   Pencil,
-  Loader2,
 } from 'lucide-react';
-import { fetchBook, requestContinueStream } from '@/lib/api';
+import { fetchBook } from '@/lib/api';
 import { BookDoc, Chapter, Section } from '@mono-reader/shared';
 import { ThemeToggle } from '@/components/ThemeToggle';
 import { TocDrawer } from '@/components/TocDrawer';
@@ -41,9 +40,6 @@ export default function LayeredReaderPage({ params }: { params: Promise<{ id: st
   const resolvedParams = use(params);
 
   const [book, setBook] = useState<BookDoc | null>(null);
-  const [extraSections, setExtraSections] = useState<Section[]>([]);
-  const [continuationStep, setContinuationStep] = useState(1);
-  const [isGeneratingMore, setIsGeneratingMore] = useState(false);
 
   const [currentChapterIndex, setCurrentChapterIndex] = useState(0);
   const [visibleBlockIndex, setVisibleBlockIndex] = useState(0);
@@ -66,8 +62,7 @@ export default function LayeredReaderPage({ params }: { params: Promise<{ id: st
   const contentRef = useRef<HTMLElement | null>(null);
   const blockRefs = useRef<(HTMLElement | null)[]>([]);
   const activeBlockContainerRef = useRef<HTMLElement | null>(null);
-  const sentinelRef = useRef<HTMLDivElement | null>(null);
-  const loadingMoreRef = useRef(false);
+  const lastUserScrollRef = useRef(0);
 
   useEffect(() => {
     let active = true;
@@ -182,24 +177,8 @@ export default function LayeredReaderPage({ params }: { params: Promise<{ id: st
       }
     });
 
-    extraSections.forEach((sec: Section) => {
-      const text = (sec.content || '').trim();
-      if (!text) return;
-      list.push({
-        blockIndex: idx,
-        id: `${book.meta.id}-L${activeLayer}-b-${idx}`,
-        chapterIndex: book.chapters.length - 1,
-        type: sec.type === 'heading' ? 'heading' : sec.type === 'callout' ? 'callout' : 'paragraph',
-        title: sec.title,
-        content: text,
-        spokenText: sec.title ? `${sec.title}. ${text}` : text,
-        label: sec.title || text.slice(0, 50),
-      });
-      idx++;
-    });
-
     return list;
-  }, [book, activeLayer, extraSections]);
+  }, [book, activeLayer]);
 
   const audioBlocks: AudioBlockItem[] = useMemo(() => {
     return streamBlocks.map((b) => ({
@@ -212,68 +191,48 @@ export default function LayeredReaderPage({ params }: { params: Promise<{ id: st
 
   useEffect(() => {
     const targetIdx = audioOpen ? activeAudioBlockIndex : visibleBlockIndex;
-    activeBlockContainerRef.current = blockRefs.current[targetIdx] || contentRef.current;
+    activeBlockContainerRef.current =
+      document.getElementById(`reader-block-${targetIdx}`) ||
+      blockRefs.current[targetIdx] ||
+      contentRef.current;
   }, [audioOpen, activeAudioBlockIndex, visibleBlockIndex, streamBlocks.length]);
 
+  // Monitora interação direta do usuário com scroll para não intervir na rolagem manual
+  useEffect(() => {
+    const markUserScroll = () => {
+      lastUserScrollRef.current = Date.now();
+    };
+    window.addEventListener('wheel', markUserScroll, { passive: true });
+    window.addEventListener('touchmove', markUserScroll, { passive: true });
+    window.addEventListener(
+      'keydown',
+      (e) => {
+        if (['ArrowUp', 'ArrowDown', 'PageUp', 'PageDown', 'Space'].includes(e.code)) {
+          markUserScroll();
+        }
+      },
+      { passive: true }
+    );
+  }, []);
+
+  // Auto-scroll suave para o bloco ativo APENAS na transição de bloco e SE o usuário não estiver rolando
   useEffect(() => {
     if (!audioPlayback.isPlaying) return;
-    const el = blockRefs.current[activeAudioBlockIndex];
+    // Se o usuário interagiu com o scroll nos últimos 4 segundos, respeita e não puxa a tela
+    if (Date.now() - lastUserScrollRef.current < 4000) return;
+
+    const el =
+      document.getElementById(`reader-block-${activeAudioBlockIndex}`) ||
+      blockRefs.current[activeAudioBlockIndex];
     if (el) {
       const rect = el.getBoundingClientRect();
       const viewH = window.innerHeight;
-      if (rect.top < 110 || rect.bottom > viewH - 180) {
-        const y = rect.top + window.pageYOffset - viewH * 0.34;
+      if (rect.top < 60 || rect.bottom > viewH - 120) {
+        const y = rect.top + window.pageYOffset - viewH * 0.32;
         window.scrollTo({ top: Math.max(0, y), behavior: 'smooth' });
       }
     }
-  }, [activeAudioBlockIndex, audioPlayback.isPlaying]);
-
-  const loadMoreInfiniteBlocks = useCallback(async () => {
-    if (!book || loadingMoreRef.current) return;
-    loadingMoreRef.current = true;
-    setIsGeneratingMore(true);
-
-    try {
-      const tailBlocks = streamBlocks.slice(-3).map((b) => b.spokenText).join('\n\n');
-      const res = await requestContinueStream({
-        bookTitle: book.meta.title,
-        bookSubtitle: book.meta.subtitle,
-        previousContext: tailBlocks,
-        continuationStep,
-      });
-
-      if (res.sections && res.sections.length > 0) {
-        setExtraSections((prev) => [...prev, ...res.sections]);
-        setContinuationStep((prev) => prev + 1);
-      }
-    } catch (err) {
-      console.warn('Aviso ao expandir fluxo infinito em camadas:', err);
-    } finally {
-      setIsGeneratingMore(false);
-      loadingMoreRef.current = false;
-    }
-  }, [book, continuationStep, streamBlocks]);
-
-  useEffect(() => {
-    if (!book || loading || !sentinelRef.current) return;
-
-    const observer = new IntersectionObserver(
-      (entries) => {
-        for (const entry of entries) {
-          if (entry.isIntersecting && !loadingMoreRef.current) {
-            loadMoreInfiniteBlocks();
-          }
-        }
-      },
-      {
-        rootMargin: '0px 0px 900px 0px',
-        threshold: 0,
-      }
-    );
-
-    observer.observe(sentinelRef.current);
-    return () => observer.disconnect();
-  }, [book, loading, loadMoreInfiniteBlocks]);
+  }, [activeAudioBlockIndex]);
 
   useEffect(() => {
     if (!book || loading || streamBlocks.length === 0) return;
@@ -583,14 +542,15 @@ export default function LayeredReaderPage({ params }: { params: Promise<{ id: st
           })}
         </div>
 
-        {/* Sentinela Invisível de Scroll Infinito */}
-        <div ref={sentinelRef} className="py-12 flex items-center justify-center">
-          {isGeneratingMore && (
-            <div className="flex items-center gap-2 text-xs font-mono text-[var(--text-muted)]">
-              <Loader2 className="w-3.5 h-3.5 animate-spin" />
-              <span>Expandindo fluxo contínuo em camadas...</span>
-            </div>
-          )}
+        {/* Conclusão Elegante e Definitiva da Obra em Camadas */}
+        <div className="py-20 text-center border-t border-[var(--border-color)] mt-16 space-y-3">
+          <div className="text-2xl text-[var(--text-muted)] font-serif select-none">❦</div>
+          <p className="font-serif text-base italic text-[var(--text-secondary)]">
+            Fim do Livro em Camadas • {book.meta.title}
+          </p>
+          <div className="text-xs font-mono text-[var(--text-muted)]">
+            {streamBlocks.length} blocos completados
+          </div>
         </div>
       </main>
 
@@ -603,18 +563,19 @@ export default function LayeredReaderPage({ params }: { params: Promise<{ id: st
         onActiveBlockChange={setActiveAudioBlockIndex}
         bookTitle={book.meta.title}
         onPlaybackUpdate={setAudioPlayback}
-        onNearEnd={loadMoreInfiniteBlocks}
       />
 
       {/* Guia Animado do Lápis Editorial */}
       <ReadingPencilGuide
+        activeBlockId={`reader-block-${audioOpen ? activeAudioBlockIndex : visibleBlockIndex}`}
+        activeBlockKey={audioOpen ? activeAudioBlockIndex : visibleBlockIndex}
         containerRef={activeBlockContainerRef}
         isPlaying={audioPlayback.isPlaying}
         currentTime={audioPlayback.currentTime}
         duration={audioPlayback.duration}
         isLoading={audioPlayback.isLoading}
+        playbackRate={audioPlayback.playbackRate || 1}
         enabled={pencilEnabled}
-        activeBlockKey={audioOpen ? activeAudioBlockIndex : visibleBlockIndex}
       />
     </div>
   );

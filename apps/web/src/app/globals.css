@@ -214,7 +214,7 @@ body {
   position: fixed;
   inset: 0;
   pointer-events: none;
-  z-index: 520;
+  z-index: 450;
   opacity: 0;
   transition: opacity 0.25s ease;
   overflow: hidden;

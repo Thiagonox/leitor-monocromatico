@@ -29,6 +29,7 @@ export interface AudioPlaybackState {
   isLoading: boolean;
   activeBlockIndex: number;
   totalBlocks: number;
+  playbackRate?: number;
 }
 
 interface AudioPlayerModalProps {
@@ -174,8 +175,9 @@ export function AudioPlayerModal({
       isLoading,
       activeBlockIndex,
       totalBlocks: blocks.length,
+      playbackRate: rate,
     });
-  }, [isPlaying, currentTime, duration, isLoading, activeBlockIndex, blocks.length, onPlaybackUpdate]);
+  }, [isPlaying, currentTime, duration, isLoading, activeBlockIndex, blocks.length, rate, onPlaybackUpdate]);
 
   // Busca o áudio do bloco no Bucket S3 (ou gera via HeyGen) e decodifica em AudioBuffer
   const fetchAndDecodeBlock = useCallback(
@@ -624,7 +626,7 @@ export function AudioPlayerModal({
   const currentBlock = blocks[activeBlockIndex];
 
   return (
-    <div className="fixed bottom-0 left-0 right-0 sm:bottom-6 sm:right-6 sm:left-auto z-50 w-full sm:max-w-md bg-[var(--bg-surface)] border-t-2 sm:border border-[var(--border-strong)] sm:rounded-xl shadow-2xl p-3.5 pb-6 sm:pb-4 font-sans text-[var(--text-primary)] transition-all max-h-[90vh] overflow-y-auto box-border">
+    <div className="fixed bottom-0 left-0 right-0 sm:bottom-6 sm:right-6 sm:left-auto z-[600] w-full sm:max-w-md bg-[var(--bg-surface)] border-t-2 sm:border border-[var(--border-strong)] sm:rounded-xl shadow-2xl p-3.5 pb-6 sm:pb-4 font-sans text-[var(--text-primary)] transition-all max-h-[90vh] overflow-y-auto box-border">
       {/* Cabeçalho do Player Gapless */}
       <div className="flex items-center justify-between pb-2 border-b border-[var(--border-color)] mb-2.5">
         <div className="flex items-center gap-1.5 sm:gap-2 min-w-0">
