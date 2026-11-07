@@ -2,6 +2,18 @@ import { CatalogItem } from './types.js';
 
 export const DEFAULT_CATALOG: CatalogItem[] = [
   {
+    id: "linguagens-enem-completo",
+    title: "Manual Supremo de Linguagens, Códigos e suas Tecnologias",
+    subtitle: "O Curso Definitivo do ENEM por Ordem de Relevância e Peso na TRI: Da Interpretação Máxima às Artes, Literatura e Línguas Estrangeiras",
+    author: "Prof. Antigravity & Estudos Vivos da Linguagem",
+    category: "Curso Completo ENEM · Linguagens & Códigos",
+    chaptersCount: 68,
+    estimatedTime: "Aprox. 8 horas de imersão completa (68 Capítulos)",
+    file: "/data/linguagens-enem-completo.json",
+    description: "O mais completo curso de Linguagens, Códigos e suas Tecnologias já estruturado para o ENEM e vestibulares. Reúne todo o currículo em 68 capítulos ordenados rigorosamente do maior peso e retorno na TRI para o menor: 1. Interpretação de Texto e Estratégias Argumentativas (~35-40% dos pontos), 2. Gêneros Textuais e Multimodalidade (~25%), 3. Língua Estrangeira Instrumental (Inglês e Espanhol - Questões 1 a 5), 4. Gramática Aplicada ao Sentido e Coesão (~15%), 5. Literatura e Dossiês de Autores Canônicos (~15%), 6. História da Arte, Cultura Visual e Patrimônio (~7%) e 7. Linguagem Corporal e Cultura do Movimento (~3%). Cada capítulo traz conceitos mastigados, quadros comparativos, exemplos reais de prova e questões formativas comentadas.",
+    isPriority: true
+  },
+  {
     id: "redacao-enem",
     title: "Manual Vivo de Redação e Argumentação Nota 1000",
     subtitle: "Como Interpretar Qualquer Tema, Construir uma Tese Inabalável, Dominar os Quatro Parágrafos e Aplicar Repertórios Socioculturais com Fluidez",
@@ -11,78 +23,6 @@ export const DEFAULT_CATALOG: CatalogItem[] = [
     estimatedTime: "Aprox. 78 min de aula",
     file: "/data/redacao-enem.json",
     description: "Uma imersão completa, fluida e conversada em toda a engenharia da redação nota 1000 do ENEM: visão panorâmica da estrutura dissertativo-argumentativa, leitura cirúrgica do tema, construção da tese, introdução passo a passo, desenvolvimento 1 e 2, conclusão com os 5 elementos da proposta de intervenção, as cinco competências e um arsenal completo com os 11 eixos de repertório sociocultural explicados e aplicados em parágrafos reais.",
-    isPriority: true
-  },
-  {
-    id: "interpretacao-de-texto",
-    title: "Manual Vivo de Interpretação e Compreensão Textual",
-    subtitle: "Como Ler nas Entrelinhas, Dominar a Argumentação e Destravar Qualquer Texto sem Mistério",
-    author: "Prof. Antigravity & Estudos Vivos da Linguagem",
-    category: "Língua Portuguesa & Prática de Leitura",
-    chaptersCount: 15,
-    estimatedTime: "Aprox. 110 min de aula",
-    file: "/data/interpretacao-de-texto.json",
-    description: "Uma verdadeira imersão didática em forma de conversa viva: aprenda compreensão vs interpretação, tema e tese, inferência, implícitos e pressupostos, ironia e humor, intertextualidade, a função social dos textos, relação texto e contexto histórico, estratégias persuasivas e operadores argumentativos com dezenas de exemplos cotidianos, notícias e questões resolvidas passo a passo.",
-    isPriority: true
-  },
-  {
-    id: "generos-textuais",
-    title: "Manual Vivo de Gêneros Textuais: Do Jornalismo às Mídias Digitais",
-    subtitle: "Tipologias, Propósitos Comunicativos e Estratégias Discursivas na Prática",
-    author: "Prof. Antigravity & Estudos Vivos da Linguagem",
-    category: "Língua Portuguesa & Gêneros do Discurso",
-    chaptersCount: 11,
-    estimatedTime: "Aprox. 85 min de aula",
-    file: "/data/generos-textuais.json",
-    description: "Um curso aprofundado e prático sobre a multiplicidade dos gêneros discursivos: notícia, reportagem investigativa, editorial, artigo de opinião, crônica urbana, propaganda e publicidade, charges e cartuns multimodais, lírica poética, resenha crítica de obras culturais, divulgação científica e os novos gêneros digitais em rede.",
-    isPriority: true
-  },
-  {
-    id: "gramatica-aplicada",
-    title: "Manual Vivo de Gramática Aplicada ao Texto e aos Sentidos",
-    subtitle: "Sintaxe, Morfologia e Estilística: Do Mecanismo da Frase aos Efeitos Discursivos e Pegadinhas de Prova",
-    author: "Prof. Antigravity & Estudos Vivos da Linguagem",
-    category: "Gramática Aplicada & Norma Padrão",
-    chaptersCount: 10,
-    estimatedTime: "Aprox. 95 min de aula",
-    file: "/data/gramatica-aplicada.json",
-    description: "Gramática sem decoreba e aplicada ao sentido: a função discursiva das classes de palavras, tempos e aspectos verbais na narrativa, harmonia na concordância verbal e nominal, regência e os segredos dos verbos de duplo sentido, o guia definitivo da crase sem medo, pontuação e vírgula sintática, pronomes demonstrativos e colocação, tecidos da coesão e coerência, apagamento do agente nas vozes verbais e arquitetura do período composto.",
-    isPriority: true
-  },
-  {
-    id: "literatura-e-autores",
-    title: "Manual Vivo de Literatura: Escolas Literárias e Autores Fundamentais",
-    subtitle: "Do Trovadorismo Medieval à Contemporaneidade: Estética, Contexto Histórico, Análise de Textos e Dossiês Monográficos",
-    author: "Prof. Antigravity & Estudos Vivos da Linguagem",
-    category: "Literatura Brasileira e Universal",
-    chaptersCount: 14,
-    estimatedTime: "Aprox. 120 min de aula",
-    file: "/data/literatura-e-autores.json",
-    description: "Panorama completo e envolvente da evolução literária de língua portuguesa: Trovadorismo, Humanismo de Gil Vicente, Classicismo de Camões, Barroco e o dilema carne/espírito, o bucolismo árcade na Inconfidência Mineira, as três gerações românticas, o bisturi do Realismo e Naturalismo, o mármore parnasiano, o mistério simbolista, as três fases do Modernismo brasileiro e as vozes da Contemporaneidade. Inclui dossiês analíticos detalhados de Machado de Assis, José de Alencar, Carlos Drummond de Andrade, Clarice Lispector, Graciliano Ramos, Guimarães Rosa e Manuel Bandeira.",
-    isPriority: true
-  },
-  {
-    id: "historia-da-arte-e-cultura",
-    title: "Manual Vivo de História da Arte, Cultura Visual e Patrimônio",
-    subtitle: "Das Matrizes Indígenas e Africanas às Vanguardas Modernas, Cinema, Fotografia e Festas Populares",
-    author: "Prof. Antigravity & Estudos Vivos da Linguagem",
-    category: "Artes & Cultura Visual",
-    chaptersCount: 9,
-    estimatedTime: "Aprox. 90 min de aula",
-    file: "/data/historia-da-arte-e-cultura.json",
-    description: "Uma jornada estética transformadora: as matrizes ancestrais indígenas e afro-brasileiras, a revolução espacial da perspectiva no Renascimento, o drama do chiaroscuro e o barroco mineiro de Aleijadinho e Mestre Ataíde, a luz fugaz dos Impressionistas e Pós-Impressionistas, a explosão antropofágica da Semana de 22 e do Modernismo (Anita Malfatti, Tarsila do Amaral, Di Cavalcanti), a linguagem e montagem do Cinema e do Cinema Novo, o instante decisivo na Fotografia e as celebrações vivas da Cultura Popular e do patrimônio imaterial.",
-    isPriority: true
-  },
-  {
-    id: "lingua-estrangeira-ingles-espanhol",
-    title: "Manual Vivo de Línguas Estrangeiras: Inglês e Espanhol Instrumental",
-    subtitle: "Técnicas de Leitura, Vocabulário Crítico, Falsos Cognatos, Gêneros Globais e Contexto Sociocultural",
-    author: "Prof. Antigravity & Estudos Vivos da Linguagem",
-    category: "Línguas Estrangeiras & Leitura Instrumental",
-    chaptersCount: 8,
-    estimatedTime: "Aprox. 85 min de aula",
-    file: "/data/lingua-estrangeira-ingles-espanhol.json",
-    description: "Curso completo e prático de leitura instrumental em Inglês e Espanhol para exames de alto desempenho: métodos velozes de Skimming e Scanning, desmistificação de vocabulário por prefixos e sufixos, o arsenal definitivo de conectivos argumentativos (linking words e marcadores del discurso), o guia completo de falsos amigos (false friends e heterosemánticos comparados), decodificação crítica de charges, notícias internacionais e artigos científicos, e a visão plural e descolonizada das variedades mundiais do inglês e do espanhol.",
     isPriority: true
   },
   {
