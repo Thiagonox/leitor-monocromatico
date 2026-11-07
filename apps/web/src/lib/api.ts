@@ -7,6 +7,8 @@ import {
   DEFAULT_CATALOG,
   ChatRequest,
   ChatResponse,
+  Section,
+  AgentId,
 } from '@mono-reader/shared';
 
 const API_BASE = process.env.NEXT_PUBLIC_API_URL || '';
@@ -146,6 +148,30 @@ export async function requestTTS(payload: {
     data.audioUrl = resolveAudioUrl(data.audioUrl);
   }
   return data;
+}
+
+export async function requestContinueStream(payload: {
+  bookTitle: string;
+  bookSubtitle?: string;
+  previousContext?: string;
+  continuationStep: number;
+  agentId?: AgentId;
+}): Promise<{ sections: Section[]; model?: string }> {
+  const res = await fetch(`${API_BASE}/api/ai/continue-stream`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(payload),
+  });
+
+  if (!res.ok) {
+    throw new Error(`Falha ao expandir leitura infinita: HTTP ${res.status}`);
+  }
+
+  const data = await res.json();
+  return {
+    sections: Array.isArray(data.sections) ? data.sections : [],
+    model: data.model,
+  };
 }
 
 export async function sendAgentChatMessage(payload: ChatRequest): Promise<ChatResponse> {

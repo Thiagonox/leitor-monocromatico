@@ -331,6 +331,152 @@ Estruture sua explicação conforme sua metodologia e tom característico.`;
   });
 });
 
+// Endpoint de Continuidade de Leitura (Scroll Infinito Contínuo sem Paginação)
+aiRouter.post('/continue-stream', async (req: Request, res: Response) => {
+  const {
+    bookTitle = 'Estudo Aprofundado',
+    bookSubtitle = '',
+    previousContext = '',
+    continuationStep = 1,
+    agentId = 'professor',
+    apiKey,
+    model,
+  } = req.body;
+
+  const validAgentId: AgentId = (agentId in AGENT_PERSONAS) ? (agentId as AgentId) : 'professor';
+  const agent = AGENT_PERSONAS[validAgentId];
+  const stepNum = Math.max(1, Number(continuationStep) || 1);
+
+  const angles = [
+    'Estudos de Caso Reais, Repertório Sociocultural e Exemplos Concretos de Alta Nota',
+    'Erros Invisíveis, Distratores Clássicos e Como Blindar Cada Argumento na Prática',
+    'Conexões Interdisciplinares: Filosofia, Sociologia, Direito Constitucional e Atualidades',
+    'Engenharia Sintática, Coesão Referencial, Operadores Argumentativos e Fluidez Textual',
+    'Simulação Prática Comentada: Do Rascunho Bruto à Versão Lapidada Nota 1000',
+    'Fronteiras Avançadas do Tema: Dilemas Contemporâneos e Impactos Estruturais',
+  ];
+  const currentAngle = angles[(stepNum - 1) % angles.length];
+
+  const systemPrompt = `${agent.systemPrompt}
+Você está escrevendo a continuação fluida de um fluxo de leitura infinito (sem paginação e sem cortes) da obra "${bookTitle}".
+Mantenha total continuidade com o que já foi lido, explorando agora o eixo: "${currentAngle}".
+Responda APENAS com um objeto JSON válido contendo um array "sections" com 5 a 6 novos blocos editoriais (heading, paragraph, callout, quote).`;
+
+  const userPrompt = `Continue o fluxo contínuo da obra "${bookTitle}" (${bookSubtitle}).
+Trecho imediatamente anterior:
+"${String(previousContext).slice(-600)}"
+
+Eixo de aprofundamento desta sequência (#${stepNum}): ${currentAngle}.
+
+Retorne APENAS um JSON válido neste formato exato:
+{
+  "sections": [
+    {"type": "heading", "level": 2, "content": "Subtítulo instigante dando sequência natural ao texto"},
+    {"type": "paragraph", "content": "Parágrafo denso, fluido e didático conectando o ponto anterior ao novo ângulo..."},
+    {"type": "paragraph", "content": "Segundo parágrafo com exemplo concreto, aplicação real ou análise detalhada..."},
+    {"type": "callout", "title": "Síntese Estratégica", "content": "Ponto-chave prático para aplicação imediata..."},
+    {"type": "quote", "content": "Reflexão ou citação pertinente ao argumento desenvolvido.", "author": "Referência Clássica / ${agent.name}"},
+    {"type": "paragraph", "content": "Parágrafo de transição mantendo o ritmo contínuo da leitura..."}
+  ]
+}`;
+
+  try {
+    const { text, model: outModel } = await callOpenRouterLlm(
+      [
+        { role: 'system', content: systemPrompt },
+        { role: 'user', content: userPrompt },
+      ],
+      2800,
+      0.65,
+      16000
+    );
+
+    if (text) {
+      let cleaned = text.trim();
+      if (cleaned.startsWith('```')) {
+        cleaned = cleaned.replace(/^```(?:json)?\s*/i, '').replace(/\s*```$/i, '');
+      }
+      const sIdx = cleaned.indexOf('{');
+      const eIdx = cleaned.lastIndexOf('}');
+      if (sIdx !== -1 && eIdx !== -1) {
+        cleaned = cleaned.slice(sIdx, eIdx + 1);
+      }
+      const parsed = JSON.parse(cleaned);
+      if (Array.isArray(parsed.sections) && parsed.sections.length >= 2) {
+        return res.json({
+          status: 'ok',
+          sections: parsed.sections,
+          model: outModel || 'OpenRouter',
+        });
+      }
+    }
+  } catch (e) {
+    console.warn('[Continue Stream OpenRouter Warn]:', e);
+  }
+
+  try {
+    const { text, model: outModel } = await callNvidiaLlm(
+      [
+        { role: 'system', content: systemPrompt },
+        { role: 'user', content: userPrompt },
+      ],
+      apiKey,
+      model
+    );
+    if (text) {
+      const sIdx = text.indexOf('{');
+      const eIdx = text.lastIndexOf('}');
+      if (sIdx !== -1 && eIdx !== -1) {
+        const parsed = JSON.parse(text.slice(sIdx, eIdx + 1));
+        if (Array.isArray(parsed.sections) && parsed.sections.length >= 2) {
+          return res.json({
+            status: 'ok',
+            sections: parsed.sections,
+            model: outModel || 'Nvidia',
+          });
+        }
+      }
+    }
+  } catch (e) {}
+
+  // Continuação Determinística Contextual Rica (garante que o scroll infinito nunca pare)
+  const fallbackSections = [
+    {
+      type: 'heading',
+      level: 2,
+      content: `${currentAngle}`,
+    },
+    {
+      type: 'paragraph',
+      content: `Avançando organicamente na análise de ${bookTitle}, é indispensável observar como a teoria se materializa quando submetida a situações reais de pressão argumentativa. Não basta enunciar uma premissa; a maturidade intelectual exige que cada afirmação seja sustentada por um mecanismo causal explícito — demonstrando por que o fenômeno ocorre, quais forças institucionais o alimentam e quais consequências concretas dele decorrem.`,
+    },
+    {
+      type: 'paragraph',
+      content: `Sob a ótica de ${agent.name}, a diferença entre uma leitura superficial e o domínio completo de ${bookTitle} reside na capacidade de conectar conceitos abstratos a fatos observáveis. Quando você articula repertório legítimo com precisão vocabular, o texto deixa de ser uma sequência de opiniões e passa a operar como uma demonstração lógica irrefutável.`,
+    },
+    {
+      type: 'callout',
+      title: `Diretriz de Continuidade · Sequência #${stepNum}`,
+      content: `Ao aplicar este eixo (${currentAngle}), verifique sempre três pilares: 1) A clareza do recorte temático; 2) A pertinência produtiva do repertório mobilizado; 3) O encadeamento fluido entre a causa diagnosticada e a intervenção proposta.`,
+    },
+    {
+      type: 'quote',
+      content: `A clareza não é o ornamento do pensamento, mas a própria prova de que o conceito foi compreendido até a sua raiz.`,
+      author: agent.authorLabel,
+    },
+    {
+      type: 'paragraph',
+      content: `Prosseguindo nessa linha de raciocínio, observe nos parágrafos seguintes como cada camada de aprofundamento amplia seu repertório ativo sem quebrar a cadência da leitura contínua.`,
+    },
+  ];
+
+  return res.json({
+    status: 'ok',
+    sections: fallbackSections,
+    model: 'Motor de Fluxo Infinito Contínuo',
+  });
+});
+
 import {
   getAudioCacheKey,
   isAudioInBucket,

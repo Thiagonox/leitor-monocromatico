@@ -19,6 +19,7 @@ interface ReadingPencilGuideProps {
   duration: number;
   isLoading?: boolean;
   enabled?: boolean;
+  activeBlockKey?: string | number;
 }
 
 export function ReadingPencilGuide({
@@ -28,6 +29,7 @@ export function ReadingPencilGuide({
   duration,
   isLoading = false,
   enabled = true,
+  activeBlockKey = 0,
 }: ReadingPencilGuideProps) {
   const cursorRef = useRef<HTMLDivElement | null>(null);
   const trailRef = useRef<HTMLDivElement | null>(null);
@@ -119,8 +121,7 @@ export function ReadingPencilGuide({
     }
 
     setWords(wordList);
-    stateRef.current.initializedPos = false;
-  }, [containerRef]);
+  }, [containerRef, activeBlockKey]);
 
   // Loop de Animação contínua (rAF) para suavidade máxima
   useEffect(() => {

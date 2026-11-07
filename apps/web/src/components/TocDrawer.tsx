@@ -36,7 +36,7 @@ export function TocDrawer({
         <div>
           <div className="flex items-center justify-between pb-4 border-b border-[var(--border-color)] mb-6">
             <div>
-              <span className="text-[10px] font-mono uppercase tracking-wider text-[var(--text-muted)]">Sumário da Obra</span>
+              <span className="text-[10px] font-mono uppercase tracking-wider text-[var(--text-muted)]">Índice de Tópicos do Fluxo</span>
               <h2 className="font-serif text-lg font-bold text-[var(--text-primary)] line-clamp-1">
                 {bookTitle}
               </h2>
@@ -81,7 +81,7 @@ export function TocDrawer({
         </div>
 
         <div className="pt-6 border-t border-[var(--border-color)] mt-6 text-xs text-[var(--text-muted)] font-mono text-center">
-          Total de {chapters.length} capítulos
+          Fluxo em Scroll Infinito Contínuo
         </div>
       </div>
     </div>

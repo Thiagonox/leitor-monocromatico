@@ -25,7 +25,61 @@ export function getS3Client(): S3Client {
   return s3ClientInstance;
 }
 
-// Converte PCM linear 16-bit 44.1kHz mono em arquivo WAV RIFF universal
+// Remove silêncio excessivo no início e fim do buffer PCM 16-bit mono e aplica micro-fade suave (gapless)
+export function trimPcmSilence(
+  pcmBuffer: Buffer,
+  sampleRate: number = 44100,
+  threshold: number = 140
+): Buffer {
+  const totalSamples = Math.floor(pcmBuffer.length / 2);
+  if (totalSamples < sampleRate * 0.1) return pcmBuffer;
+
+  let firstActive = 0;
+  let lastActive = totalSamples - 1;
+
+  for (let i = 0; i < totalSamples; i++) {
+    const sample = Math.abs(pcmBuffer.readInt16LE(i * 2));
+    if (sample > threshold) {
+      firstActive = i;
+      break;
+    }
+  }
+
+  for (let i = totalSamples - 1; i >= firstActive; i--) {
+    const sample = Math.abs(pcmBuffer.readInt16LE(i * 2));
+    if (sample > threshold) {
+      lastActive = i;
+      break;
+    }
+  }
+
+  // Margem natural de 20ms no início e 45ms no final para respiração contínua sem corte perceptível
+  const leadSamples = Math.floor(sampleRate * 0.02);
+  const tailSamples = Math.floor(sampleRate * 0.045);
+  const startSample = Math.max(0, firstActive - leadSamples);
+  const endSample = Math.min(totalSamples, lastActive + tailSamples);
+
+  if (endSample <= startSample) return pcmBuffer;
+
+  const trimmed = Buffer.from(pcmBuffer.subarray(startSample * 2, endSample * 2));
+  const trimmedSamples = Math.floor(trimmed.length / 2);
+  const fadeSamples = Math.min(Math.floor(sampleRate * 0.006), Math.floor(trimmedSamples / 4));
+
+  // Aplica micro-fade de 6ms nas bordas para eliminar qualquer estalo (click/pop) na junção gapless
+  for (let i = 0; i < fadeSamples; i++) {
+    const gain = i / fadeSamples;
+    const inVal = Math.round(trimmed.readInt16LE(i * 2) * gain);
+    trimmed.writeInt16LE(Math.max(-32768, Math.min(32767, inVal)), i * 2);
+
+    const outIdx = trimmedSamples - 1 - i;
+    const outVal = Math.round(trimmed.readInt16LE(outIdx * 2) * gain);
+    trimmed.writeInt16LE(Math.max(-32768, Math.min(32767, outVal)), outIdx * 2);
+  }
+
+  return trimmed;
+}
+
+// Converte PCM linear 16-bit 44.1kHz mono em arquivo WAV RIFF universal com trim gapless
 export function pcmToWav(
   pcmBuffer: Buffer,
   sampleRate: number = 44100,
@@ -35,7 +89,10 @@ export function pcmToWav(
   const bytesPerSample = Math.max(1, Math.floor(bitsPerSample / 8));
   const blockAlign = numChannels * bytesPerSample;
   const validLength = pcmBuffer.length - (pcmBuffer.length % blockAlign);
-  const cleanPcm = validLength === pcmBuffer.length ? pcmBuffer : pcmBuffer.subarray(0, validLength);
+  const alignedPcm = validLength === pcmBuffer.length ? pcmBuffer : pcmBuffer.subarray(0, validLength);
+  const cleanPcm = (numChannels === 1 && bitsPerSample === 16)
+    ? trimPcmSilence(alignedPcm, sampleRate)
+    : alignedPcm;
 
   const byteRate = sampleRate * blockAlign;
   const dataSize = cleanPcm.length;
@@ -58,24 +115,18 @@ export function pcmToWav(
   return Buffer.concat([header, cleanPcm]);
 }
 
-// Hash determinístico para cache no Bucket Railway (canônico por capítulo para garantir cache compartilhado entre todos os usuários)
-export function getAudioCacheKey(text: string, voice: string = 'nadine', chapterId?: string): string {
+// Hash determinístico por bloco de texto para cache compartilhado no Bucket Railway S3
+export function getAudioCacheKey(text: string, voice: string = 'nadine', _chapterId?: string): string {
   const cleanVoice = (voice || 'nadine').trim().toLowerCase();
 
-  if (chapterId && chapterId.trim()) {
-    const cleanChapter = chapterId.trim().toLowerCase();
-    const content = `heygen-voice-1-turbo:${cleanVoice}:${cleanChapter}`;
-    return crypto.createHash('sha256').update(content).digest('hex').slice(0, 24);
-  }
-
-  // Fallback quando não há chapterId: normaliza quebras de linha e múltiplos espaços
+  // Normaliza o texto do bloco para garantir que o mesmo parágrafo compartilhe o mesmo áudio no S3
   const normalized = (text || '')
     .replace(/[*#_`~>\[\]\r]/g, ' ')
     .replace(/\s+/g, ' ')
     .trim()
-    .slice(0, 4000);
+    .slice(0, 2500);
 
-  const content = `heygen-voice-1-turbo:${cleanVoice}:${normalized}`;
+  const content = `heygen-voice-1-turbo:block-v2:${cleanVoice}:${normalized}`;
   return crypto.createHash('sha256').update(content).digest('hex').slice(0, 24);
 }
 
