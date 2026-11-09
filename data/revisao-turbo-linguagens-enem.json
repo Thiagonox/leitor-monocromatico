@@ -1,0 +1,1512 @@
+{
+  "meta": {
+    "id": "revisao-turbo-linguagens-enem",
+    "title": "Revisão Turbo ENEM: Linguagens em Flashcards & Gatilhos de Prova",
+    "subtitle": "O Raio-X Mais Rápido e Focado do Edital: 31 Estações de Alta Retenção, Pegadinhas da Banca e Resumos de Bolso",
+    "author": "Prof. Antigravity & Revisão Estratégica ENEM",
+    "date": "2026",
+    "language": "pt-BR",
+    "category": "Revisão Turbo · Tiro Curto & Alta Retenção",
+    "chaptersCount": 31,
+    "estimatedReadingTime": "Aprox. 70 min de revisão acelerada (31 Estações Flash)",
+    "description": "A revisão definitiva de alta velocidade para Linguagens, Códigos e suas Tecnologias no ENEM. Estruturada em 31 estações de tiro curto organizadas do maior peso na TRI para o menor: cada capítulo traz o Raio-X em 30 segundos, como o INEP cobra a questão no enunciado, o distrator fatal que elimina candidatos desatentos, um exemplo relâmpago resolvido e o flashcard mental de bolso para memorização imediata. Cobre toda a interpretação, gêneros, gramática aplicada ao sentido, linha do tempo literária, autores canônicos, artes, línguas estrangeiras (inglês/espanhol) e cultura corporal.",
+    "isPriority": true,
+    "createdAt": "2026-11-07T23:20:00Z",
+    "style": "editorial-flashcard-turbo"
+  },
+  "settings": {
+    "defaultFont": "serif",
+    "defaultTheme": "eink",
+    "fontSize": 20
+  },
+  "chapters": [
+    {
+      "id": "cap-01",
+      "number": "ESTAÇÃO I",
+      "title": "Tema, Tese e Funil de Assunto: O Filtro em 5 Segundos",
+      "epigraph": {
+        "text": "A clareza de pensamento precede a precisão da resposta.",
+        "author": "Princípio da TRI"
+      },
+      "sections": [
+        {
+          "type": "heading",
+          "level": 2,
+          "content": "⚡ O Raio-X em 30 Segundos"
+        },
+        {
+          "type": "paragraph",
+          "content": "No ENEM, assunto, tema e tese são três andares de um funil que você não pode misturar. Assunto é o terreno amplo (ex: 'Cinema'). Tema é o recorte específico delimitado pelo autor (ex: 'O acesso elitizado às salas de cinema no Brasil'). Tese é a tomada de posição crítica diante desse tema (ex: 'A concentração das salas nos grandes centros urbanos viola o direito constitucional à cultura'). Toda questão de interpretação que pergunta o 'objetivo central do texto' quer a TESE, nunca o mero assunto genérico."
+        },
+        {
+          "type": "heading",
+          "level": 2,
+          "content": "🎯 Como o ENEM Cobra no Enunciado"
+        },
+        {
+          "type": "paragraph",
+          "content": "Procure verbos de comando e expressões como: 'O propósito comunicativo central do autor é...', 'A tese defendida no texto sustenta que...' ou 'O posicionamento expresso pelo articulista evidencia que...'. Quando o enunciado falar em 'propósito', 'tese' ou 'intuito principal', descarte imediatamente as alternativas que apenas descrevem um exemplo periférico ou repetem o assunto vago."
+        },
+        {
+          "type": "callout",
+          "title": "⚠️ O Distrator Fatal (A Pegadinha da Alternativa)",
+          "content": "A alternativa distratora clássica traz uma afirmação 100% verdadeira sobre o texto, mas que se refere apenas a um detalhe do segundo parágrafo ou ao assunto amplo demais. Lembre-se: estar escrito no texto não significa responder à pergunta. Se a alternativa não sintetizar a tese do autor, ela é um distrator de tangenciamento ou redução."
+        },
+        {
+          "type": "heading",
+          "level": 2,
+          "content": "💡 Aplicação Relâmpago Resolvida"
+        },
+        {
+          "type": "paragraph",
+          "content": "Texto rápido: 'Embora a tecnologia conecte pessoas a milhares de quilômetros, as redes sociais criaram bolhas de convivência onde o contraditório é sumariamente silenciado, enfraquecendo o debate democrático.' Se a pergunta for 'A tese central do excerto é:', a resposta certa apontará que as redes comprometem a democracia pelo isolamento em bolhas. Distrator típico: 'A tecnologia permitiu a conexão de pessoas distantes' (fato citado, mas oposto à tese crítica)."
+        },
+        {
+          "type": "callout",
+          "title": "📌 Flashcard Mental de Bolso",
+          "content": "Assunto é 'sobre o quê' (cinema). Tema é 'qual recorte' (falta de acesso). Tese é 'qual a bronca do autor' (isso fere a cidadania). A questão de propósito comunicativo SEMPRE cobra a bronca do autor!"
+        }
+      ]
+    },
+    {
+      "id": "cap-02",
+      "number": "ESTAÇÃO II",
+      "title": "Ideia Principal versus Secundária: A Armadilha do Detalhe",
+      "epigraph": {
+        "text": "Nem tudo que reluz no texto é a viga que o sustenta.",
+        "author": "Guia de Leitura Analítica"
+      },
+      "sections": [
+        {
+          "type": "heading",
+          "level": 2,
+          "content": "⚡ O Raio-X em 30 Segundos"
+        },
+        {
+          "type": "paragraph",
+          "content": "Textos do ENEM possuem uma espinha dorsal (ideia principal) e costelas (ideias secundárias). As ideias secundárias servem apenas para ilustrar, exemplificar, comparar ou justificar a espinha dorsal. Se você retirar um exemplo do texto, a tese continua em pé; se retirar a ideia principal, o texto desmorona. A TRI pune candidatos que marcam o exemplo ilustrativo achando que ele é a mensagem nuclear."
+        },
+        {
+          "type": "heading",
+          "level": 2,
+          "content": "🎯 Como o ENEM Cobra no Enunciado"
+        },
+        {
+          "type": "paragraph",
+          "content": "O enunciado costuma questionar: 'No desenvolvimento da argumentação, o autor recorre à menção de [X] com a finalidade de...'. Note que a questão não quer saber o que [X] significa isoladamente, mas sim qual função de apoio [X] exerce em relação à tese mestra do parágrafo."
+        },
+        {
+          "type": "callout",
+          "title": "⚠️ O Distrator Fatal (A Pegadinha da Alternativa)",
+          "content": "Distrator de Elevação: transforma uma ilustração secundária em finalidade mestra do artigo. Por exemplo, se o autor cita brevemente a Finlândia para ilustrar um modelo educacional, o distrator dirá que o objetivo do autor era 'apresentar um panorama histórico da educação escandinava'."
+        },
+        {
+          "type": "heading",
+          "level": 2,
+          "content": "💡 Aplicação Relâmpago Resolvida"
+        },
+        {
+          "type": "paragraph",
+          "content": "Se o texto afirma: 'A evasão escolar no ensino médio decorre da necessidade precoce de geração de renda, como atesta o caso do jovem Pedro, que abandonou os estudos para trabalhar como entregador.' Pergunta: 'A referência ao jovem Pedro visa a...' Resposta: 'Concretizar por meio de um caso particular o impacto da pressão econômica na evasão escolar.' Distrator: 'Narrar a biografia de um entregador urbano.'"
+        },
+        {
+          "type": "callout",
+          "title": "📌 Flashcard Mental de Bolso",
+          "content": "Exemplo nunca é tese! Dados estatísticos, casos particulares e comparações são apenas tijolos de sustentação; o objetivo da questão é sempre a parede que eles erguem."
+        }
+      ]
+    },
+    {
+      "id": "cap-03",
+      "number": "ESTAÇÃO III",
+      "title": "Inferência Válida versus Extrapolação Indevida",
+      "epigraph": {
+        "text": "Interpretar é deduzir com autorização prévia das pistas da escrita.",
+        "author": "Umberto Eco"
+      },
+      "sections": [
+        {
+          "type": "heading",
+          "level": 2,
+          "content": "⚡ O Raio-X em 30 Segundos"
+        },
+        {
+          "type": "paragraph",
+          "content": "Inferência é a dedução lógica e obrigatória a partir de pistas explícitas deixadas pelo texto. Extrapolação é quando você usa suas opiniões pessoais, ideologias ou conhecimentos de mundo prévios para inventar conclusões que o autor jamais autorizou. No ENEM, se o texto não fornece a premissa de sustentação, a alternativa é falsa, mesmo que você concorde pessoalmente com ela na vida real."
+        },
+        {
+          "type": "heading",
+          "level": 2,
+          "content": "🎯 Como o ENEM Cobra no Enunciado"
+        },
+        {
+          "type": "paragraph",
+          "content": "Comandos clássicos: 'Depreende-se do texto que...', 'Infere-se da leitura que...' ou 'A reflexão proposta permite concluir que...'. O verbo 'depreender' significa puxar o fio lógico escondido na tessitura das palavras."
+        },
+        {
+          "type": "callout",
+          "title": "⚠️ O Distrator Fatal (A Pegadinha da Alternativa)",
+          "content": "O distrator sedutor é aquela alternativa que parece politicamente perfeita, inteligente ou filosoficamente bonita, mas que diz muito mais do que o texto permitiu. O candidato desatento pensa: 'Isso é verdade no mundo real!' e marca. Erro fatal de extrapolação!"
+        },
+        {
+          "type": "heading",
+          "level": 2,
+          "content": "💡 Aplicação Relâmpago Resolvida"
+        },
+        {
+          "type": "paragraph",
+          "content": "Texto: 'O percentual de jovens que declaram ler ao menos um livro por mês caiu 14% na última década.' O que se infere validamente: 'Houve uma retração no hábito mensal de leitura entre o público jovem recente.' O que é extrapolação indevida: 'Os smartphones destruíram a capacidade cognitiva das novas gerações.' (O texto não citou smartphones nem destruição cognitiva)."
+        },
+        {
+          "type": "callout",
+          "title": "📌 Flashcard Mental de Bolso",
+          "content": "Regra de ouro da inferência: se a alternativa depende de um fato que não está ancorado em nenhuma palavra ou conector do texto, é extrapolação. Fique preso ao texto como um detetive às pistas da cena!"
+        }
+      ]
+    },
+    {
+      "id": "cap-04",
+      "number": "ESTAÇÃO IV",
+      "title": "Pressupostos e Subentendidos: Lendo os Não-Ditos",
+      "epigraph": {
+        "text": "As palavras dizem o que mostram; a sintaxe revela o que escondem.",
+        "author": "Oswald Ducrot"
+      },
+      "sections": [
+        {
+          "type": "heading",
+          "level": 2,
+          "content": "⚡ O Raio-X em 30 Segundos"
+        },
+        {
+          "type": "paragraph",
+          "content": "Pressuposto é uma informação não dita explicitamente, mas marcada obrigatoriamente por um elemento linguístico (um verbo, um advérbio ou uma oração adjetiva). Se eu digo 'Mariana deixou de fumar', o verbo 'deixou' pressupõe gramaticalmente que ela fumava antes. Já o subentendido é uma insinuação que depende totalmente do contexto e da sagacidade do leitor, podendo ser negada pelo emissor ('Está frio aqui' subentende 'feche a janela')."
+        },
+        {
+          "type": "heading",
+          "level": 2,
+          "content": "🎯 Como o ENEM Cobra no Enunciado"
+        },
+        {
+          "type": "paragraph",
+          "content": "O ENEM adora questionar o papel de advérbios e adjetivos: 'O emprego do advérbio [ainda / já / até] no trecho denota o pressuposto de que...' ou 'A estratégia argumentativa constrói o subentendido de que...'."
+        },
+        {
+          "type": "callout",
+          "title": "⚠️ O Distrator Fatal (A Pegadinha da Alternativa)",
+          "content": "Gatilhos gramaticais de pressuposto: verbos que indicam mudança ou continuidade ('voltou a', 'começou a', 'parou de'), advérbios temporais ('ainda' pressupõe que algo continuava até então; 'já' pressupõe mudança antes do esperado) e orações subordinadas adjetivas explicativas."
+        },
+        {
+          "type": "heading",
+          "level": 2,
+          "content": "💡 Aplicação Relâmpago Resolvida"
+        },
+        {
+          "type": "paragraph",
+          "content": "Frase de propaganda: 'Até os bancos estatais agora oferecem taxas justas.' O vocábulo 'até' é um operador inclusivo de escala extrema que pressupõe que os bancos estatais eram os mais improváveis ou os últimos a praticar tais taxas. Gabarito imediato."
+        },
+        {
+          "type": "callout",
+          "title": "📌 Flashcard Mental de Bolso",
+          "content": "Pressuposto tem carimbo gramatical indiscutível no texto ('deixou', 'ainda', 'já'). Subentendido fica solto no ar e depende da malícia do contexto!"
+        }
+      ]
+    },
+    {
+      "id": "cap-05",
+      "number": "ESTAÇÃO V",
+      "title": "Ironia, Humor e Ruptura de Expectativa",
+      "epigraph": {
+        "text": "A ironia é a elegância de dizer o oposto para revelar a verdade.",
+        "author": "Machado de Assis"
+      },
+      "sections": [
+        {
+          "type": "heading",
+          "level": 2,
+          "content": "⚡ O Raio-X em 30 Segundos"
+        },
+        {
+          "type": "paragraph",
+          "content": "O humor e a ironia no ENEM nunca são gratuitos: são sempre ferramentas de crítica social, política ou comportamental. A ironia se baseia na dissonância entre o que é dito e o que se pretende comunicar (antífrase). O humor quase sempre nasce da quebra brusca de expectativa (o desfecho do último quadrinho que desconstrói a premissa séria dos anteriores) ou da ambiguidade lexical (duplo sentido)."
+        },
+        {
+          "type": "heading",
+          "level": 2,
+          "content": "🎯 Como o ENEM Cobra no Enunciado"
+        },
+        {
+          "type": "paragraph",
+          "content": "Os enunciados apontam diretamente para o recurso: 'O efeito de humor decorre da quebra de expectativa provocada por...', 'O tom irônico do texto constrói-se pela contraposição entre...' ou 'O recurso à ambiguidade no último quadrinho evidencia...'. Foco sempre no efeito crítico gerado."
+        },
+        {
+          "type": "callout",
+          "title": "⚠️ O Distrator Fatal (A Pegadinha da Alternativa)",
+          "content": "Leitura literal do texto irônico. A banca coloca entre as alternativas exatamente aquilo que o texto disse na superfície, mas que na verdade era uma ironia escrachada. Quem lê ironia de forma literal cai imediatamente no distrator ingênuo."
+        },
+        {
+          "type": "heading",
+          "level": 2,
+          "content": "💡 Aplicação Relâmpago Resolvida"
+        },
+        {
+          "type": "paragraph",
+          "content": "Tirinha: Personagem olha para uma montanha de lixo em um rio poluído e diz: 'Que maravilhoso progresso alcançamos!'. Pergunta: 'O efeito de sentido decorre do emprego de ironia que visa a...'. Gabarito: 'Criticar a degradação ambiental promovida sob a justificativa do avanço econômico.' Distrator: 'Elogiar as conquistas industriais contemporâneas.'"
+        },
+        {
+          "type": "callout",
+          "title": "📌 Flashcard Mental de Bolso",
+          "content": "Viu ironia no ENEM? Inverta o sentido literal e procure a denúncia social por trás do sorriso. O riso na prova do INEP é sempre reflexivo e político!"
+        }
+      ]
+    },
+    {
+      "id": "cap-06",
+      "number": "ESTAÇÃO VI",
+      "title": "Intertextualidade: Paródia, Paráfrase, Alusão e Pastiche",
+      "epigraph": {
+        "text": "Um texto é um tecido construído a partir de citações antigas.",
+        "author": "Roland Barthes"
+      },
+      "sections": [
+        {
+          "type": "heading",
+          "level": 2,
+          "content": "⚡ O Raio-X em 30 Segundos"
+        },
+        {
+          "type": "paragraph",
+          "content": "Intertextualidade é o diálogo explícito ou implícito entre dois textos. Suas duas formas rainhas no ENEM são: 1. Paráfrase (diálogo concordante que reafirma as ideias do texto-fonte com outras palavras, mantendo o sentido original, como uma citação de apoio); 2. Paródia (diálogo subversivo, irônico ou crítico que deforma o texto-fonte para rir dele, criticar uma realidade presente ou contestar o original)."
+        },
+        {
+          "type": "heading",
+          "level": 2,
+          "content": "🎯 Como o ENEM Cobra no Enunciado"
+        },
+        {
+          "type": "paragraph",
+          "content": "O exame traz dois textos (Texto I clássico, ex: 'Canção do Exílio' de Gonçalves Dias; Texto II moderno, ex: poema de Oswald de Andrade ou Murilo Mendes) e pergunta: 'A comparação entre os dois textos evidencia que o Texto II estabelece com o Texto I uma relação de...' ou 'O Texto II retoma o Texto I com a finalidade de ressignificar...'."
+        },
+        {
+          "type": "callout",
+          "title": "⚠️ O Distrator Fatal (A Pegadinha da Alternativa)",
+          "content": "Confundir Paráfrase com Paródia. Se o segundo texto mantém a reverência patriótica ao primeiro, é paráfrase. Se o segundo texto diz 'Minha terra tem palmeiras onde canta o sabiá / As aves que aqui gorjeiam não cantam como as de lá / Mas aqui tem fome e corrupção', houve quebra crítica: é PARÓDIA subversiva!"
+        },
+        {
+          "type": "heading",
+          "level": 2,
+          "content": "💡 Aplicação Relâmpago Resolvida"
+        },
+        {
+          "type": "paragraph",
+          "content": "Texto clássico: Mona Lisa serena. Imagem contemporânea: Mona Lisa usando máscara de proteção e segurando álcool em gel durante a pandemia. Pergunta: 'A releitura da obra clássica configura um diálogo intertextual cujo propósito é...'. Gabarito: 'Ressignificar um ícone da história da arte para dialogar com as urgências sanitárias contemporâneas.'"
+        },
+        {
+          "type": "callout",
+          "title": "📌 Flashcard Mental de Bolso",
+          "content": "Paráfrase confirma e respeita o original (voz uníssona). Paródia distorce, critica ou satiriza o original (voz dissonante). Alusão apenas cita brevemente de passagem!"
+        }
+      ]
+    },
+    {
+      "id": "cap-07",
+      "number": "ESTAÇÃO VII",
+      "title": "Estratégias de Argumentação: O Arsenal da Persuasão",
+      "epigraph": {
+        "text": "Opinião sem evidência é apenas ruído; argumento é arquitetura lógica.",
+        "author": "Lógica do Discurso"
+      },
+      "sections": [
+        {
+          "type": "heading",
+          "level": 2,
+          "content": "⚡ O Raio-X em 30 Segundos"
+        },
+        {
+          "type": "paragraph",
+          "content": "O autor de um artigo de opinião ou ensaio precisa convencer o leitor. Para isso, ele recorre a 5 estratégias clássicas: 1. Autoridade (citação de especialista respeitado, filósofo, cientista ou órgão institucional renomado); 2. Evidência / Dados Estatísticos (números do IBGE, IPEA, pesquisas empíricas); 3. Causa e Consequência (relação causal de que A inevitavelmente desencadeia B); 4. Exemplificação / Caso Real (concretude dramática); 5. Contra-argumentação (antecipar o argumento do adversário para desmontá-lo em seguida)."
+        },
+        {
+          "type": "heading",
+          "level": 2,
+          "content": "🎯 Como o ENEM Cobra no Enunciado"
+        },
+        {
+          "type": "paragraph",
+          "content": "Enunciado típico: 'Para conferir credibilidade e força persuasiva à sua tese, o articulista recorre prioritariamente ao recurso de...' ou 'O encadeamento argumentativo do segundo parágrafo constrói-se mediante a relação de...'."
+        },
+        {
+          "type": "callout",
+          "title": "⚠️ O Distrator Fatal (A Pegadinha da Alternativa)",
+          "content": "Identificar erroneamente o tipo de recurso: chamar dado estatístico de 'opinião subjetiva', ou chamar citação de filósofo de 'exemplificação cotidiana'. Atente para a fonte: órgão científico = autoridade/evidência; relato pessoal = exemplificação empírica."
+        },
+        {
+          "type": "heading",
+          "level": 2,
+          "content": "💡 Aplicação Relâmpago Resolvida"
+        },
+        {
+          "type": "paragraph",
+          "content": "Se o texto diz: 'Como alerta o sociólogo Zygmunt Bauman, a modernidade líquida fragilizou os laços comunitários.' A estratégia é argumento de AUTORIDADE filosófica para legitimar o diagnóstico social do articulista."
+        },
+        {
+          "type": "callout",
+          "title": "📌 Flashcard Mental de Bolso",
+          "content": "Citação de pensador/instituto = Autoridade. Gráficos/porcentagens = Evidência/Comprovação. Se aconteceu X, logo acontece Y = Causa e Efeito. 'Dizem que X, mas na verdade Y' = Contra-argumentação!"
+        }
+      ]
+    },
+    {
+      "id": "cap-08",
+      "number": "ESTAÇÃO VIII",
+      "title": "Função Social dos Textos: Para Quem e Para Que Serve",
+      "epigraph": {
+        "text": "Nenhum texto nasce no vácuo; todo texto cumpre uma missão no mundo.",
+        "author": "Linguística Pragmática"
+      },
+      "sections": [
+        {
+          "type": "heading",
+          "level": 2,
+          "content": "⚡ O Raio-X em 30 Segundos"
+        },
+        {
+          "type": "paragraph",
+          "content": "A competência fundamental de Linguagens no ENEM avalia se você compreende que todo texto tem uma função social na esfera pública: informar, conscientizar, reivindicar direitos, mobilizar comportamentos, entreter, denunciar abusos ou regular ações da cidadania. O texto não é julgado por sua beleza abstrata, mas pela sua utilidade comunicativa dentro da sociedade em que circula."
+        },
+        {
+          "type": "heading",
+          "level": 2,
+          "content": "🎯 Como o ENEM Cobra no Enunciado"
+        },
+        {
+          "type": "paragraph",
+          "content": "Comandos diretos: 'Considerando o suporte em que foi veiculado, o texto cumpre a função social de...', 'A mensagem da campanha publicitária atua na esfera comunitária com o intuito de...' ou 'O estatuto legal apresentado destina-se a assegurar...'."
+        },
+        {
+          "type": "callout",
+          "title": "⚠️ O Distrator Fatal (A Pegadinha da Alternativa)",
+          "content": "Ignorar o suporte e o público-alvo. Um cartaz colado em um posto de saúde tem função social diferente de uma coluna assinada na Folha de S.Paulo ou de um termo de uso de aplicativo. Olhe sempre para o rodapé (fonte): saber de onde o texto foi extraído entrega metade do gabarito!"
+        },
+        {
+          "type": "heading",
+          "level": 2,
+          "content": "💡 Aplicação Relâmpago Resolvida"
+        },
+        {
+          "type": "paragraph",
+          "content": "Texto: Guia prático de combate ao assédio no transporte público publicado no metrô. Função social: conscientizar a população sobre a gravidade da conduta e orientar as vítimas sobre os canais imediatos de denúncia e acolhimento."
+        },
+        {
+          "type": "callout",
+          "title": "📌 Flashcard Mental de Bolso",
+          "content": "Olhe a fonte no rodapé: site governamental quer orientar/regular; jornal quer noticiar/opinar; ONG quer conscientizar/mobilizar; dicionário quer normatizar/definir!"
+        }
+      ]
+    },
+    {
+      "id": "cap-09",
+      "number": "ESTAÇÃO IX",
+      "title": "Texto e Contexto Histórico: O Diálogo com Sua Época",
+      "epigraph": {
+        "text": "A literatura e a arte são os sismógrafos das convulsões de seu tempo.",
+        "author": "Antonio Candido"
+      },
+      "sections": [
+        {
+          "type": "heading",
+          "level": 2,
+          "content": "⚡ O Raio-X em 30 Segundos"
+        },
+        {
+          "type": "paragraph",
+          "content": "Todo texto reflete, refrata ou contesta o momento histórico em que foi produzido: a censura da ditadura militar, o autoritarismo do Estado Novo, a euforia modernista dos anos 1920, as dores da escravidão no século XIX ou o isolamento pandêmico recente. Interpretar no ENEM exige articular as escolhas estéticas e lexicais do autor com as tensões sociais, econômicas e políticas daquele período."
+        },
+        {
+          "type": "heading",
+          "level": 2,
+          "content": "🎯 Como o ENEM Cobra no Enunciado"
+        },
+        {
+          "type": "paragraph",
+          "content": "Comandos típicos: 'Produzido durante o período da ditadura militar brasileira, o poema expressa resistência por meio de...', 'O romance de 1930 reflete o contexto socioeconômico regional marcado por...' ou 'A crônica dialoga com as transformações urbanas do início do século XX ao focalizar...'."
+        },
+        {
+          "type": "callout",
+          "title": "⚠️ O Distrator Fatal (A Pegadinha da Alternativa)",
+          "content": "Anacronismo! Julgar um texto colonial do Barroco ou do Arcadismo com os valores morais e científicos do século XXI, ou desvincular um poema de Drummond da Segunda Guerra Mundial e da crise política da Era Vargas quando o próprio texto dá pistas explícitas da angústia bélica."
+        },
+        {
+          "type": "heading",
+          "level": 2,
+          "content": "💡 Aplicação Relâmpago Resolvida"
+        },
+        {
+          "type": "paragraph",
+          "content": "Canção 'Cálice' de Chico Buarque e Gilberto Gil (1973): 'Pai, afasta de mim esse cálice'. A homofonia entre 'cálice' (taça litúrgica de sofrimento) e 'cale-se' (ordem autoritária de censura) dialoga diretamente com o contexto de repressão e cerceamento à liberdade de expressão do AI-5."
+        },
+        {
+          "type": "callout",
+          "title": "📌 Flashcard Mental de Bolso",
+          "content": "Sempre confira a data da publicação original no rodapé! 1888 = Abolição; 1922 = Semana de Arte Moderna; 1930 = Seca e Crise Social; 1964-1985 = Ditadura e Censura. A data é a chave secreta do texto!"
+        }
+      ]
+    },
+    {
+      "id": "cap-10",
+      "number": "ESTAÇÃO X",
+      "title": "Notícia versus Reportagem: O Fato Pontual contra o Dossiê Profundo",
+      "epigraph": {
+        "text": "A notícia é a faísca do acontecimento; a reportagem é a investigação do incêndio.",
+        "author": "Teoria do Jornalismo"
+      },
+      "sections": [
+        {
+          "type": "heading",
+          "level": 2,
+          "content": "⚡ O Raio-X em 30 Segundos"
+        },
+        {
+          "type": "paragraph",
+          "content": "Notícia relata um fato recente, pontual e urgente, respondendo rápido à pirâmide invertida (O quê? Quem? Quando? Onde? Como? Por quê?), com tom neutro, impessoal e objetivo. Reportagem é um gênero mais amplo, investigativo e atemporal: não precisa ser de ontem; ela aprofunda as causas, traz múltiplas vozes em confronto (entrevistas, especialistas), dados estatísticos, contextualização histórica e interpretação do repórter."
+        },
+        {
+          "type": "heading",
+          "level": 2,
+          "content": "🎯 Como o ENEM Cobra no Enunciado"
+        },
+        {
+          "type": "paragraph",
+          "content": "O enunciado costuma focar na estrutura informativa: 'O texto organiza suas informações segundo o padrão do gênero notícia ao priorizar...' ou 'O caráter investigativo da reportagem manifesta-se pela inclusão de...'."
+        },
+        {
+          "type": "callout",
+          "title": "⚠️ O Distrator Fatal (A Pegadinha da Alternativa)",
+          "content": "Afirmar que a notícia expressa a opinião pessoal do jornalista. Notícia pura não opina; ela relata fatos observáveis em 3ª pessoa. Se houver adjetivos opinativos pesados e tese assinada, você está diante de um artigo ou crônica, não de uma notícia clássica."
+        },
+        {
+          "type": "heading",
+          "level": 2,
+          "content": "💡 Aplicação Relâmpago Resolvida"
+        },
+        {
+          "type": "paragraph",
+          "content": "Um texto sobre um novo telescópio espacial traz depoimentos de três astrônomos de países diferentes, histórico dos projetos anteriores e gráficos de custo. Gênero: Reportagem de divulgação, pois transcende o mero anúncio da descoberta e investiga desdobramentos científicos aprofundados."
+        },
+        {
+          "type": "callout",
+          "title": "📌 Flashcard Mental de Bolso",
+          "content": "Notícia = O fato imediato, curto e direto (pirâmide invertida). Reportagem = O dossiê completo, com entrevistas, causas históricas e desdobramentos!"
+        }
+      ]
+    },
+    {
+      "id": "cap-11",
+      "number": "ESTAÇÃO XI",
+      "title": "Editorial versus Artigo de Opinião: A Voz da Empresa vs. A Voz Assinada",
+      "epigraph": {
+        "text": "Opinar com assinatura é coragem pessoal; opinar em nome da empresa é linha editorial.",
+        "author": "Comunicação Social"
+      },
+      "sections": [
+        {
+          "type": "heading",
+          "level": 2,
+          "content": "⚡ O Raio-X em 30 Segundos"
+        },
+        {
+          "type": "paragraph",
+          "content": "O Artigo de Opinião é assinado por um autor individual (jornalista, jurista, médico, cidadão), usa primeira pessoa facultativa e defende a posição pessoal daquele indivíduo, que pode inclusive divergir do jornal. O Editorial NÃO é assinado por uma pessoa física: ele expressa a posição institucional coletiva do veículo de comunicação (a opinião da empresa jornalística) sobre um tema relevante do momento, escrito formalmente em 3ª pessoa ou 1ª do plural ('entendemos que...')."
+        },
+        {
+          "type": "heading",
+          "level": 2,
+          "content": "🎯 Como o ENEM Cobra no Enunciado"
+        },
+        {
+          "type": "paragraph",
+          "content": "Gatilhos frequentes: 'Por se tratar de um editorial, o texto caracteriza-se por expressar...', 'O articulista constrói sua tese no artigo de opinião recorrendo à estratégia de...' ou 'A ausência de assinatura individual no texto reflete...'."
+        },
+        {
+          "type": "callout",
+          "title": "⚠️ O Distrator Fatal (A Pegadinha da Alternativa)",
+          "content": "Dizer que o editorial representa a voz de toda a sociedade ou a opinião unânime da população. O editorial representa única e exclusivamente a postura ideológica e corporativa DAQUELE jornal/revista específico!"
+        },
+        {
+          "type": "heading",
+          "level": 2,
+          "content": "💡 Aplicação Relâmpago Resolvida"
+        },
+        {
+          "type": "paragraph",
+          "content": "Texto intitulado 'O desafio da transição energética' publicado sem assinatura na seção de opinião de um grande jornal: trata-se de Editorial, cuja função é marcar a posição institucional da empresa perante as políticas climáticas governamentais."
+        },
+        {
+          "type": "callout",
+          "title": "📌 Flashcard Mental de Bolso",
+          "content": "Tem assinatura de pessoa física no fim? Artigo de Opinião. Não tem assinatura e fala em nome do jornal? Editorial institucional!"
+        }
+      ]
+    },
+    {
+      "id": "cap-12",
+      "number": "ESTAÇÃO XII",
+      "title": "Crônica Literária: A Poesia do Cotidiano e o Olhar Desatento",
+      "epigraph": {
+        "text": "A crônica pega o fato banal que todo mundo viu e ninguém enxergou.",
+        "author": "Rubem Braga"
+      },
+      "sections": [
+        {
+          "type": "heading",
+          "level": 2,
+          "content": "⚡ O Raio-X em 30 Segundos"
+        },
+        {
+          "type": "paragraph",
+          "content": "A crônica é o gênero híbrido brasileiro que mora na fronteira exata entre o jornalismo e a literatura. Ela parte de uma cena cotidiana banal e passageira (uma conversa ouvida no ônibus, uma fila de padaria, um cachorro na chuva, uma troca de olhares no sinal) para tecer uma reflexão filosófica, lírica, bem-humorada ou crítica sobre a existência humana e as relações sociais."
+        },
+        {
+          "type": "heading",
+          "level": 2,
+          "content": "🎯 Como o ENEM Cobra no Enunciado"
+        },
+        {
+          "type": "paragraph",
+          "content": "O enunciado investiga a transmutação do comum: 'O traço característico da crônica manifesta-se no texto por meio da...', 'A transformação de uma cena corriqueira em matéria poética evidencia...' ou 'O tom confessional e intimista do cronista visa a...'."
+        },
+        {
+          "type": "callout",
+          "title": "⚠️ O Distrator Fatal (A Pegadinha da Alternativa)",
+          "content": "Tratar a crônica como se fosse uma notícia objetiva ou um artigo dissertativo frio. A crônica tem liberdade estilística, oralidade, subjetividade, humor sutil e ritmo quase poético."
+        },
+        {
+          "type": "heading",
+          "level": 2,
+          "content": "💡 Aplicação Relâmpago Resolvida"
+        },
+        {
+          "type": "paragraph",
+          "content": "Texto de Rubem Braga ou Luis Fernando Verissimo narrando o diálogo de duas pessoas que tentam consertar uma torradeira velha: o foco não é o eletrodoméstico, mas sim a nostalgia da passagem do tempo e as memórias afetivas da família. Gabarito na sensibilidade do olhar sobre o banal."
+        },
+        {
+          "type": "callout",
+          "title": "📌 Flashcard Mental de Bolso",
+          "content": "Fato minúsculo do cotidiano + reflexão filosófica/lírica/humorística + tom de conversa íntima = CRÔNICA!"
+        }
+      ]
+    },
+    {
+      "id": "cap-13",
+      "number": "ESTAÇÃO XIII",
+      "title": "Divulgação Científica: Rigor Conceitual com Linguagem Acessível",
+      "epigraph": {
+        "text": "A ciência que não se comunica com o povo é apenas mistério de claustro.",
+        "author": "Carl Sagan"
+      },
+      "sections": [
+        {
+          "type": "heading",
+          "level": 2,
+          "content": "⚡ O Raio-X em 30 Segundos"
+        },
+        {
+          "type": "paragraph",
+          "content": "O texto de divulgação científica (presente em revistas como Superinteressante, Ciência Hoje ou sites de universidades) tem uma missão dupla: manter o rigor metodológico e a precisão dos conceitos científicos, mas traduzi-los em uma linguagem didática, clara e envolvente para o grande público leigo, recorrendo frequentemente a metáforas, analogias e comparações do dia a dia."
+        },
+        {
+          "type": "heading",
+          "level": 2,
+          "content": "🎯 Como o ENEM Cobra no Enunciado"
+        },
+        {
+          "type": "paragraph",
+          "content": "Comandos: 'O recurso à metáfora no segundo parágrafo tem a função de aproximar o conhecimento científico de...', 'Para tornar compreensível um fenômeno complexo ao leitor leigo, o autor recorre a...' ou 'O vocabulário técnico associado à linguagem acessível atende ao propósito de...'."
+        },
+        {
+          "type": "callout",
+          "title": "⚠️ O Distrator Fatal (A Pegadinha da Alternativa)",
+          "content": "Afirmar que o texto científico é simplório ou fictício. As analogias (ex: comparar as hemácias a caminhões de carga que transportam oxigênio) são estratégias pedagógicas de mediação, nunca distorções da verdade experimental."
+        },
+        {
+          "type": "heading",
+          "level": 2,
+          "content": "💡 Aplicação Relâmpago Resolvida"
+        },
+        {
+          "type": "paragraph",
+          "content": "Texto que explica o funcionamento do CRISPR-Cas9 comparando a enzima a uma 'ferramenta de tesoura molecular com função de localizar e substituir letras de um arquivo de texto'. Função: mediar o conhecimento genético hermético por meio de uma metáfora operacional compreensível."
+        },
+        {
+          "type": "callout",
+          "title": "📌 Flashcard Mental de Bolso",
+          "content": "Divulgação científica = Rigor da ciência + metáforas didáticas para o público não-especialista!"
+        }
+      ]
+    },
+    {
+      "id": "cap-14",
+      "number": "ESTAÇÃO XIV",
+      "title": "Charge versus Cartum: O Temporal Político contra o Atemporal Humano",
+      "epigraph": {
+        "text": "O traço do humor gráfico é a lâmina mais afiada do jornal.",
+        "author": "Henfil"
+      },
+      "sections": [
+        {
+          "type": "heading",
+          "level": 2,
+          "content": "⚡ O Raio-X em 30 Segundos"
+        },
+        {
+          "type": "paragraph",
+          "content": "A Charge está amarrada ao tempo histórico imediato: critica um fato político, escândalo ou personagem público específico que aconteceu nesta semana (ex: caricatura de um ministro atual em uma CPI). Se você ler a charge daqui a trinta anos sem nota de rodapé, não entenderá a piada. O Cartum é universal e atemporal: critica comportamentos humanos eternos, relações amorosas, hipocrisia, ganância ou a relação do homem com a morte e o tempo, compreensível em qualquer época ou país."
+        },
+        {
+          "type": "heading",
+          "level": 2,
+          "content": "🎯 Como o ENEM Cobra no Enunciado"
+        },
+        {
+          "type": "paragraph",
+          "content": "A prova exige a leitura da linguagem mista (verbal + não verbal): 'A crítica expressa na charge direciona-se a...', 'O efeito de sentido da imagem decorre da relação entre a expressão corporal do personagem e a fala...' ou 'A atemporalidade do cartum manifesta-se pela abordagem de...'."
+        },
+        {
+          "type": "callout",
+          "title": "⚠️ O Distrator Fatal (A Pegadinha da Alternativa)",
+          "content": "Ler apenas o balão de fala e ignorar a imagem, ou olhar apenas a imagem e ignorar a legenda. A resposta correta sempre nasce da fusão semiótica entre o desenho (expressão facial, sombra, perspectiva) e o texto verbal."
+        },
+        {
+          "type": "heading",
+          "level": 2,
+          "content": "💡 Aplicação Relâmpago Resolvida"
+        },
+        {
+          "type": "paragraph",
+          "content": "Desenho de duas pessoas sentadas em uma praia paradisíaca, ambas de cabeça baixa digitando no celular sem olhar para o mar. Gênero: Cartum (crítica atemporal ao vício digital e ao isolamento contemporâneo, sem datação política específica)."
+        },
+        {
+          "type": "callout",
+          "title": "📌 Flashcard Mental de Bolso",
+          "content": "Charge = Datada, política, fato de hoje, pessoa pública específica. Cartum = Universal, comportamento humano atemporal, qualquer lugar e época!"
+        }
+      ]
+    },
+    {
+      "id": "cap-15",
+      "number": "ESTAÇÃO XV",
+      "title": "Propaganda e Campanhas Comunitárias: O Apelo Imperativo",
+      "epigraph": {
+        "text": "Vender um produto é comércio; transformar uma conduta social é cidadania.",
+        "author": "Comunicação Pública"
+      },
+      "sections": [
+        {
+          "type": "heading",
+          "level": 2,
+          "content": "⚡ O Raio-X em 30 Segundos"
+        },
+        {
+          "type": "paragraph",
+          "content": "Publicidade comercial quer vender um produto ou serviço com apelo ao consumo e sedução de marca. Campanha publicitária institucional/comunitária quer conscientizar a população e alterar condutas sociais em prol da saúde coletiva, trânsito seguro, vacinação ou preservação ambiental. Ambas usam a função conativa/apelativa da linguagem: verbos no imperativo ('vacine', 'doe', 'respeite'), pronomes de 2ª pessoa ('você'), apelos emocionais e imagens impactantes."
+        },
+        {
+          "type": "heading",
+          "level": 2,
+          "content": "🎯 Como o ENEM Cobra no Enunciado"
+        },
+        {
+          "type": "paragraph",
+          "content": "O foco é a persuasão e a cidadania: 'A campanha de utilidade pública recorre ao verbo no modo imperativo com o intuito de mobilizar o leitor para...', 'A associação entre a imagem da criança e o slogan visa a despertar...' ou 'A estratégia discursiva do anúncio baseia-se na...'."
+        },
+        {
+          "type": "callout",
+          "title": "⚠️ O Distrator Fatal (A Pegadinha da Alternativa)",
+          "content": "Confundir publicidade institucional com publicidade comercial. Uma campanha do Ministério da Saúde contra a dengue não visa lucro nem venda; ela visa à mobilização cívica de prevenção sanitária."
+        },
+        {
+          "type": "heading",
+          "level": 2,
+          "content": "💡 Aplicação Relâmpago Resolvida"
+        },
+        {
+          "type": "paragraph",
+          "content": "Cartaz com um laço vermelho e a frase: 'O preconceito também transmite sofrimento. Faça o teste de HIV e acolha quem vive com o vírus.' Propósito: Combater o estigma social e incentivar o diagnóstico precoce por meio do apelo à empatia e à solidariedade."
+        },
+        {
+          "type": "callout",
+          "title": "📌 Flashcard Mental de Bolso",
+          "content": "Verbo no imperativo ('faça', 'proteja') + pronome 'você' + problema social = Função Conativa/Apelativa focada em mudar o comportamento do cidadão!"
+        }
+      ]
+    },
+    {
+      "id": "cap-16",
+      "number": "ESTAÇÃO XVI",
+      "title": "Resenha Crítica: Descrição Informativa com Juízo de Valor",
+      "epigraph": {
+        "text": "O resumo apenas conta a história; a resenha julga o mérito da criação.",
+        "author": "Crítica Cultural"
+      },
+      "sections": [
+        {
+          "type": "heading",
+          "level": 2,
+          "content": "⚡ O Raio-X em 30 Segundos"
+        },
+        {
+          "type": "paragraph",
+          "content": "Resumo é um texto meramente informativo e objetivo que condensa os pontos essenciais de um livro, filme ou peça teatral sem emitir opinião pessoal. Resenha Crítica faz um breve resumo descritivo, mas seu coração é a valoração analítica e o julgamento crítico fundamentado: o autor emite pareceres, elogia atuações, aponta falhas de roteiro e recomenda ou não a obra com base em argumentos técnicos."
+        },
+        {
+          "type": "heading",
+          "level": 2,
+          "content": "🎯 Como o ENEM Cobra no Enunciado"
+        },
+        {
+          "type": "paragraph",
+          "content": "Comandos analíticos: 'O trecho que expressa um juízo de valor explícito do resenhista sobre o filme é...', 'Diferentemente do mero resumo, o texto configura-se como resenha crítica ao apresentar...' ou 'Os adjetivos empregados no texto evidenciam uma avaliação...'."
+        },
+        {
+          "type": "callout",
+          "title": "⚠️ O Distrator Fatal (A Pegadinha da Alternativa)",
+          "content": "Escolher um trecho puramente descritivo ('O filme conta a história de três amigos que viajam...') quando a questão pede o trecho opinativo ('A fotografia sombria e as atuações contidas elevam a obra ao status de obra-prima'). Aprenda a caçar adjetivos avaliativos!"
+        },
+        {
+          "type": "heading",
+          "level": 2,
+          "content": "💡 Aplicação Relâmpago Resolvida"
+        },
+        {
+          "type": "paragraph",
+          "content": "Excerto: 'Apesar do ritmo lento no primeiro ato, a direção precisa de Walter Salles entrega um retrato comovente e politicamente urgente da memória nacional.' O trecho 'direção precisa (...) retrato comovente e politicamente urgente' é o coração opinativo da resenha crítica."
+        },
+        {
+          "type": "callout",
+          "title": "📌 Flashcard Mental de Bolso",
+          "content": "Resumo = 'O que acontece na obra'. Resenha Crítica = 'O que acontece + se é bom ou ruim e por quais razões técnicas'!"
+        }
+      ]
+    },
+    {
+      "id": "cap-17",
+      "number": "ESTAÇÃO XVII",
+      "title": "Poema e Lírica: Ritmo, Quebra de Verso e Ruptura Formal",
+      "epigraph": {
+        "text": "A poesia não quer dizer nada além do peso exato de suas palavras.",
+        "author": "Manoel de Barros"
+      },
+      "sections": [
+        {
+          "type": "heading",
+          "level": 2,
+          "content": "⚡ O Raio-X em 30 Segundos"
+        },
+        {
+          "type": "paragraph",
+          "content": "O poema no ENEM explora a função poética: o foco está na própria mensagem, no arranjo espacial das palavras na página, no ritmo, na métrica (ou na escolha deliberada do verso livre moderno), na quebra de verso (enjambement ou cavalgamento) e nas figuras de linguagem sonoras (aliteração, assonância) e semânticas (metáfora, metonímia, paradoxo). Modernistas e contemporâneos usam a poesia não para mero lirismo romântico, mas para denúncia social e reflexão metalinguística."
+        },
+        {
+          "type": "heading",
+          "level": 2,
+          "content": "🎯 Como o ENEM Cobra no Enunciado"
+        },
+        {
+          "type": "paragraph",
+          "content": "A banca pergunta sobre o efeito da forma: 'A disposição visual dos versos reforça o sentido de...', 'A repetição do fonema /s/ no poema produz a sensação acústica de...' ou 'O recurso ao enjambement (continuação de uma frase no verso seguinte) provoca o efeito de...'."
+        },
+        {
+          "type": "callout",
+          "title": "⚠️ O Distrator Fatal (A Pegadinha da Alternativa)",
+          "content": "Desprezar a pontuação e as quebras de linha. Quando um poeta quebra o verso no meio de uma frase ('Quero a vida / quebrando / o silêncio'), essa quebra cria suspense, destaque semântico e lentidão rítmica que a banca cobrará diretamente."
+        },
+        {
+          "type": "heading",
+          "level": 2,
+          "content": "💡 Aplicação Relâmpago Resolvida"
+        },
+        {
+          "type": "paragraph",
+          "content": "Poema com versos curtos de uma única palavra que caem pela página como pingos: 'Cai / chuva / fina / na / vidraça'. O recurso visual e rítmico mimetiza a cadência das gotas de chuva, integrando forma plástica e significado textual."
+        },
+        {
+          "type": "callout",
+          "title": "📌 Flashcard Mental de Bolso",
+          "content": "No poema, a FORMA é CONTEÚDO! Verso curto acelera ou isola a palavra; aliteração imita o som da coisa; verso livre quebra a regra acadêmica em nome da liberdade de expressão!"
+        }
+      ]
+    },
+    {
+      "id": "cap-18",
+      "number": "ESTAÇÃO XVIII",
+      "title": "Classes de Palavras e Modalizadores: Os Rastros da Opinião",
+      "epigraph": {
+        "text": "O adjetivo é a sombra da alma que escreve.",
+        "author": "Linguística da Enunciação"
+      },
+      "sections": [
+        {
+          "type": "heading",
+          "level": 2,
+          "content": "⚡ O Raio-X em 30 Segundos"
+        },
+        {
+          "type": "paragraph",
+          "content": "O ENEM não pergunta 'qual é o substantivo da frase'. Ele quer saber o efeito de sentido das escolhas lexicais. Modalizadores são palavras que revelam o grau de certeza, adesão, obrigatoriedade ou avaliação do autor sobre o que ele mesmo afirma: advérbios avaliativos ('lamentavelmente', 'surpreendentemente', 'certamente', 'talvez'), verbos modais ('deve', 'pode', 'precisa') e adjetivos axiológicos ('medíocre', 'admirável', 'urgente')."
+        },
+        {
+          "type": "heading",
+          "level": 2,
+          "content": "🎯 Como o ENEM Cobra no Enunciado"
+        },
+        {
+          "type": "paragraph",
+          "content": "Fórmula consagrada: 'No texto, o vocábulo [infelizmente / supostamente / necessário] atua como um modalizador discursivo que indica...', 'A escolha do adjetivo [X] em detrimento de [Y] confere ao texto um tom de...' ou 'O grau de engajamento do autor manifesta-se pelo uso de...'."
+        },
+        {
+          "type": "callout",
+          "title": "⚠️ O Distrator Fatal (A Pegadinha da Alternativa)",
+          "content": "Achar que todo texto jornalístico é isento e neutro. Advérbios como 'supostamente' ou 'curiosamente' revelam desconfiança e ironia do jornalista, destruindo a suposta neutralidade da informação."
+        },
+        {
+          "type": "heading",
+          "level": 2,
+          "content": "💡 Aplicação Relâmpago Resolvida"
+        },
+        {
+          "type": "paragraph",
+          "content": "Frase: 'O projeto, pretensiosamente revolucionário, fracassou em sua execução.' O advérbio 'pretensiosamente' qualifica o adjetivo 'revolucionário', revelando a postura crítica e irônica do autor quanto à empáfia e à falta de substância da proposta."
+        },
+        {
+          "type": "callout",
+          "title": "📌 Flashcard Mental de Bolso",
+          "content": "Modalizador é a impressão digital ideológica do autor. Se o texto tem 'certamente', há certeza absoluta; se tem 'supostamente', há desconfiança irônica; se tem 'lamentavelmente', há julgamento de valor!"
+        }
+      ]
+    },
+    {
+      "id": "cap-19",
+      "number": "ESTAÇÃO XIX",
+      "title": "Verbos, Tempos e Modos: O Relógio Psicológico da Narrativa",
+      "epigraph": {
+        "text": "O tempo gramatical é a moldura viva da memória e da imaginação.",
+        "author": "Morfossintaxe Discursiva"
+      },
+      "sections": [
+        {
+          "type": "heading",
+          "level": 2,
+          "content": "⚡ O Raio-X em 30 Segundos"
+        },
+        {
+          "type": "paragraph",
+          "content": "A escolha dos tempos verbais carrega efeitos semânticos decisivos: 1. Presente do Indicativo Histórico/Universal (traz um fato do passado para o presente, criando intimidade e dinamismo; ou expressa verdades científicas atemporais); 2. Pretérito Perfeito (ação pontual, concluída, que empurra a narrativa para frente); 3. Pretérito Imperfeito (ação habitual, contínua ou inacabada no passado, que descreve cenários e estados de espírito); 4. Futuro do Pretérito (hipótese, polidez, dúvida ou condição irrealizada)."
+        },
+        {
+          "type": "heading",
+          "level": 2,
+          "content": "🎯 Como o ENEM Cobra no Enunciado"
+        },
+        {
+          "type": "paragraph",
+          "content": "A prova pergunta pela intenção discursiva: 'O emprego predominante do pretérito imperfeito no fragmento tem o efeito de criar uma atmosfera de...', 'A alternância entre o pretérito perfeito e o imperfeito marca a distinção entre...' ou 'O futuro do pretérito é utilizado para atenuar...'."
+        },
+        {
+          "type": "callout",
+          "title": "⚠️ O Distrator Fatal (A Pegadinha da Alternativa)",
+          "content": "Dizer que o pretérito imperfeito indica ação que 'nunca aconteceu'. Não! Ele indica ação que ocorria com frequência ('ele caminhava toda manhã') ou que servia de pano de fundo para outra que a interrompeu ('ele caminhava quando a chuva desabou')."
+        },
+        {
+          "type": "heading",
+          "level": 2,
+          "content": "💡 Aplicação Relâmpago Resolvida"
+        },
+        {
+          "type": "paragraph",
+          "content": "Texto de memória: 'A casa rangeva sob o vento e as janelas batiam sem parar.' O pretérito imperfeito constrói um cenário descritivo estendido e durativo, imergindo o leitor na ambiência sensorial da recordação de infância."
+        },
+        {
+          "type": "callout",
+          "title": "📌 Flashcard Mental de Bolso",
+          "content": "Pretérito Perfeito = Aconteceu e acabou rápido (pá! aconteceu!). Pretérito Imperfeito = Acontecendo por um tempo, repetido ou pano de fundo descritivo (estava lá acontecendo...). Futuro do Pretérito = Hipótese incerta ('seria', 'faria')!"
+        }
+      ]
+    },
+    {
+      "id": "cap-20",
+      "number": "ESTAÇÃO XX",
+      "title": "Concordância e Variação Linguística: A Gramática Viva do Brasil",
+      "epigraph": {
+        "text": "Não existe erro de português; existe inadequação linguística ao contexto comunicativo.",
+        "author": "Marcos Bagno"
+      },
+      "sections": [
+        {
+          "type": "heading",
+          "level": 2,
+          "content": "⚡ O Raio-X em 30 Segundos"
+        },
+        {
+          "type": "paragraph",
+          "content": "O ENEM NUNCA considera a fala popular, regional, periférica ou caipira como 'português errado' ou 'inferior'. Para o INEP, a língua é diversa e dinâmica: existem variedades linguísticas (diatópicas/regionais, diastráticas/sociais, diafásicas/formais e informais). A norma-padrão (culta) é necessária em documentos oficiais, leis e redações do vestibular, mas a oralidade coloquial segue regras gramaticais internas consistentes e cumpre plenamente sua função comunicativa."
+        },
+        {
+          "type": "heading",
+          "level": 2,
+          "content": "🎯 Como o ENEM Cobra no Enunciado"
+        },
+        {
+          "type": "paragraph",
+          "content": "Atenção máxima: o gabarito JAMAIS será preconceituoso. Comandos: 'O texto acolhe marcas da linguagem coloquial com o intuito de conferir verossimilhança e espontaneidade à fala de...', 'O uso de construções como [a gente fomos / os menino chegou] evidencia uma regra da variedade popular que opera por...' ou 'A adequação da linguagem ao contexto de circulação demonstra que...'."
+        },
+        {
+          "type": "callout",
+          "title": "⚠️ O Distrator Fatal (A Pegadinha da Alternativa)",
+          "content": "Qualquer alternativa que afirme que a linguagem popular 'revela ignorância', 'empobrece a língua', 'viola a lógica' ou 'deve ser erradicada'. Tais alternativas são DISTRATORES DE PRECONCEITO LINGUÍSTICO que a banca coloca para eliminar quem não estudou sociolinguística!"
+        },
+        {
+          "type": "heading",
+          "level": 2,
+          "content": "💡 Aplicação Relâmpago Resolvida"
+        },
+        {
+          "type": "paragraph",
+          "content": "Poema de Patativa do Assaré ou letra de rap de Emicida com termos regionais e marcas da oralidade: a função desse registro é legitimar a identidade sociocultural do falante e conferir expressividade e representatividade estética à poesia popular."
+        },
+        {
+          "type": "callout",
+          "title": "📌 Flashcard Mental de Bolso",
+          "content": "Se a alternativa disser que o povo 'fala errado' ou 'destrói a gramática', elimine na hora! A resposta certa no ENEM sempre valoriza a riqueza da variação e a adequação ao contexto social!"
+        }
+      ]
+    },
+    {
+      "id": "cap-21",
+      "number": "ESTAÇÃO XXI",
+      "title": "Regência, Sentido e Crase Sem Mistério: Onde Mora o Significado",
+      "epigraph": {
+        "text": "Mudar a preposição de um verbo é mudar o rumo de sua intenção.",
+        "author": "Sintaxe Aplicada"
+      },
+      "sections": [
+        {
+          "type": "heading",
+          "level": 2,
+          "content": "⚡ O Raio-X em 30 Segundos"
+        },
+        {
+          "type": "paragraph",
+          "content": "Regência no ENEM é cobrada pelo efeito de sentido: 1. Assistir algo (ver/presenciar: 'assistiu ao filme'; prestar socorro: 'assistiu o paciente'); 2. Aspirar algo (respirar: 'aspirou o ar fresco'; almejar/desejar: 'aspirava a um cargo melhor'); 3. Visar algo (mirar ou assinar: 'visou o alvo/cheque'; ter por objetivo: 'visa à igualdade'). A crase (fusão da preposição 'a' com o artigo 'a') só ocorre diante de palavras femininas que admitam artigo e sejam regidas por termo que exija a preposição 'a'. Jamais antes de verbo, pronome pessoal ou substantivo masculino genérico."
+        },
+        {
+          "type": "heading",
+          "level": 2,
+          "content": "🎯 Como o ENEM Cobra no Enunciado"
+        },
+        {
+          "type": "paragraph",
+          "content": "O ENEM cobra regência inserida em textos reais, charges ou campanhas publicitárias: 'A mudança na regência do verbo no trecho [X] provocaria a alteração de seu sentido para...' ou 'O acento grave indicativo de crase na frase justifica-se pela...'."
+        },
+        {
+          "type": "callout",
+          "title": "⚠️ O Distrator Fatal (A Pegadinha da Alternativa)",
+          "content": "Colocar crase antes de verbo ('disposto à lutar' — ERRADO!) ou antes de substantivo masculino ('vendeu à prazo' — ERRADO!). Teste infalível de troca: substitua a palavra feminina por uma masculina ('vou à feira' -> 'vou ao mercado'; deu 'ao', tem crase!)."
+        },
+        {
+          "type": "heading",
+          "level": 2,
+          "content": "💡 Aplicação Relâmpago Resolvida"
+        },
+        {
+          "type": "paragraph",
+          "content": "Frase de campanha: 'Esta lei visa a garantir direitos fundamentais.' O verbo 'visar' exige preposição 'a' pelo sentido de almejar, mas antes do verbo 'garantir' a crase é terminantemente proibida. Perfeito."
+        },
+        {
+          "type": "callout",
+          "title": "📌 Flashcard Mental de Bolso",
+          "content": "Crase antes de verbo: NUNCA! Crase antes de homem: NUNCA! Trocou pelo masculino e virou 'AO'? CRASE NO 'A' COM CERTEZA!"
+        }
+      ]
+    },
+    {
+      "id": "cap-22",
+      "number": "ESTAÇÃO XXII",
+      "title": "Pontuação Expressiva: Travessões, Dois-Pontos e Parênteses",
+      "epigraph": {
+        "text": "A pontuação não é apenas a respiração da voz; é a arquitetura da ênfase.",
+        "author": "Estilística Textual"
+      },
+      "sections": [
+        {
+          "type": "heading",
+          "level": 2,
+          "content": "⚡ O Raio-X em 30 Segundos"
+        },
+        {
+          "type": "paragraph",
+          "content": "Pontuação no ENEM não serve só para não morrer sem fôlego: é um recurso estético e argumentativo de alto nível: 1. Dois-pontos introduzem uma explicação, síntese, enumeração ou citação de fala direta; 2. Travessões duplos e Parênteses isolam comentários à parte, ressalvas irônicas ou esclarecimentos adicionais, conferindo destaque enfático ao trecho intercalado; 3. Ponto e vírgula separa itens de uma lista complexa ou orações coordenadas com vírgulas internas; 4. Reticências marcam suspensão de pensamento, hesitação lírica ou cumplicidade com o subentendido."
+        },
+        {
+          "type": "heading",
+          "level": 2,
+          "content": "🎯 Como o ENEM Cobra no Enunciado"
+        },
+        {
+          "type": "paragraph",
+          "content": "Comandos: 'O emprego dos travessões no segundo parágrafo cumpre a função estilística de...', 'Os dois-pontos foram utilizados com o propósito de introduzir uma...' ou 'As reticências no final da frase sugerem ao leitor que...'."
+        },
+        {
+          "type": "callout",
+          "title": "⚠️ O Distrator Fatal (A Pegadinha da Alternativa)",
+          "content": "Confundir travessão de diálogo (fala de personagem) com travessão de isolamento explicativo em texto dissertativo. Em artigos de opinião, o par de travessões atua como substituto enfático de parênteses ou vírgulas para destacar a opinião do autor."
+        },
+        {
+          "type": "heading",
+          "level": 2,
+          "content": "💡 Aplicação Relâmpago Resolvida"
+        },
+        {
+          "type": "paragraph",
+          "content": "Trecho: 'A reforma tributária — que há três décadas dormia em gavetas burocráticas — foi finalmente votada.' Os travessões isolam uma oração explicativa, imprimindo um tom crítico de desabafo à lentidão do processo legislativo."
+        },
+        {
+          "type": "callout",
+          "title": "📌 Flashcard Mental de Bolso",
+          "content": "Dois-pontos anunciam explicação ou prova. Par de travessões dá um megafone para uma fofoca/opinião no meio da frase. Reticências piscam o olho para o que não foi dito!"
+        }
+      ]
+    },
+    {
+      "id": "cap-23",
+      "number": "ESTAÇÃO XXIII",
+      "title": "Coesão, Conectivos e Vozes Verbais: A Mecânica da Costura Textual",
+      "epigraph": {
+        "text": "Um texto sem conectivos precisos é como uma parede de tijolos sem cimento.",
+        "author": "Coesão e Coerência"
+      },
+      "sections": [
+        {
+          "type": "heading",
+          "level": 2,
+          "content": "⚡ O Raio-X em 30 Segundos"
+        },
+        {
+          "type": "paragraph",
+          "content": "A coesão textual opera em dois eixos: 1. Coesão Referencial: anáfora (pronomes como 'este', 'esse', 'o qual', 'ele' retomando termos já ditos para evitar repetição viciosa) e catáfora (antecipando termos futuros: 'Quero apenas isto: aprovação'); 2. Coesão Sequencial: os conectivos lógicos indispensáveis: Adversativos (oposição pura: mas, porém, contudo, todavia); Concessivos (ressalva que NÃO anula a ideia principal: embora, ainda que, apesar de, conquanto); Conclusivos (portanto, logo, destarte, dessarte); Causais (porque, já que, visto que, dado que). 3. Voz Passiva Sintética com 'se': 'Construíram-se escolas' (escolas foram construídas) oculta o agente para conferir impessoalidade institucional."
+        },
+        {
+          "type": "heading",
+          "level": 2,
+          "content": "🎯 Como o ENEM Cobra no Enunciado"
+        },
+        {
+          "type": "paragraph",
+          "content": "Comandos de peso na TRI: 'O conectivo [embora / contudo / portanto] estabelece entre as orações uma relação semântica de...', 'O pronome [isso / este] retoma por anáfora a ideia de...' ou 'O emprego da voz passiva no trecho visa a conferir ao relato um efeito de impessoalidade ao...'."
+        },
+        {
+          "type": "callout",
+          "title": "⚠️ O Distrator Fatal (A Pegadinha da Alternativa)",
+          "content": "Trocar Causa por Consequência! 'Choveu tanto que a cidade alagou' -> A chuva é a CAUSA; o alagamento é a CONSEQUÊNCIA. O distrator inverte a flecha lógica. E nunca confunda adversidade ('mas' = anula o anterior) com concessão ('embora' = ressalva que não impede a ação principal)."
+        },
+        {
+          "type": "heading",
+          "level": 2,
+          "content": "💡 Aplicação Relâmpago Resolvida"
+        },
+        {
+          "type": "paragraph",
+          "content": "'Embora o PIB tenha crescido 3%, a desigualdade social permaneceu intocada.' O conectivo 'embora' introduz uma concessão: a melhoria do indicador macroeconômico é admitida como fato, mas é insuficiente para barrar a constatação crítica de que a renda continuou concentrada."
+        },
+        {
+          "type": "callout",
+          "title": "📌 Flashcard Mental de Bolso",
+          "content": "'Mas/porém' = Quebra e anula o que veio antes. 'Embora/apesar de' = Dá o braço a torcer, mas a tese principal segue firme! Voz passiva com 'se' = Esconde quem fez e destaca a coisa feita!"
+        }
+      ]
+    },
+    {
+      "id": "cap-24",
+      "number": "ESTAÇÃO XXIV",
+      "title": "Linha do Tempo Literária: Do Conflito Barroco à Estética Parnasiana",
+      "epigraph": {
+        "text": "Cada escola literária é um grito de revolta contra a geração que a precedeu.",
+        "author": "Teoria da Literatura"
+      },
+      "sections": [
+        {
+          "type": "heading",
+          "level": 2,
+          "content": "⚡ O Raio-X em 30 Segundos"
+        },
+        {
+          "type": "paragraph",
+          "content": "A literatura no ENEM é cobrada pela ideologia de cada época: 1. Barroco (séc. XVII): conflito existencial entre carne e espírito, salvação e pecado (antítese, paradoxo, cultismo e conceptismo com Gregório de Matos e Pe. Antônio Vieira); 2. Arcadismo (séc. XVIII): razão iluminista, simplicidade pastoral (fugere urbem, locus amoenus, Tomás Antônio Gonzaga e Cláudio Manuel da Costa); 3. Romantismo (séc. XIX): 1ª geração (nacionalista/indianista idealizada com Gonçalves Dias), 2ª geração (ultrarromântica, mal do século, morte e pessimismo com Álvares de Azevedo), 3ª geração (condoreira, abolicionista e social com Castro Alves); 4. Realismo (crítica psicológica implacável à hipocrisia burguesa com Machado de Assis); 5. Naturalismo (determinismo biológico e social, homem reduzido ao animal/instinto em 'O Cortiço' de Aluísio Azevedo); 6. Parnasianismo e Simbolismo (arte pela arte, perfeição métrica fria contra o misticismo e as sinestesias dos simbolistas)."
+        },
+        {
+          "type": "heading",
+          "level": 2,
+          "content": "🎯 Como o ENEM Cobra no Enunciado"
+        },
+        {
+          "type": "paragraph",
+          "content": "A banca relaciona a forma estética ao projeto social: 'O soneto barroco reflete o dilema religioso da Contrarreforma por meio da oposição entre...', 'A idealização da figura indígena no Romantismo atende ao projeto de construção de uma identidade nacional pautada em...' ou 'A zoomorfização das personagens em O Cortiço evidencia a filiação estética ao Naturalismo pela...'."
+        },
+        {
+          "type": "callout",
+          "title": "⚠️ O Distrator Fatal (A Pegadinha da Alternativa)",
+          "content": "Confundir Realismo com Naturalismo. O Realismo analisa a mente, o adultério moral e as convenções burguesas da elite (Machado de Assis). O Naturalismo foca na patologia coletiva, nas massas, no cheiro de suor, no instinto carnal incontrolável e no homem escravo da hereditariedade e do meio social (Aluísio Azevedo)."
+        },
+        {
+          "type": "heading",
+          "level": 2,
+          "content": "💡 Aplicação Relâmpago Resolvida"
+        },
+        {
+          "type": "paragraph",
+          "content": "Texto descreve moradores de uma estalagem acordando, comparados a formigas e animais rastejantes em busca de comida e sexo: Estética Naturalista pura, marcada pelo determinismo biológico e pela zoomorfização humana sob influência do positivismo oitocentista."
+        },
+        {
+          "type": "callout",
+          "title": "📌 Flashcard Mental de Bolso",
+          "content": "Barroco = Dúvida céu x inferno. Arcadismo = Natureza calma e razão. Romantismo = Paixão exagerada e índio herói. Realismo = Cinismo e mente humana. Naturalismo = Homem bicho e instinto. Parnasianismo = Rima rica e vaso grego!"
+        }
+      ]
+    },
+    {
+      "id": "cap-25",
+      "number": "ESTAÇÃO XXV",
+      "title": "Dossiê dos Mestres: Machado de Assis e José de Alencar",
+      "epigraph": {
+        "text": "Alencar sonhou o Brasil do mito; Machado dissecou o Brasil real.",
+        "author": "História Crítica da Prosa"
+      },
+      "sections": [
+        {
+          "type": "heading",
+          "level": 2,
+          "content": "⚡ O Raio-X em 30 Segundos"
+        },
+        {
+          "type": "paragraph",
+          "content": "José de Alencar fundou o romance brasileiro romântico em três frentes: indianista ('O Guarani', 'Iracema'), urbano ('Senhora', 'Lucíola') e regionalista ('O Gaúcho'). Seu projeto era criar uma língua brasileira autônoma e um herói fundador nativo (o indígena nobre). Machado de Assis é o gênio maior da literatura nacional: rompe com as ilusões românticas na fase realista ('Memórias Póstumas de Brás Cubas', 'Dom Casmurro', 'Quincas Borba'), utilizando narrador não confiável em 1ª pessoa, ironia fina, digressão e desmontagem implacável das convenções da elite escravocrata carioca."
+        },
+        {
+          "type": "heading",
+          "level": 2,
+          "content": "🎯 Como o ENEM Cobra no Enunciado"
+        },
+        {
+          "type": "paragraph",
+          "content": "No ENEM, Machado cai como psicólogo social: 'A ironia machadiana atua como instrumento de desmascaramento das relações de interesse na sociedade...', 'O narrador póstumo de Brás Cubas adota uma postura cínica justificada por...' ou 'O projeto nacionalista de José de Alencar constrói o indígena como símbolo de...'."
+        },
+        {
+          "type": "callout",
+          "title": "⚠️ O Distrator Fatal (A Pegadinha da Alternativa)",
+          "content": "Acreditar piamente no narrador de Machado de Assis! Bentinho (Dom Casmurro) e Brás Cubas mentem, omitem, são ciumentos e vaidosos. Afirmar com certeza que 'Capitu traiu Bentinho' é o distrator do leitor desatento que acreditou no ciúme obsessivo do narrador sem perceber a ambiguidade da obra."
+        },
+        {
+          "type": "heading",
+          "level": 2,
+          "content": "💡 Aplicação Relâmpago Resolvida"
+        },
+        {
+          "type": "paragraph",
+          "content": "Brás Cubas declara no cemitério: 'Não tive filhos, não transmiti a nenhuma criatura o legado da nossa miséria.' A frase sintetiza o pessimismo filosófico machadiano que nega a perpetuação da espécie humana como alívio diante da baixeza moral do mundo."
+        },
+        {
+          "type": "callout",
+          "title": "📌 Flashcard Mental de Bolso",
+          "content": "Alencar = Cria o herói mítico nacional e a cor local romântica. Machado = Desconfie do narrador! Ironia cirúrgica, cinismo elegante e crítica ácida à hipocrisia burguesa!"
+        }
+      ]
+    },
+    {
+      "id": "cap-26",
+      "number": "ESTAÇÃO XXVI",
+      "title": "Modernismo de 1922 e a Geração de 30: A Reconstrução da Cultura",
+      "epigraph": {
+        "text": "Só a Antropofagia nos une. Socialmente. Economicamente. Filosoficamente.",
+        "author": "Oswald de Andrade"
+      },
+      "sections": [
+        {
+          "type": "heading",
+          "level": 2,
+          "content": "⚡ O Raio-X em 30 Segundos"
+        },
+        {
+          "type": "paragraph",
+          "content": "O Modernismo brasileiro é dividido em fases revolucionárias: 1. Primeira Fase / Heroica (1922-1930): Semana de Arte Moderna, destruição do parnasianismo acadêmico, verso livre, poema-piada, valorização da fala cotidiana do povo brasileiro, nacionalismo crítico e Manifesto Antropófago de Oswald de Andrade (devorar a cultura estrangeira e regurgitá-la brasileira); 2. Segunda Fase / Consolidação e Engajamento (1930-1945): Na poesia, Carlos Drummond de Andrade ('Sentimento do Mundo', a dor do indivíduo perante a guerra e a desigualdade) e Manuel Bandeira (a beleza dolorosa do cotidiano humilde e a simplicidade lírica de Pasárgada). Na prosa, o Regionalismo de 30 com Graciliano Ramos ('Vidas Secas', a tragédia da seca nordestina, a mudez social de Fabiano e a zoomorfização da família de retirantes perante a opressão latifundiária)."
+        },
+        {
+          "type": "heading",
+          "level": 2,
+          "content": "🎯 Como o ENEM Cobra no Enunciado"
+        },
+        {
+          "type": "paragraph",
+          "content": "Comandos centrais do ENEM: 'A proposta antropofágica de Oswald de Andrade evidencia-se no texto pela...', 'O poema de Drummond reflete a angústia com o cenário sociopolítico dos anos 1940 ao...' ou 'Em Vidas Secas, a limitação vocabular da personagem Fabiano expressa...'."
+        },
+        {
+          "type": "callout",
+          "title": "⚠️ O Distrator Fatal (A Pegadinha da Alternativa)",
+          "content": "Dizer que os modernistas de 22 queriam fechar o Brasil ao exterior. Errado! A Antropofagia não é isolacionismo xenofóbico: ela engole as vanguardas europeias (cubismo, dadaísmo), mas as digere sob a perspectiva brasileira de Tarsila do Amaral e Mário de Andrade."
+        },
+        {
+          "type": "heading",
+          "level": 2,
+          "content": "💡 Aplicação Relâmpago Resolvida"
+        },
+        {
+          "type": "paragraph",
+          "content": "Fabiano, em 'Vidas Secas', tenta articular pensamentos complexos, mas só emite sons guturais e pensa: 'Você é um bicho, Fabiano'. Gabarito: A desumanização e o silenciamento das populações marginalizadas pela estrutura social arcaica do sertão."
+        },
+        {
+          "type": "callout",
+          "title": "📌 Flashcard Mental de Bolso",
+          "content": "Modernismo de 22 = Quebrar regras, Antropofagia, fala do povo na poesia. Geração de 30 = Graciliano Ramos (seca e miséria social em Vidas Secas) + Drummond (angústia existencial e mundo em guerra)!"
+        }
+      ]
+    },
+    {
+      "id": "cap-27",
+      "number": "ESTAÇÃO XXVII",
+      "title": "A Reinvenção da Linguagem: Guimarães Rosa, Clarice e os Contemporâneos",
+      "epigraph": {
+        "text": "O sertão é do tamanho do mundo; a palavra é a morada do indizível.",
+        "author": "Guimarães Rosa & Clarice Lispector"
+      },
+      "sections": [
+        {
+          "type": "heading",
+          "level": 2,
+          "content": "⚡ O Raio-X em 30 Segundos"
+        },
+        {
+          "type": "paragraph",
+          "content": "Na Terceira Fase / Geração de 45 e na Contemporaneidade, a linguagem atinge a máxima voltagem: 1. Guimarães Rosa ('Grande Sertão: Veredas', 'Sagarana'): reinventa o português com neologismos geniais, arcaísmos, sintaxe poética e eleva o sertanejo ao plano metafísico universal ('o sertão está em toda parte; o diabo na rua, no meio do redemunho'); 2. Clarice Lispector ('A Hora da Estrela', 'Laços de Família'): prosa intimista, fluxo de consciência, monólogo interior e a EPIFANIA (o momento em que um fato banal cotidiano, como um ovo ou um cego mascando chiclete, rasga a casca da realidade e revela a vertigem da existência); 3. Literatura Contemporânea: polifonia urbana, vozes periféricas, autoficção, escrita feminina e afrodiaspórica (Conceição Evaristo e a 'escrevivência', Carolina Maria de Jesus, Itamar Vieira Junior)."
+        },
+        {
+          "type": "heading",
+          "level": 2,
+          "content": "🎯 Como o ENEM Cobra no Enunciado"
+        },
+        {
+          "type": "paragraph",
+          "content": "Questões favoritas da banca: 'O processo epifânico que acomete a protagonista de Clarice Lispector caracteriza-se por...', 'A recriação lexical de Guimarães Rosa cumpre a função poética de...' ou 'A narrativa contemporânea incorpora a perspectiva das populações historicamente marginalizadas por meio da...'."
+        },
+        {
+          "type": "callout",
+          "title": "⚠️ O Distrator Fatal (A Pegadinha da Alternativa)",
+          "content": "Reduzir Guimarães Rosa a um escritor meramente regionalista caipira. Rosa usa o sertão das Minas Gerais como laboratório metafísico sobre o bem e o mal universais; sua linguagem é cosmopolita e inovadora."
+        },
+        {
+          "type": "heading",
+          "level": 2,
+          "content": "💡 Aplicação Relâmpago Resolvida"
+        },
+        {
+          "type": "paragraph",
+          "content": "Em 'A Hora da Estrela', Macabéa come cachorro-quente e olha os anúncios sem compreender seu próprio vazio existencial. A obra articula a denúncia da invisibilidade da retirante nordestina alienada com a angústia metalinguística do narrador Rodrigo S.M."
+        },
+        {
+          "type": "callout",
+          "title": "📌 Flashcard Mental de Bolso",
+          "content": "Guimarães Rosa = Neologismos e sertão metafísico universal. Clarice Lispector = Epifania, choque interior e fluxo de consciência. Contemporânea = Escrevivência, vozes negras, indígenas e periféricas na cena literária!"
+        }
+      ]
+    },
+    {
+      "id": "cap-28",
+      "number": "ESTAÇÃO XXVIII",
+      "title": "Artes Visuais: Do Renascimento e Barroco ao Impressionismo e Vanguardas",
+      "epigraph": {
+        "text": "A arte não reproduz o visível; ela torna visível aquilo que não vemos.",
+        "author": "Paul Klee"
+      },
+      "sections": [
+        {
+          "type": "heading",
+          "level": 2,
+          "content": "⚡ O Raio-X em 30 Segundos"
+        },
+        {
+          "type": "paragraph",
+          "content": "A história da arte no ENEM segue uma lógica de rupturas ópticas e ideológicas: 1. Renascimento (séc. XV-XVI): razão humanista, perspectiva geométrica, profundidade e harmonia simétrica (Da Vinci, Michelangelo); 2. Barroco (séc. XVII): claro-escuro dramático (chiaroscuro), teatralidade, emoção religiosa e diagonais dinâmicas (Caravaggio, Aleijadinho no Brasil); 3. Impressionismo (final do séc. XIX): pintura ao ar livre, captura das variações da luz solar momentânea, pinceladas soltas e dissolução do contorno nítido (Monet, Renoir); 4. Vanguardas Europeias (início do séc. XX): Cubismo (múltiplas perspectivas simultâneas e geometria), Expressionismo (deformação da realidade para expressar a angústia interior), Surrealismo (o inconsciente e o mundo dos sonhos), Futurismo (a velocidade e as máquinas) e Dadaísmo (o absurdo, o antiauto e o ready-made de Duchamp)."
+        },
+        {
+          "type": "heading",
+          "level": 2,
+          "content": "🎯 Como o ENEM Cobra no Enunciado"
+        },
+        {
+          "type": "paragraph",
+          "content": "A prova traz uma pintura ou escultura e questiona a técnica em diálogo com o sentido: 'A técnica do claro-escuro na tela barroca produz o efeito dramático de...', 'A estética impressionista rompe com os padrões da arte acadêmica ao priorizar...' ou 'O quadro cubista desconstrói a perspectiva renascentista clássica por meio de...'."
+        },
+        {
+          "type": "callout",
+          "title": "⚠️ O Distrator Fatal (A Pegadinha da Alternativa)",
+          "content": "Dizer que as vanguardas modernas 'não sabiam desenhar' ou eram desorganizadas. O Modernismo e o Cubismo dominavam a técnica acadêmica perfeitamente, mas romperam deliberadamente com o realismo mimético fotográfico porque a fotografia já registrava o mundo real. A arte passou a expressar conceitos e ideias!"
+        },
+        {
+          "type": "heading",
+          "level": 2,
+          "content": "💡 Aplicação Relâmpago Resolvida"
+        },
+        {
+          "type": "paragraph",
+          "content": "Tela 'Abaporu' ou 'Os Operários' de Tarsila do Amaral: A artista combina a lição construtiva das vanguardas europeias (cubismo e cores puras) com temas nacionais urgentes (o homem telúrico do sertão e a multidão de imigrantes operários na industrialização de São Paulo)."
+        },
+        {
+          "type": "callout",
+          "title": "📌 Flashcard Mental de Bolso",
+          "content": "Renascimento = Linha reta, simetria e razão. Barroco = Sombra preta dramática e emoção. Impressionismo = Luz do sol e borrões soltos. Cubismo = Quebra a perspectiva em vários ângulos ao mesmo tempo!"
+        }
+      ]
+    },
+    {
+      "id": "cap-29",
+      "number": "ESTAÇÃO XXIX",
+      "title": "Arte Indígena, Matriz Africana, Cinema, Foto e Cultura Popular",
+      "epigraph": {
+        "text": "A identidade do Brasil é a encruzilhada viva de suas heranças ancestrais.",
+        "author": "Darcy Ribeiro"
+      },
+      "sections": [
+        {
+          "type": "heading",
+          "level": 2,
+          "content": "⚡ O Raio-X em 30 Segundos"
+        },
+        {
+          "type": "paragraph",
+          "content": "No ENEM, arte é patrimônio de resistência e diversidade: 1. Arte Indígena: grafismos geométricos ancestrais com urucum e jenipapo (simetria que comunica a cosmologia, rituais e relação de simbiose com a floresta; pintura corporal como linguagem identitária); 2. Arte Afro-brasileira: máscaras rituais, terreiros, percussão, estética negra e ancestralidade como afirmação política contra o racismo estrutural (Mestre Didi, Rubem Valentim); 3. Cinema e Fotografia: enquadramentos (plano geral, primeiro plano/close-up), iluminação, ângulo picado (de cima para baixo, apequenando o personagem) e contrapicado (de baixo para cima, monumentalizando o personagem); Sebastião Salgado e o cinema novo de Glauber Rocha como armas de denúncia social; 4. Cultura Popular e Patrimônio Imaterial: literatura de cordel, xilogravura, maracatu, bumba-meu-boi e festas tradicionais como patrimônios culturais vivos protegidos pelo IPHAN."
+        },
+        {
+          "type": "heading",
+          "level": 2,
+          "content": "🎯 Como o ENEM Cobra no Enunciado"
+        },
+        {
+          "type": "paragraph",
+          "content": "Comandos de valorização da diversidade: 'Os grafismos corporais indígenas desempenham uma função comunicativa associada a...', 'A fotografia documental atua como instrumento de denúncia social ao focalizar...' ou 'A preservação do bumba-meu-boi como patrimônio imaterial justifica-se pela salvaguarda de...'."
+        },
+        {
+          "type": "callout",
+          "title": "⚠️ O Distrator Fatal (A Pegadinha da Alternativa)",
+          "content": "Chamar manifestações populares e indígenas de 'folclore ingênuo' ou 'artesanato primitivo'. O ENEM considera essas produções sistemas estéticos e cosmológicos complexos e legítimos que merecem igual respeito acadêmico e salvaguarda patrimonial."
+        },
+        {
+          "type": "heading",
+          "level": 2,
+          "content": "💡 Aplicação Relâmpago Resolvida"
+        },
+        {
+          "type": "paragraph",
+          "content": "Fotografia em preto e branco de trabalhadores rurais em ângulo contrapicado: o recurso técnico da câmera posicionada de baixo para cima engrandece visualmente a figura do trabalhador, conferindo dignidade e força heroica ao sujeito marginalizado pelo latifúndio."
+        },
+        {
+          "type": "callout",
+          "title": "📌 Flashcard Mental de Bolso",
+          "content": "Arte indígena/africana = Cosmologia, ancestralidade e resistência política (nunca 'primitivo'). Foto em contrapicado = De baixo para cima, torna o sujeito monumental e heroico!"
+        }
+      ]
+    },
+    {
+      "id": "cap-30",
+      "number": "ESTAÇÃO XXX",
+      "title": "Cultura Corporal, Esporte e Padrões Estéticos no ENEM",
+      "epigraph": {
+        "text": "O corpo não é um objeto a ser moldado pelo consumo; é um sujeito de direitos e cultura.",
+        "author": "Sociologia do Esporte"
+      },
+      "sections": [
+        {
+          "type": "heading",
+          "level": 2,
+          "content": "⚡ O Raio-X em 30 Segundos"
+        },
+        {
+          "type": "paragraph",
+          "content": "Todo ano o ENEM cobra de 2 a 4 questões sobre Linguagem Corporal e Educação Física. Os três eixos obrigatórios são: 1. Esporte como Prática Social e Inclusão: o esporte comunitário contrapondo-se ao esporte de alto rendimento/espetáculo (jogar para integrar comunidades, acolher pessoas com deficiência e superar preconceitos de gênero, raça e classe); 2. Crítica aos Padrões Corporais Mercantilizados: denúncia da ditadura da magreza, da hipertrofia forçada, do culto tóxico ao corpo nas redes sociais e das doenças psicossomáticas (vigorexia, anorexia, bulimia); 3. Danças, Lutas e Jogos Tradicionais: manifestações populares (capoeira, frevo, ciranda, jogos indígenas) como formas lúdicas de identidade e saúde coletiva."
+        },
+        {
+          "type": "heading",
+          "level": 2,
+          "content": "🎯 Como o ENEM Cobra no Enunciado"
+        },
+        {
+          "type": "paragraph",
+          "content": "Comandos analíticos: 'A abordagem do esporte no texto evidencia seu papel como mecanismo de inclusão social ao...', 'A crítica direciona-se à imposição midiática de padrões corporais inatingíveis que provocam...' ou 'A prática da capoeira ressignifica as relações entre corpo e cultura por meio de...'."
+        },
+        {
+          "type": "callout",
+          "title": "⚠️ O Distrator Fatal (A Pegadinha da Alternativa)",
+          "content": "Alternativas que defendem a busca obsessiva por corpos padronizados, o uso de suplementos indiscriminados ou que reduzem o esporte apenas a medalhas olímpicas e vitória a qualquer custo. O gabarito do ENEM SEMPRE prioriza a saúde integral, o bem-estar coletivo, a inclusão social e o respeito à diversidade dos corpos reais."
+        },
+        {
+          "type": "heading",
+          "level": 2,
+          "content": "💡 Aplicação Relâmpago Resolvida"
+        },
+        {
+          "type": "paragraph",
+          "content": "Texto debate a criação de ligas de futebol para mulheres e idosos em periferias urbanas: Gabarito: O esporte como instrumento emancipatório de ocupação do espaço público, promoção da saúde preventiva e democratização do lazer como direito de cidadania."
+        },
+        {
+          "type": "callout",
+          "title": "📌 Flashcard Mental de Bolso",
+          "content": "Educação Física no ENEM = Esporte de inclusão social comunitária + denúncia da ditadura do corpo perfeito nas redes sociais + danças e capoeira como identidade cultural viva!"
+        }
+      ]
+    },
+    {
+      "id": "cap-31",
+      "number": "ESTAÇÃO XXXI",
+      "title": "Língua Estrangeira Instrumental: Inglês e Espanhol nas Questões 1 a 5",
+      "epigraph": {
+        "text": "Compreender outra língua é decifrar a alma e a luta de outro povo.",
+        "author": "Linguística Aplicada"
+      },
+      "sections": [
+        {
+          "type": "heading",
+          "level": 2,
+          "content": "⚡ O Raio-X em 30 Segundos"
+        },
+        {
+          "type": "paragraph",
+          "content": "As 5 primeiras questões da prova de Linguagens são de Língua Estrangeira (Inglês ou Espanhol). O ENEM NÃO cobra regras gramaticais isoladas nem tradução literal palavra por palavra: cobra leitura instrumental e interpretação crítica de textos autênticos (cartuns, letras de música, campanhas sociais, poemas, notícias da BBC ou El País). 1. Técnicas de Leitura: Skimming (leitura rápida visual para pegar a ideia geral em 10 segundos) e Scanning (busca cirúrgica por uma informação pontual ou palavra-chave mencionada no enunciado); 2. Conectivos de Ouro em Inglês: 'However/Although/Even though' (oposição/concessão), 'Therefore/Thus' (conclusão), 'Moreover/Furthermore' (adição); 3. Falsos Amigos em Inglês: 'Actually' (na verdade/realmente, NÃO atualmente), 'Push' (empurrar, NÃO puxar), 'Pretend' (fingir, NÃO pretender), 'Intend' (pretender), 'Parents' (pais, NÃO parentes); 4. Heterossemânticos Críticos em Espanhol: 'Embarazada' (grávida), 'Exquisito' (delicioso/saboroso), 'Propina' (gorjeta), 'Largo' (comprido/longo), 'Berro' (agrião), 'Acordar' (lembrar), 'Apellido' (sobrenome), 'Vaso' (copo), 'Cena' (jantar), 'Rato' (momento/instante)."
+        },
+        {
+          "type": "heading",
+          "level": 2,
+          "content": "🎯 Como o ENEM Cobra no Enunciado"
+        },
+        {
+          "type": "paragraph",
+          "content": "Os enunciados são 100% em PORTUGUÊS: 'Ao abordar a questão do aquecimento global, a tirinha em inglês produz humor ao evidenciar...', 'Na letra da canção hispânica, o eu lírico denuncia a condição dos imigrantes por meio de...' ou 'O termo [actually / sin embargo] introduz no texto uma relação de...'."
+        },
+        {
+          "type": "callout",
+          "title": "⚠️ O Distrator Fatal (A Pegadinha da Alternativa)",
+          "content": "Cair no falso cognato! O examinador do ENEM sabe exatamente que 'exquisito' parece esquisito para o brasileiro e coloca na alternativa 'a comida estava estranha e ruim'. Quem traduz de ouvido cai no distrator; quem estudou sabe que significa saborosa e requintada!"
+        },
+        {
+          "type": "heading",
+          "level": 2,
+          "content": "💡 Aplicação Relâmpago Resolvida"
+        },
+        {
+          "type": "paragraph",
+          "content": "Tirinha de Mafalda (Quino): A personagem questiona a mãe que limpa a casa incansavelmente e pergunta se o papel histórico da mulher na sociedade é apenas doméstico. Gabarito: A crítica aos papéis tradicionais de gênero e a defesa da emancipação feminina na América Latina dos anos 1960/70."
+        },
+        {
+          "type": "callout",
+          "title": "📌 Flashcard Mental de Bolso",
+          "content": "Inglês: 'Actually' = na verdade; 'Pretend' = fingir; 'Push' = empurrar! Espanhol: 'Embarazada' = grávida; 'Exquisito' = delicioso; 'Propina' = gorjeta; 'Apellido' = sobrenome! Leia o enunciado em português ANTES de ler o texto em língua estrangeira para já saber exatamente o que procurar!"
+        }
+      ]
+    }
+  ]
+}

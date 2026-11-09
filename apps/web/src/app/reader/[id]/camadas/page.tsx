@@ -197,29 +197,84 @@ export default function LayeredReaderPage({ params }: { params: Promise<{ id: st
       contentRef.current;
   }, [audioOpen, activeAudioBlockIndex, visibleBlockIndex, streamBlocks.length]);
 
-  // Monitora interação direta do usuário com scroll para não intervir na rolagem manual
+  // Controle de acompanhamento automático do áudio (sem flick ou interrupção de scroll do usuário)
+  const [autoFollowAudio, setAutoFollowAudio] = useState<boolean>(true);
+  const [isAudioOffscreen, setIsAudioOffscreen] = useState<boolean>(false);
+  const isProgrammaticScrollRef = useRef<boolean>(false);
+
+  // Detecta qualquer rolagem manual do usuário (wheel, touch, scrollbar drag) para pausar o auto-scroll
   useEffect(() => {
-    const markUserScroll = () => {
+    const handleUserScrollAction = () => {
       lastUserScrollRef.current = Date.now();
+      if (!isProgrammaticScrollRef.current) {
+        setAutoFollowAudio(false);
+      }
     };
-    window.addEventListener('wheel', markUserScroll, { passive: true });
-    window.addEventListener('touchmove', markUserScroll, { passive: true });
+
+    window.addEventListener('wheel', handleUserScrollAction, { passive: true });
+    window.addEventListener('touchmove', handleUserScrollAction, { passive: true });
+    window.addEventListener('scroll', handleUserScrollAction, { passive: true });
     window.addEventListener(
       'keydown',
       (e) => {
-        if (['ArrowUp', 'ArrowDown', 'PageUp', 'PageDown', 'Space'].includes(e.code)) {
-          markUserScroll();
+        if (['ArrowUp', 'ArrowDown', 'PageUp', 'PageDown', 'Space', 'Home', 'End'].includes(e.code)) {
+          handleUserScrollAction();
         }
       },
       { passive: true }
     );
+
+    return () => {
+      window.removeEventListener('wheel', handleUserScrollAction);
+      window.removeEventListener('touchmove', handleUserScrollAction);
+      window.removeEventListener('scroll', handleUserScrollAction);
+    };
   }, []);
 
-  // Auto-scroll suave para o bloco ativo APENAS na transição de bloco e SE o usuário não estiver rolando
+  // Monitora se o bloco de áudio ativo está fora do campo de visão visível
   useEffect(() => {
-    if (!audioPlayback.isPlaying) return;
-    // Se o usuário interagiu com o scroll nos últimos 4 segundos, respeita e não puxa a tela
-    if (Date.now() - lastUserScrollRef.current < 4000) return;
+    if (!audioOpen || !audioPlayback.isPlaying) {
+      setIsAudioOffscreen(false);
+      return;
+    }
+
+    const checkVisibility = () => {
+      const el =
+        document.getElementById(`reader-block-${activeAudioBlockIndex}`) ||
+        blockRefs.current[activeAudioBlockIndex];
+      if (!el) return;
+      const rect = el.getBoundingClientRect();
+      const viewH = window.innerHeight;
+      const isOff = rect.bottom < 40 || rect.top > viewH - 40;
+      setIsAudioOffscreen(isOff);
+    };
+
+    checkVisibility();
+    window.addEventListener('scroll', checkVisibility, { passive: true });
+    return () => window.removeEventListener('scroll', checkVisibility);
+  }, [audioOpen, audioPlayback.isPlaying, activeAudioBlockIndex]);
+
+  // Rola suavemente para o bloco de áudio ativo
+  const scrollToActiveAudioBlock = useCallback(() => {
+    const el =
+      document.getElementById(`reader-block-${activeAudioBlockIndex}`) ||
+      blockRefs.current[activeAudioBlockIndex];
+    if (el) {
+      isProgrammaticScrollRef.current = true;
+      const rect = el.getBoundingClientRect();
+      const viewH = window.innerHeight;
+      const y = rect.top + window.pageYOffset - viewH * 0.32;
+      window.scrollTo({ top: Math.max(0, y), behavior: 'smooth' });
+      setTimeout(() => {
+        isProgrammaticScrollRef.current = false;
+      }, 700);
+      setAutoFollowAudio(true);
+    }
+  }, [activeAudioBlockIndex]);
+
+  // Acompanha a transição de bloco suavemente SOMENTE quando autoFollowAudio for explicitamente true
+  useEffect(() => {
+    if (!audioPlayback.isPlaying || !autoFollowAudio) return;
 
     const el =
       document.getElementById(`reader-block-${activeAudioBlockIndex}`) ||
@@ -228,11 +283,15 @@ export default function LayeredReaderPage({ params }: { params: Promise<{ id: st
       const rect = el.getBoundingClientRect();
       const viewH = window.innerHeight;
       if (rect.top < 60 || rect.bottom > viewH - 120) {
+        isProgrammaticScrollRef.current = true;
         const y = rect.top + window.pageYOffset - viewH * 0.32;
         window.scrollTo({ top: Math.max(0, y), behavior: 'smooth' });
+        setTimeout(() => {
+          isProgrammaticScrollRef.current = false;
+        }, 700);
       }
     }
-  }, [activeAudioBlockIndex]);
+  }, [activeAudioBlockIndex, audioPlayback.isPlaying, autoFollowAudio]);
 
   useEffect(() => {
     if (!book || loading || streamBlocks.length === 0) return;

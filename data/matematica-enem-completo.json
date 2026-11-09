@@ -1,0 +1,1655 @@
+{
+  "meta": {
+    "id": "matematica-enem-completo",
+    "title": "Manual Supremo de Matemática e suas Tecnologias ENEM",
+    "subtitle": "A Grade Completa do 2º Dia: Da Matemática Básica à Análise Combinatória e Probabilidade com Foco Máximo na TRI e 800+ Pontos",
+    "author": "Prof. Antigravity & Mestres das Ciências Exatas",
+    "category": "Matemática e suas Tecnologias · ENEM 2º Dia",
+    "chaptersCount": 41,
+    "estimatedReadingTime": "Aprox. 6 horas de imersão completa",
+    "description": "Curso completo, rigoroso e estruturado cobrindo 100% da Matriz de Referência de Matemática e suas Tecnologias do ENEM (45 questões do 2º dia). Dividido em 12 grandes áreas: 1. Matemática Básica e Aritmética; 2. Porcentagem e Matemática Financeira; 3. Álgebra Elementar; 4. Estudo Completo de Funções (Afim, Quadrática, Exponencial e Logarítmica); 5. Sequências Numéricas (PA e PG); 6. Geometria Plana e Relações Métricas; 7. Geometria Espacial e Capacidades; 8. Geometria Analítica; 9. Trigonometria; 10. Estatística Descritiva (Médias, Moda, Mediana e Desvio Padrão); 11. Teoria das Probabilidades; e 12. Análise Combinatória. Cada capítulo conta com formulações didáticas, atalhos mentais para a prova, resolução comentada e estratégias anti-distrator da TRI.",
+    "isGeneratedByAI": true
+  },
+  "chapters": [
+    {
+      "id": "mat-cap-01-operacoes-conjuntos",
+      "number": 1,
+      "title": "1. Operações Fundamentais, Frações e Decimais no ENEM",
+      "epigraph": {
+        "text": "A Matemática básica responde por mais de 40% das questões do ENEM. Dominar o cálculo ágil e seguro é o passaporte direto para superar os 800 pontos na TRI.",
+        "author": "Guia de Estratégia de Prova ENEM"
+      },
+      "sections": [
+        {
+          "type": "heading",
+          "level": 2,
+          "content": "A Base da Pirâmide da TRI: Por Onde os Pontos Realmente Escorrem"
+        },
+        {
+          "type": "paragraph",
+          "content": "Na Teoria de Resposta ao Item (TRI) adotada pelo ENEM, as questões são calibradas em três níveis: fáceis, médias e difíceis. Uma questão de trigonometria complexa ou logaritmo vale quase nada se você errar uma questão de divisão de frações ou leitura de números decimais. O algoritmo interpreta o acerto na questão difícil e o erro na fácil como 'chute' (acerto ao acaso), derrubando a sua nota. Por isso, a aritmética básica não é apenas um pré-requisito técnico: ela é a fundação da sua nota máxima."
+        },
+        {
+          "type": "paragraph",
+          "content": "Os conjuntos numéricos estruturam todo o raciocínio quantitativo: os Números Naturais (N = {0, 1, 2, ...}) modelam contagens inteiras; os Inteiros (Z = {..., -2, -1, 0, 1, 2, ...}) introduzem saldos negativos, fusos horários e variações de temperatura; os Racionais (Q = {a/b, com b != 0}) representam frações e decimais finitos ou dízimas periódicas; e os Reais (R) englobam também os irracionais como pi e raiz de 2."
+        },
+        {
+          "type": "callout",
+          "title": "Regra de Ouro no ENEM: Operações com Frações sem Perder Tempo",
+          "content": "• Soma e Subtração: frações com denominadores diferentes exigem MMC ou o método da borboleta cruzada (a/b + c/d = (a*d + b*c)/(b*d)).\n• Multiplicação: direto numerador com numerador e denominador com denominador ((a/b)*(c/d) = (a*c)/(b*d)). Simplifique SEMPRE antes de multiplicar.\n• Divisão: conserva a primeira e multiplica pelo inverso da segunda ((a/b) / (c/d) = (a/b) * (d/c))."
+        },
+        {
+          "type": "heading",
+          "level": 2,
+          "content": "Números Decimais e Transformação Fracionária"
+        },
+        {
+          "type": "paragraph",
+          "content": "No ENEM, quase todas as situações cotidianas (preço por litro de combustível, massa de medicamentos em miligramas, dosagens de adubos por hectare) vêm expressas em números decimais. O erro mais recorrente é o alinhamento da vírgula na adição e na subtração, ou a contagem errônea de casas decimais na multiplicação (por exemplo, 0,2 * 0,03 = 0,006, pois somamos 1 casa com 2 casas decimais = 3 casas decimais)."
+        },
+        {
+          "type": "quote",
+          "content": "Nunca divida números com vírgula direto: multiplique dividendo e divisor por potências de 10 até eliminar todas as vírgulas. Dividir 4,8 por 0,12 é exatamente o mesmo que dividir 480 por 12 = 40.",
+          "author": "Gatilho de Prova de Matemática"
+        }
+      ],
+      "quiz": [
+        {
+          "question": "Um atleta consome 3/5 de uma garrafa de 750 mL de isotônico no primeiro tempo de uma partida e 1/3 do restante no intervalo. Quantos mililitros de isotônico restaram na garrafa?",
+          "options": [
+            "200 mL",
+            "150 mL",
+            "100 mL",
+            "250 mL"
+          ],
+          "correctAnswer": 0,
+          "explanation": "No 1º tempo, ele consome (3/5) * 750 = 450 mL. Sobram 750 - 450 = 300 mL. No intervalo, consome 1/3 de 300 mL = 100 mL. Portanto, restam 300 - 100 = 200 mL."
+        }
+      ]
+    },
+    {
+      "id": "mat-cap-02-potencias-notacao",
+      "number": 2,
+      "title": "2. Potenciação, Radiciação e Notação Científica no ENEM",
+      "epigraph": {
+        "text": "O ENEM adora grandezas microscópicas (como o diâmetro do vírus ou a massa do elétron) e grandezas astronômicas (como a distância da Terra ao Sol ou o orçamento federal). A notação científica é a linguagem oficial dessas questões.",
+        "author": "Matriz de Competências do INEP"
+      },
+      "sections": [
+        {
+          "type": "heading",
+          "level": 2,
+          "content": "Propriedades Fundamentais de Potenciação"
+        },
+        {
+          "type": "paragraph",
+          "content": "A potenciação sintetiza produtos de fatores iguais: a^n = a * a * ... * a (n vezes). As propriedades que você precisa executar de olhos fechados na prova são:\n1. Produto de mesma base: a^m * a^n = a^(m+n)\n2. Divisão de mesma base: a^m / a^n = a^(m-n)\n3. Potência de potência: (a^m)^n = a^(m*n)\n4. Potência de produto ou quociente: (a*b)^n = a^n * b^n e (a/b)^n = a^n / b^n\n5. Expoente negativo: a^(-n) = 1 / (a^n)\n6. Expoente fracionário (ponte com radiciação): a^(m/n) = raiz n-ésima de a^m ('o que está no sol vai para a sombra, o que está na sombra vai para o sol')."
+        },
+        {
+          "type": "heading",
+          "level": 2,
+          "content": "Notação Científica e Ordem de Grandeza"
+        },
+        {
+          "type": "paragraph",
+          "content": "A forma canônica de um número em notação científica é dada por: N = a * 10^k, onde 1 <= a < 10 (o coeficiente 'a' deve ser estritamente maior ou igual a 1 e estritamente menor que 10) e k é um número inteiro. Para números muito grandes, deslocamos a vírgula para a esquerda e o expoente k fica positivo. Para números minúsculos (menores que 1), deslocamos a vírgula para a direita e o expoente k fica negativo."
+        },
+        {
+          "type": "callout",
+          "title": "Pegadinha Clássica do Distrator no ENEM: Ordem de Grandeza",
+          "content": "Para encontrar a ordem de grandeza de N = a * 10^k:\n• Se a < raiz de 10 (~3,16), a ordem de grandeza é 10^k.\n• Se a >= raiz de 10 (~3,16), a ordem de grandeza é 10^(k+1).\nExemplo: 4 * 10^6 tem ordem de grandeza 10^7, porque 4 >= 3,16!"
+        }
+      ],
+      "quiz": [
+        {
+          "question": "Um nanômetro equivale a 10^(-9) metros. Uma molécula tem comprimento médio de 45 nanômetros. Como esse valor é expresso corretamente em notação científica em metros?",
+          "options": [
+            "4,5 * 10^(-8) m",
+            "45 * 10^(-9) m",
+            "4,5 * 10^(-10) m",
+            "0,45 * 10^(-7) m"
+          ],
+          "correctAnswer": 0,
+          "explanation": "45 nm = 45 * 10^(-9) m = (4,5 * 10^1) * 10^(-9) = 4,5 * 10^(1 - 9) = 4,5 * 10^(-8) m."
+        }
+      ]
+    },
+    {
+      "id": "mat-cap-03-mmc-mdc",
+      "number": 3,
+      "title": "3. Múltiplos, Divisores, MMC e MDC em Situações Cotidianas",
+      "epigraph": {
+        "text": "Quando dois ou mais eventos periódicos se repetem e você precisa descobrir quando eles vão coincidir de novo: pense em MMC. Quando você precisa dividir ou repartir recursos em partes iguais e máximas: pense em MDC.",
+        "author": "Gatilho de Identificação de Enunciado"
+      },
+      "sections": [
+        {
+          "type": "heading",
+          "level": 2,
+          "content": "Como Reconhecer se a Questão Pede MMC ou MDC"
+        },
+        {
+          "type": "paragraph",
+          "content": "O ENEM quase nunca escreve as palavras 'calcule o MMC' ou 'calcule o MDC'. A prova traz historinhas do cotidiano. Você precisa decodificar o gatilho semântico do enunciado:\n• Gatilhos de MMC: 'De quanto em quanto tempo se encontram novamente?', 'Quando as luzes piscam juntas de novo?', 'Três remédios tomados em horários diferentes que serão ingeridos juntos no mesmo horário'.\n• Gatilhos de MDC: 'Dividir em lotes com o maior tamanho possível', 'Cortar tecidos ou tábuas sem sobras no maior comprimento comum', 'Agrupar pessoas em equipes com o mesmo número de integrantes sem misturar categorias'."
+        },
+        {
+          "type": "callout",
+          "title": "Técnica de Fatoração Simultânea Ágil",
+          "content": "Para calcular MMC e MDC ao mesmo tempo: fature os números por fatores primos simultaneamente. O MMC é o produto de TODOS os fatores primos até que todos os números cheguem a 1. O MDC é o produto APENAS daqueles fatores primos que dividiram todos os números ao mesmo tempo naquela linha!"
+        }
+      ],
+      "quiz": [
+        {
+          "question": "Três linhas de ônibus A, B e C passam em um mesmo terminal a cada 12, 15 e 20 minutos, respectivamente. Se às 8h00 os três ônibus partiram simultaneamente, qual será o próximo horário em que eles partirão juntos de novo?",
+          "options": [
+            "9h00",
+            "9h15",
+            "8h45",
+            "9h30"
+          ],
+          "correctAnswer": 0,
+          "explanation": "Calculamos o MMC(12, 15, 20): 12 = 2^2 * 3; 15 = 3 * 5; 20 = 2^2 * 5. MMC = 2^2 * 3 * 5 = 60 minutos (1 hora). 8h00 + 1h = 9h00."
+        }
+      ]
+    },
+    {
+      "id": "mat-cap-04-razao-proporcao",
+      "number": 4,
+      "title": "4. Razão, Proporção e Divisão Proporcional",
+      "epigraph": {
+        "text": "Razão é a comparação entre duas grandezas por meio de uma divisão. Proporção é a igualdade entre duas razões. Essa ferramenta simples resolve cerca de 8 a 10 questões por prova no ENEM.",
+        "author": "Estatística da Matriz do ENEM"
+      },
+      "sections": [
+        {
+          "type": "heading",
+          "level": 2,
+          "content": "Razões Especiais que o ENEM Adora"
+        },
+        {
+          "type": "paragraph",
+          "content": "No mundo real e nas questões interdisciplinares do ENEM, certas razões recebem nomes consagrados pela ciência e pela economia:\n1. Velocidade Média: Razão entre o deslocamento e o intervalo de tempo (v = delta_s / delta_t).\n2. Densidade Demográfica: Razão entre o número de habitantes e a área territorial em km² (Hab/km²).\n3. Massa Específica / Densidade: Razão entre a massa de um corpo e seu volume (d = m / V).\n4. Concentração Comum: Razão entre a massa de soluto e o volume da solução (C = m / V em g/L).\n5. Consumo de Combustível: Razão entre a distância percorrida e o volume de combustível gasto (km/L)."
+        },
+        {
+          "type": "heading",
+          "level": 2,
+          "content": "Divisão em Partes Diretamente e Inversamente Proporcionais"
+        },
+        {
+          "type": "paragraph",
+          "content": "Dividir uma quantia Q em partes proporcionais aos números a, b e c significa encontrar x, y e z tais que x/a = y/b = z/c = k (onde k é a constante de proporcionalidade). Logo, x = a*k, y = b*k, z = c*k, e a soma x + y + z = Q.\nQuando a divisão é INVERSAMENTE proporcional a a, b e c, ela equivale a ser DIRETAMENTE proporcional aos inversos (1/a, 1/b, 1/c). Exemplo clássico do ENEM: bônus financeiro dividido inversamente ao número de faltas dos funcionários!"
+        }
+      ],
+      "quiz": [
+        {
+          "question": "Um prêmio de R$ 60.000,00 deve ser dividido entre dois funcionários de forma diretamente proporcional ao tempo de serviço de cada um na empresa. O funcionário A trabalha há 3 anos e o funcionário B há 7 anos. Quanto receberá o funcionário B?",
+          "options": [
+            "R$ 42.000,00",
+            "R$ 18.000,00",
+            "R$ 35.000,00",
+            "R$ 40.000,00"
+          ],
+          "correctAnswer": 0,
+          "explanation": "A soma das partes é 3 + 7 = 10 partes. Cada parte k vale 60.000 / 10 = R$ 6.000,00. O funcionário B tem 7 partes: 7 * 6.000 = R$ 42.000,00."
+        }
+      ]
+    },
+    {
+      "id": "mat-cap-05-regra-de-tres",
+      "number": 5,
+      "title": "5. Regra de Três Simples e Composta: O Método das Grandezas",
+      "epigraph": {
+        "text": "O segredo da regra de três não é cruzar em 'X' automaticamente. O segredo é identificar se as grandezas são diretamente ou inversamente proporcionais antes de armar a proporção.",
+        "author": "Mestre de Questões ENEM"
+      },
+      "sections": [
+        {
+          "type": "heading",
+          "level": 2,
+          "content": "Grandezas Diretamente vs Inversamente Proporcionais"
+        },
+        {
+          "type": "paragraph",
+          "content": "Duas grandezas são DIRETAMENTE proporcionais quando o aumento de uma acarreta o aumento da outra na mesma proporção (se uma dobra, a outra dobra). Exemplo: quantidade de combustível e distância percorrida; massa de farinha e quantidade de pães produzidos.\nDuas grandezas são INVERSAMENTE proporcionais quando o aumento de uma provoca a redução proporcional da outra (se uma dobra, a outra cai pela metade). Exemplo: velocidade de um carro e tempo de viagem; número de operários trabalhando no mesmo ritmo e dias necessários para concluir uma obra."
+        },
+        {
+          "type": "callout",
+          "title": "Método Infalível para Regra de Três Composta",
+          "content": "1. Isole a grandeza que contém a incógnita 'x' no lado esquerdo da igualdade.\n2. Compare cada uma das outras grandezas isoladamente com a grandeza de 'x':\n   - Se for diretamente proporcional, mantenha a fração original no produto do lado direito.\n   - Se for inversamente proporcional, inverta a fração no produto do lado direito.\n3. Isole o 'x' e simplifique antes de multiplicar os números grandes!"
+        }
+      ],
+      "quiz": [
+        {
+          "question": "Se 6 operários constroem um muro de 120 metros em 8 dias, quantos operários de mesma capacidade seriam necessários para construir um muro de 180 metros em 6 dias?",
+          "options": [
+            "12 operários",
+            "10 operários",
+            "9 operários",
+            "15 operários"
+          ],
+          "correctAnswer": 0,
+          "explanation": "Incógnita: Operários (6/x). Muro maior -> mais operários (direta: 120/180). Menos dias -> mais operários (inversa: 6/8). Equação: 6/x = (120/180) * (6/8) = (2/3) * (3/4) = 2/4 = 1/2. Logo, 6/x = 1/2 => x = 12 operários."
+        }
+      ]
+    },
+    {
+      "id": "mat-cap-06-escalas",
+      "number": 6,
+      "title": "6. Escalas Cartográficas, Lineares, Superficiais e Volumétricas",
+      "epigraph": {
+        "text": "Escala linear cai todo ano no ENEM sem exceção. O grande distrator é esquecer que área varia com o quadrado da escala e volume varia com o cubo da escala.",
+        "author": "Alerta de Distrator ENEM"
+      },
+      "sections": [
+        {
+          "type": "heading",
+          "level": 2,
+          "content": "Definição de Escala Linear (E)"
+        },
+        {
+          "type": "paragraph",
+          "content": "A escala linear é a razão constante entre a medida no mapa, desenho ou maquete (d) e a medida real correspondente (D), ambas expressas rigorosamente na MESMA unidade de medida:\nE = d / D.\nSe a escala de uma planta é 1 : 50, significa que 1 cm no papel equivale a 50 cm no mundo real (0,5 metros)."
+        },
+        {
+          "type": "callout",
+          "title": "A Armadilha Fatal do ENEM: Escalas de Área e Volume",
+          "content": "Se a escala linear de comprimento é E = d / D:\n• Escala de Área (superfície): Razão entre as áreas = E² = (d / D)².\n• Escala de Volume (capacidade): Razão entre os volumes = E³ = (d / D)³.\nExemplo: Se um mapa tem escala 1 : 100, uma sala de 2 cm² no papel tem área real de 2 * (100)² = 2 * 10.000 = 20.000 cm² = 2 m²!"
+        }
+      ],
+      "quiz": [
+        {
+          "question": "Em um mapa construído na escala 1 : 250.000, a distância em linha reta entre duas cidades é de 8 cm. Qual é a distância real entre essas duas cidades em quilômetros?",
+          "options": [
+            "20 km",
+            "2 km",
+            "200 km",
+            "25 km"
+          ],
+          "correctAnswer": 0,
+          "explanation": "D = d / E = 8 cm * 250.000 = 2.000.000 cm. Como 1 m = 100 cm, 2.000.000 cm = 20.000 m. Como 1 km = 1.000 m, 20.000 m = 20 km."
+        }
+      ]
+    },
+    {
+      "id": "mat-cap-07-porcentagem-aumentos",
+      "number": 7,
+      "title": "7. Porcentagem, Aumentos e Descontos Sucessivos",
+      "epigraph": {
+        "text": "Quem soma porcentagens de aumentos sucessivos erra na hora. Aprender o Fator de Multiplicação é a arma mais rápida do candidato 800+.",
+        "author": "Matemática Financeira Estratégica"
+      },
+      "sections": [
+        {
+          "type": "heading",
+          "level": 2,
+          "content": "O Conceito e o Poder do Fator Multiplicativo"
+        },
+        {
+          "type": "paragraph",
+          "content": "Porcentagem nada mais é do que uma fração de denominador 100: p% = p / 100. Em vez de calcular a porcentagem e depois somar ou subtrair do valor original, utilize diretamente o Fator Multiplicativo (FM):\n• Aumento de i%: FM = 1 + (i / 100). Exemplo: Aumento de 15% -> multiplica por 1,15. Aumento de 8% -> multiplica por 1,08. Aumento de 120% -> multiplica por 2,20.\n• Desconto de i%: FM = 1 - (i / 100). Exemplo: Desconto de 20% -> multiplica por 0,80. Desconto de 5% -> multiplica por 0,95."
+        },
+        {
+          "type": "callout",
+          "title": "O Erro que 90% dos Candidatos Cometem em Aumentos e Descontos",
+          "content": "Se um produto sofre um aumento de 10% e depois outro aumento de 20%, o aumento acumulado NÃO É 30%!\nO cálculo real é o produto dos fatores:\nValor Final = V0 * 1,10 * 1,20 = V0 * 1,32 -> Aumento real de 32%!\nDa mesma forma, um aumento de 25% seguido de um desconto de 20% retorna exatamente ao valor original, pois 1,25 * 0,80 = 1,00!"
+        }
+      ],
+      "quiz": [
+        {
+          "question": "Uma mercadoria que custava R$ 200,00 sofreu um aumento de 20% em janeiro e, em seguida, uma liquidação com desconto de 15% em fevereiro. Qual é o preço final do produto?",
+          "options": [
+            "R$ 204,00",
+            "R$ 210,00",
+            "R$ 200,00",
+            "R$ 205,00"
+          ],
+          "correctAnswer": 0,
+          "explanation": "Preço final = 200 * 1,20 * 0,85 = 240 * 0,85 = R$ 204,00."
+        }
+      ]
+    },
+    {
+      "id": "mat-cap-08-variacao-percentual",
+      "number": 8,
+      "title": "8. Variação Percentual e Análise Crítica de Índices",
+      "epigraph": {
+        "text": "Variação percentual mede o quanto uma grandeza mudou em relação ao seu valor inicial de referência. No ENEM, identificar a base de comparação correta evita o distrator mais frequente.",
+        "author": "Estatística Econômica no ENEM"
+      },
+      "sections": [
+        {
+          "type": "heading",
+          "level": 2,
+          "content": "A Fórmula Universal da Variação Percentual (Delta %)"
+        },
+        {
+          "type": "paragraph",
+          "content": "A variação percentual mede a mudança relativa de um valor inicial (Vi) para um valor final (Vf):\nDelta % = [(Vf - Vi) / Vi] * 100%.\nSe o resultado for positivo, houve crescimento percentual; se for negativo, houve redução percentual. O ponto crítico é SEMPRE dividir pelo valor INICIAL (a base de comparação), nunca pelo final."
+        },
+        {
+          "type": "callout",
+          "title": "Diferença Vital: 'Pontos Percentuais' vs 'Variação Percentual'",
+          "content": "Se a taxa de desemprego passa de 10% para 12%:\n• Ela subiu 2 PONTOS PERCENTUAIS (12% - 10% = 2 p.p.).\n• Ela teve uma VARIAÇÃO PERCENTUAL de 20% (pois (12 - 10) / 10 = 2 / 10 = 0,20 = 20%). O ENEM adora explorar essa confusão em gráficos da imprensa!"
+        }
+      ],
+      "quiz": [
+        {
+          "question": "As vendas de uma livraria passaram de 400 exemplares em março para 500 exemplares em abril. Qual foi a taxa percentual de aumento nas vendas?",
+          "options": [
+            "25%",
+            "20%",
+            "30%",
+            "15%"
+          ],
+          "correctAnswer": 0,
+          "explanation": "Delta % = (500 - 400) / 400 = 100 / 400 = 0,25 = 25%."
+        }
+      ]
+    },
+    {
+      "id": "mat-cap-09-juros-simples-compostos",
+      "number": 9,
+      "title": "9. Juros Simples versus Juros Compostos: Curvas de Crescimento",
+      "epigraph": {
+        "text": "Juros simples crescem em linha reta (progressão aritmética). Juros compostos crescem em curva exponencial acelerada (progressão geométrica). O ENEM cobra a comparação direta entre as duas modalidades.",
+        "author": "Guia de Matemática Financeira"
+      },
+      "sections": [
+        {
+          "type": "heading",
+          "level": 2,
+          "content": "Mecânica dos Juros Simples"
+        },
+        {
+          "type": "paragraph",
+          "content": "Nos juros simples, a taxa de juros (i) incide SEMPRE e exclusivamente sobre o Capital Inicial (C), durante todo o tempo de aplicação (t):\n• Juros: J = C * i * t\n• Montante final: M = C + J = C * (1 + i * t)\nImportante: a taxa 'i' e o tempo 't' precisam estar rigorosamente na mesma unidade de tempo (se a taxa for ao mês, o tempo deve estar em meses; se a taxa for ao ano, o tempo em anos)."
+        },
+        {
+          "type": "heading",
+          "level": 2,
+          "content": "Mecânica dos Juros Compostos (Juros sobre Juros)"
+        },
+        {
+          "type": "paragraph",
+          "content": "Nos juros compostos, a taxa incide sobre o saldo acumulado do período anterior (capital + juros passados):\n• Montante final: M = C * (1 + i)^t\n• Juros acumulados: J = M - C = C * [(1 + i)^t - 1]\nEsse é o regime utilizado universalmente no sistema financeiro real: cartões de crédito, cheque especial, poupança, tesouro direto e empréstimos bancários."
+        },
+        {
+          "type": "callout",
+          "title": "Comparativo Visual no Gráfico do ENEM",
+          "content": "• No período t = 0: Ambos partem do Capital C.\n• No período t = 1: Juros simples e compostos rendem exatamente o MESMO montante!\n• Para t > 1: Os juros compostos superam exponencialmente os juros simples, formando uma curva côncava para cima, enquanto os juros simples formam uma reta."
+        }
+      ],
+      "quiz": [
+        {
+          "question": "Um capital de R$ 1.000,00 foi aplicado a juros compostos à taxa de 10% ao mês durante 2 meses. Qual o montante gerado ao final do período?",
+          "options": [
+            "R$ 1.210,00",
+            "R$ 1.200,00",
+            "R$ 1.220,00",
+            "R$ 1.150,00"
+          ],
+          "correctAnswer": 0,
+          "explanation": "M = C * (1 + i)^t = 1000 * (1 + 0,10)^2 = 1000 * (1,10)^2 = 1000 * 1,21 = R$ 1.210,00."
+        }
+      ]
+    },
+    {
+      "id": "mat-cap-10-inflacao-financiamentos",
+      "number": 10,
+      "title": "10. Inflação, Financiamentos, Parcelamentos e Investimentos",
+      "epigraph": {
+        "text": "Comprar à vista com desconto ou a prazo em parcelas sem juros aparentes? A resposta está no cálculo do custo de oportunidade e da taxa implícita de juros.",
+        "author": "Educação Financeira no ENEM"
+      },
+      "sections": [
+        {
+          "type": "heading",
+          "level": 2,
+          "content": "A Ilusão das 'Parcelas Sem Juros' no Comércio"
+        },
+        {
+          "type": "paragraph",
+          "content": "Uma questão clássica do ENEM traz um produto anunciado por R$ 100,00 à vista ou em 2 vezes de R$ 50,00 (uma entrada de R$ 50,00 no ato e outra parcela de R$ 50,00 após 30 dias). Parece que não há juros, mas se a loja oferece 10% de desconto à vista (R$ 90,00):\n• Se você optar pelo parcelamento: você dá R$ 50,00 de entrada.\n• O valor que você realmente está financiando é 90 - 50 = R$ 40,00.\n• Ao pagar R$ 50,00 após um mês, você está pagando R$ 10,00 de juros sobre uma dívida de R$ 40,00!\n• Taxa real de juros da operação: 10 / 40 = 0,25 = 25% ao mês! Uma taxa absurda disfarçada de 'sem juros'."
+        },
+        {
+          "type": "heading",
+          "level": 2,
+          "content": "Inflação e Poder de Compra: Taxa Real vs Taxa Nominal"
+        },
+        {
+          "type": "paragraph",
+          "content": "A inflação mede a perda do poder de compra da moeda. Se um investimento rende 10% ao ano (taxa nominal) e a inflação do período foi de 6%, o rendimento real NÃO é 10 - 6 = 4%. Pela Equação de Fisher:\n(1 + i_nominal) = (1 + i_real) * (1 + inflação)\nLogo, (1 + i_real) = 1,10 / 1,06 ~= 1,0377 -> rendimento real de aproximadamente 3,77%."
+        }
+      ],
+      "quiz": [
+        {
+          "question": "Um eletrodoméstico custa R$ 500,00 à vista. A loja oferece a opção de pagar em duas parcelas de R$ 260,00: a primeira como entrada no ato da compra e a segunda após 30 dias. Qual é a taxa de juros mensal cobrada nesse parcelamento?",
+          "options": [
+            "8,33%",
+            "4,00%",
+            "10,00%",
+            "5,50%"
+          ],
+          "correctAnswer": 0,
+          "explanation": "À vista: R$ 500,00. Dando R$ 260,00 de entrada, a dívida financiada fica em 500 - 260 = R$ 240,00. Após 30 dias, paga-se R$ 260,00, gerando juros de 260 - 240 = R$ 20,00. Taxa de juros = 20 / 240 = 1 / 12 ~= 0,0833 = 8,33% ao mês."
+        }
+      ]
+    },
+    {
+      "id": "mat-cap-11-custo-receita-lucro",
+      "number": 11,
+      "title": "11. Custo, Receita, Lucro e Ponto de Equilíbrio",
+      "epigraph": {
+        "text": "Lucro = Receita - Custo Total. O Ponto de Equilíbrio (Break-Even Point) é o instante exato em que a empresa não tem lucro nem prejuízo: o faturamento cobre exatamente todos os custos.",
+        "author": "Matemática Aplicada aos Negócios"
+      },
+      "sections": [
+        {
+          "type": "heading",
+          "level": 2,
+          "content": "Modelagem Algébrica da Produção Empresarial"
+        },
+        {
+          "type": "paragraph",
+          "content": "Toda atividade produtiva é descrita por três funções essenciais em função da quantidade produzida e vendida (x):\n1. Custo Total: C(x) = Custo Fixo + (Custo Variável Unitário * x). O custo fixo independe da produção (aluguel, salários administrativos); o custo variável varia diretamente com x (matéria-prima, energia de maquinário).\n2. Receita Total: R(x) = Preço de Venda Unitário * x.\n3. Lucro Total: L(x) = R(x) - C(x).\nNo Ponto de Equilíbrio: L(x) = 0 => R(x) = C(x)."
+        },
+        {
+          "type": "callout",
+          "title": "Conexão com Funções Afins e Quadráticas no ENEM",
+          "content": "Se o preço de venda é constante, a Receita e o Custo são funções afins (retas). Mas quando o preço de venda cai conforme a quantidade aumenta (demanda elástica), a Receita vira uma parábola com concavidade para baixo, e o Lucro Máximo é atingido no VÉRTICE da parábola!"
+        }
+      ],
+      "quiz": [
+        {
+          "question": "Uma microempresa tem custo fixo mensal de R$ 3.000,00 e custo variável de R$ 20,00 por camiseta produzida. Cada camiseta é vendida por R$ 50,00. Quantas camisetas a empresa precisa vender mensalmente para atingir o ponto de equilíbrio?",
+          "options": [
+            "100 camisetas",
+            "150 camisetas",
+            "60 camisetas",
+            "120 camisetas"
+          ],
+          "correctAnswer": 0,
+          "explanation": "C(x) = 3000 + 20x. R(x) = 50x. Ponto de equilíbrio: R(x) = C(x) => 50x = 3000 + 20x => 30x = 3000 => x = 100 camisetas."
+        }
+      ]
+    },
+    {
+      "id": "mat-cap-12-produtos-notaveis-fatoracao",
+      "number": 12,
+      "title": "12. Expressões Algébricas, Produtos Notáveis e Fatoração",
+      "epigraph": {
+        "text": "Produtos notáveis e fatoração são atalhos mentais que transformam cálculos gigantescos em simplificações instantâneas na prova de Matemática.",
+        "author": "Guia de Álgebra do ENEM"
+      },
+      "sections": [
+        {
+          "type": "heading",
+          "level": 2,
+          "content": "Os Três Produtos Notáveis Sagrados"
+        },
+        {
+          "type": "paragraph",
+          "content": "Você precisa saber estes três produtos de forma automática:\n1. Quadrado da Soma: (a + b)² = a² + 2ab + b² (nunca escreva a² + b²; o termo do meio '2ab' é indispensável).\n2. Quadrado da Diferença: (a - b)² = a² - 2ab + b².\n3. Produto da Soma pela Diferença (Diferença de Quadrados): (a + b)(a - b) = a² - b²."
+        },
+        {
+          "type": "heading",
+          "level": 2,
+          "content": "Técnicas de Fatoração Algébrica"
+        },
+        {
+          "type": "paragraph",
+          "content": "Fatorar significa transformar uma soma ou subtração em uma multiplicação. As quatro técnicas mais cobradas são:\n• Fator Comum em Evidência: ax + ay = a(x + y).\n• Agrupamento: ax + ay + bx + by = a(x + y) + b(x + y) = (a + b)(x + y).\n• Trinômio Quadrado Perfeito: a² +- 2ab + b² = (a +- b)².\n• Diferença de Dois Quadrados: a² - b² = (a + b)(a - b). Dica mágica de cálculo mental: quanto vale 102² - 98²? Em vez de calcular os quadrados, faça (102 + 98)(102 - 98) = 200 * 4 = 800!"
+        }
+      ],
+      "quiz": [
+        {
+          "question": "Qual é o valor numérico da expressão (2025² - 2024²)?",
+          "options": [
+            "4.049",
+            "1",
+            "4.050",
+            "2.025"
+          ],
+          "correctAnswer": 0,
+          "explanation": "Pela diferença de quadrados: a² - b² = (a + b)(a - b). Logo, 2025² - 2024² = (2025 + 2024)(2025 - 2024) = 4049 * 1 = 4.049."
+        }
+      ]
+    },
+    {
+      "id": "mat-cap-13-equacoes-1-2-grau",
+      "number": 13,
+      "title": "13. Equações do 1º e 2º Grau: Modelagem de Problemas Reais",
+      "epigraph": {
+        "text": "No ENEM, a equação não vem pronta. O desafio é traduzir o texto em português para a linguagem matemática sem cometer erros de interpretação.",
+        "author": "Matriz de Competências do ENEM"
+      },
+      "sections": [
+        {
+          "type": "heading",
+          "level": 2,
+          "content": "Dicionário de Tradução: Português para Matemática"
+        },
+        {
+          "type": "paragraph",
+          "content": "• 'O dobro de um número aumentado de 5': 2x + 5\n• 'O dobro da soma de um número com 5': 2(x + 5) [Atenção aos parênteses!]\n• 'A terça parte do quadrado de x': (x²) / 3\n• 'O quadrado da terça parte de x': (x / 3)² = x² / 9\n• 'x excede y em 8 unidades': x - y = 8 ou x = y + 8\n• 'A soma de três números consecutivos': x + (x + 1) + (x + 2) = 3x + 3."
+        },
+        {
+          "type": "heading",
+          "level": 2,
+          "content": "Resolução de Equações do 2º Grau e Relações de Girard (Soma e Produto)"
+        },
+        {
+          "type": "paragraph",
+          "content": "A forma canônica da equação do 2º grau é ax² + bx + c = 0 (com a != 0). Pela fórmula de Bhaskara:\nDelta = b² - 4ac\nx = (-b +- raiz de Delta) / (2a)\n• Se Delta > 0: duas raízes reais e distintas.\n• Se Delta = 0: duas raízes reais e iguais (uma raiz dupla).\n• Se Delta < 0: não possui raízes reais.\nAtalho rápido: Relações de Girard (Soma e Produto):\nS = x1 + x2 = -b / a\nP = x1 * x2 = c / a. Exemplo: Para x² - 7x + 12 = 0, procuramos dois números que somam 7 e multiplicam 12 -> as raízes são 3 e 4!"
+        }
+      ],
+      "quiz": [
+        {
+          "question": "O produto da idade de João pela idade que ele terá daqui a 4 anos é igual a 96. Qual é a idade atual de João?",
+          "options": [
+            "8 anos",
+            "10 anos",
+            "12 anos",
+            "6 anos"
+          ],
+          "correctAnswer": 0,
+          "explanation": "Seja x a idade atual: x * (x + 4) = 96 => x² + 4x - 96 = 0. Procuramos dois números cuja soma é -4 e produto é -96: 8 e -12. Como a idade é positiva, x = 8 anos."
+        }
+      ]
+    },
+    {
+      "id": "mat-cap-14-sistemas-inequacoes",
+      "number": 14,
+      "title": "14. Inequações e Sistemas de Equações Lineares no ENEM",
+      "epigraph": {
+        "text": "Sistemas de equações resolvem problemas de misturas, compras no supermercado, estacionamento de veículos com motos e carros e balanço financeiro.",
+        "author": "Guia de Resolução Prática"
+      },
+      "sections": [
+        {
+          "type": "heading",
+          "level": 2,
+          "content": "Métodos de Solução de Sistemas Lineares: Adição vs Substituição"
+        },
+        {
+          "type": "paragraph",
+          "content": "1. Método da Adição: Multiplique uma ou ambas as equações por números convenientes para que os coeficientes de uma das incógnitas fiquem opostos (ex: +3y e -3y). Ao somar as duas equações membro a membro, essa incógnita é eliminada de imediato.\n2. Método da Substituição: Isole uma incógnita que tenha coeficiente 1 em uma das equações e substitua sua expressão na outra equação."
+        },
+        {
+          "type": "callout",
+          "title": "Cuidado Crítico com Inequações: A Inversão do Sinal",
+          "content": "Ao resolver uma inequação (ex: -3x <= 12), ao multiplicar ou dividir ambos os membros por um número NEGATIVO, o sentido da desigualdade DEVE OBRIGATORIAMENTE INVERTER:\n-3x <= 12 => x >= 12 / (-3) => x >= -4. Esquecer de inverter o sinal é o distrator número 1 em inequações no ENEM!"
+        }
+      ],
+      "quiz": [
+        {
+          "question": "Em um estacionamento há 40 veículos entre carros e motos, totalizando 130 rodas. Quantos carros estão no estacionamento?",
+          "options": [
+            "25 carros",
+            "20 carros",
+            "15 carros",
+            "30 carros"
+          ],
+          "correctAnswer": 0,
+          "explanation": "Seja c o número de carros e m o de motos: c + m = 40 (I) e 4c + 2m = 130 (II). Multiplicando (I) por -2: -2c - 2m = -80. Somando com (II): 2c = 50 => c = 25 carros."
+        }
+      ]
+    },
+    {
+      "id": "mat-cap-15-conceito-funcao-graficos",
+      "number": 15,
+      "title": "15. Conceito de Função, Domínio, Imagem e Interpretação de Gráficos",
+      "epigraph": {
+        "text": "Uma função é uma relação de dependência unívoca: para cada valor de entrada (x), existe um único valor de saída correspondente (y). Saber ler gráficos cartesianos garante pelo menos 5 questões no ENEM.",
+        "author": "Matriz de Habilidades do ENEM"
+      },
+      "sections": [
+        {
+          "type": "heading",
+          "level": 2,
+          "content": "Domínio, Contradomínio e Imagem"
+        },
+        {
+          "type": "paragraph",
+          "content": "Seja uma função f: A -> B:\n• Domínio (D): Conjunto de partida A. São todos os valores possíveis da variável independente x.\n• Contradomínio (CD): Conjunto de chegada B.\n• Conjunto Imagem (Im): Subconjunto de B formado pelos valores efetivamente atingidos por f(x).\nNo teste da reta vertical: um gráfico no plano cartesiano representa uma função se e somente se qualquer reta vertical imaginária intercepta a curva em no máximo UM único ponto."
+        },
+        {
+          "type": "callout",
+          "title": "Leitura de Gráficos no ENEM: Os Quatro Pontos Vitais",
+          "content": "Ao analisar qualquer gráfico cartesiano na prova:\n1. Intercepto com o eixo Y: Ocorre quando x = 0 (valor inicial, custo fixo, ponto de partida).\n2. Interceptos com o eixo X (Raízes ou Zeros da função): Ocorrem quando y = f(x) = 0.\n3. Pontos de Máximo e Mínimo: Onde a curva muda de direção (crescente para decrescente ou vice-versa).\n4. Intervalos de Crescimento e Decrescimento: Onde a inclinação da reta tangente é positiva ou negativa."
+        }
+      ],
+      "quiz": [
+        {
+          "question": "Um reservatório de água tem sua capacidade modelada por V(t) = 500 - 25t, onde V é o volume em litros e t é o tempo em horas. Qual é o tempo necessário para o reservatório esvaziar completamente?",
+          "options": [
+            "20 horas",
+            "25 horas",
+            "15 horas",
+            "10 horas"
+          ],
+          "correctAnswer": 0,
+          "explanation": "Reservatório vazio significa V(t) = 0. Logo, 500 - 25t = 0 => 25t = 500 => t = 20 horas."
+        }
+      ]
+    },
+    {
+      "id": "mat-cap-16-funcao-afim",
+      "number": 16,
+      "title": "16. Função Afim (1º Grau): Taxa de Variação, Coeficientes e Aplicações",
+      "epigraph": {
+        "text": "f(x) = ax + b. A função afim é a representação matemática do crescimento linear a uma taxa constante.",
+        "author": "Álgebra Linear no ENEM"
+      },
+      "sections": [
+        {
+          "type": "heading",
+          "level": 2,
+          "content": "Significado Físico e Geométrico dos Coeficientes 'a' e 'b'"
+        },
+        {
+          "type": "paragraph",
+          "content": "Na função afim f(x) = ax + b:\n• Coeficiente Angular (a): É a TAXA DE VARIAÇÃO da função: a = delta_y / delta_x = (y2 - y1) / (x2 - x1). Se a > 0, a função é estritamente crescente; se a < 0, a função é decrescente; se a = 0, a função é constante.\n• Coeficiente Linear (b): É o ponto onde a reta cruza o eixo vertical Y, correspondendo às coordenadas (0, b). No cotidiano, 'b' representa o valor inicial, a bandeirada do táxi ou o custo fixo de uma conta de energia."
+        },
+        {
+          "type": "callout",
+          "title": "Como Montar a Equação da Reta Direto do Gráfico",
+          "content": "1. Identifique onde a reta corta o eixo vertical: esse valor é o 'b'.\n2. Escolha outro ponto conhecido (x, y) da reta e calcule a inclinação: a = (y - b) / x.\nExemplo clássico: Táxi cobra bandeirada de R$ 5,00 e R$ 2,50 por km rodado. A função do preço P em relação aos quilômetros x é: P(x) = 2,50x + 5,00."
+        }
+      ],
+      "quiz": [
+        {
+          "question": "Um plano de telefonia cobra uma taxa fixa mensal de R$ 35,00 mais R$ 0,50 por gigabyte adicional consumido além da franquia. Se um cliente consumiu 18 GB adicionais em um mês, qual foi o valor total da sua fatura?",
+          "options": [
+            "R$ 44,00",
+            "R$ 42,00",
+            "R$ 40,00",
+            "R$ 48,00"
+          ],
+          "correctAnswer": 0,
+          "explanation": "P(x) = 35 + 0,50 * x. Para x = 18 GB: P(18) = 35 + 0,50 * 18 = 35 + 9 = R$ 44,00."
+        }
+      ]
+    },
+    {
+      "id": "mat-cap-17-funcao-quadratica",
+      "number": 17,
+      "title": "17. Função Quadrática (2º Grau): Vértice, Máximos, Mínimos e Trajetórias",
+      "epigraph": {
+        "text": "Toda vez que uma questão do ENEM falar em 'lucro máximo', 'altura máxima atingida por um projétil' ou 'custo mínimo de produção': você DEVE calcular o VÉRTICE da parábola.",
+        "author": "Gatilho de Resolução Imediata"
+      },
+      "sections": [
+        {
+          "type": "heading",
+          "level": 2,
+          "content": "A Parábola e a Concavidade"
+        },
+        {
+          "type": "paragraph",
+          "content": "A função quadrática é dada por f(x) = ax² + bx + c (com a != 0):\n• Se a > 0: a parábola tem concavidade voltada para CIMA ('sorriso'). Ela possui um ponto de MÍNIMO absoluto.\n• Se a < 0: a parábola tem concavidade voltada para BAIXO ('tristeza'). Ela possui um ponto de MÁXIMO absoluto.\n• O coeficiente 'c' é o ponto exato onde a curva corta o eixo Y (x = 0, y = c)."
+        },
+        {
+          "type": "heading",
+          "level": 2,
+          "content": "As Coordenadas do Vértice V(Xv, Yv)"
+        },
+        {
+          "type": "paragraph",
+          "content": "O vértice é o ponto de virada da parábola:\n• X do Vértice: Xv = -b / (2a). Ele indica 'QUANDO' ou 'QUAL QUANTIDADE' gera o máximo ou o mínimo.\n• Y do Vértice: Yv = -Delta / (4a) = f(Xv). Ele indica 'QUAL É' o valor máximo ou mínimo em si (o valor do lucro máximo, a altura máxima em metros)."
+        },
+        {
+          "type": "callout",
+          "title": "Atenção ao Enunciado: O ENEM Pede Xv ou Yv?",
+          "content": "• Se perguntar: 'Quantas peças devem ser produzidas para maximizar o lucro?': a resposta é o Xv!\n• Se perguntar: 'Qual é o lucro máximo obtido?': a resposta é o Yv!"
+        }
+      ],
+      "quiz": [
+        {
+          "question": "O lucro mensal de uma confecção é modelado por L(x) = -2x² + 120x - 1000, onde x é a quantidade de vestidos fabricados. Quantos vestidos devem ser produzidos para se obter o lucro máximo?",
+          "options": [
+            "30 vestidos",
+            "60 vestidos",
+            "25 vestidos",
+            "40 vestidos"
+          ],
+          "correctAnswer": 0,
+          "explanation": "A pergunta quer saber 'quantos vestidos' (variável x), logo calculamos Xv = -b / (2a) = -120 / (2 * (-2)) = -120 / -4 = 30 vestidos."
+        }
+      ]
+    },
+    {
+      "id": "mat-cap-18-funcao-exponencial",
+      "number": 18,
+      "title": "18. Função Exponencial: Fenômenos de Multiplicação Acelerada",
+      "epigraph": {
+        "text": "Enquanto a função afim soma uma quantia fixa a cada passo, a função exponencial multiplica por um fator fixo a cada passo. É a matemática dos vírus, bactérias e juros compostos.",
+        "author": "Modelagem Biológica e Financeira"
+      },
+      "sections": [
+        {
+          "type": "heading",
+          "level": 2,
+          "content": "Forma Geral e Comportamento da Função Exponencial"
+        },
+        {
+          "type": "paragraph",
+          "content": "Uma função exponencial tem a forma f(x) = c * a^x (com a > 0 e a != 1):\n• Se a > 1: a função é estritamente crescente, com crescimento vertiginoso (ex: duplicação de bactérias a(t) = N0 * 2^t).\n• Se 0 < a < 1: a função é estritamente decrescente, aproximando-se assintoticamente de zero mas nunca tocando o zero (ex: decaimento radioativo e meia-vida N(t) = N0 * (1/2)^(t/T))."
+        },
+        {
+          "type": "callout",
+          "title": "Técnica de Resolução de Equações Exponenciais no ENEM",
+          "content": "O método principal consiste em igualar as bases dos dois lados da equação:\na^f(x) = a^g(x) <=> f(x) = g(x).\nExemplo: 4^(x + 1) = 32 => (2²)^(x + 1) = 2^5 => 2^(2x + 2) = 2^5 => 2x + 2 = 5 => 2x = 3 => x = 1,5."
+        }
+      ],
+      "quiz": [
+        {
+          "question": "Uma colônia de bactérias dobra de tamanho a cada 3 horas. Inicialmente há 500 bactérias. Qual será a população após 12 horas?",
+          "options": [
+            "8.000 bactérias",
+            "4.000 bactérias",
+            "16.000 bactérias",
+            "6.000 bactérias"
+          ],
+          "correctAnswer": 0,
+          "explanation": "Em 12 horas, ocorrem 12 / 3 = 4 ciclos de duplicação. População = 500 * 2^4 = 500 * 16 = 8.000 bactérias."
+        }
+      ]
+    },
+    {
+      "id": "mat-cap-19-funcao-logaritmica",
+      "number": 19,
+      "title": "19. Função Logarítmica: Descoberta de Tempo, Escalas Richter, pH e Decibéis",
+      "epigraph": {
+        "text": "O logaritmo é o inverso da exponencial: ele responde à pergunta 'a qual expoente devo elevar a base para obter este resultado?'. No ENEM, os dados de logaritmo sempre vêm no enunciado.",
+        "author": "Guia de Logaritmos no ENEM"
+      },
+      "sections": [
+        {
+          "type": "heading",
+          "level": 2,
+          "content": "Definição e Propriedades Operatórias Fundamentais"
+        },
+        {
+          "type": "paragraph",
+          "content": "log_b(a) = x <=> b^x = a (com a > 0, b > 0 e b != 1).\nAs propriedades que você precisa dominar para o ENEM são:\n1. Logaritmo do Produto: log(a * b) = log(a) + log(b)\n2. Logaritmo do Quociente: log(a / b) = log(a) - log(b)\n3. Regra do Tombo (Potência): log(a^k) = k * log(a)\n4. Mudança de Base: log_b(a) = log_c(a) / log_c(b)."
+        },
+        {
+          "type": "callout",
+          "title": "Como o ENEM Cobra Logaritmos: Escalas Científicas",
+          "content": "O ENEM quase nunca cobra equações logarítmicas puras. Ele fornece uma fórmula da física ou química:\n• Escala Richter de terremotos: M = (2/3) * log(E / E0)\n• Potencial Hidrogeniônico (pH): pH = -log[H+]\n• Nível de intensidade sonora em decibéis: beta = 10 * log(I / I0)\nVocê só precisa aplicar as propriedades operatórias aos dados informados (como log 2 = 0,30 e log 3 = 0,48)!"
+        }
+      ],
+      "quiz": [
+        {
+          "question": "Sabendo que log 2 = 0,301 e log 3 = 0,477, qual é o valor aproximado de log 6?",
+          "options": [
+            "0,778",
+            "0,825",
+            "0,650",
+            "0,720"
+          ],
+          "correctAnswer": 0,
+          "explanation": "Como 6 = 2 * 3, pela propriedade do produto: log 6 = log(2 * 3) = log 2 + log 3 = 0,301 + 0,477 = 0,778."
+        }
+      ]
+    },
+    {
+      "id": "mat-cap-20-progressao-aritmetica",
+      "number": 20,
+      "title": "20. Progressão Aritmética (PA): Padrões Lineares e Soma dos Termos",
+      "epigraph": {
+        "text": "Na Progressão Aritmética, a diferença entre qualquer termo e seu antecessor é uma constante chamada razão (r). A PA é a versão discreta (em passos inteiros) da função afim.",
+        "author": "Guia de Sequências no ENEM"
+      },
+      "sections": [
+        {
+          "type": "heading",
+          "level": 2,
+          "content": "Termo Geral da PA: Onde Chegar em n Passos"
+        },
+        {
+          "type": "paragraph",
+          "content": "Para chegar ao termo de ordem n partindo do primeiro termo (a1), precisamos somar a razão (n - 1) vezes:\nan = a1 + (n - 1) * r.\nGeneralização útil para o ENEM: an = ak + (n - k) * r. Exemplo: se conhecemos o a5 e queremos o a12, basta somar 7 razões (12 - 5 = 7): a12 = a5 + 7r."
+        },
+        {
+          "type": "heading",
+          "level": 2,
+          "content": "A Soma dos Termos de uma PA Finita (Fórmula de Gauss)"
+        },
+        {
+          "type": "paragraph",
+          "content": "A soma dos n primeiros termos de uma PA é dada por:\nSn = [(a1 + an) * n] / 2.\nO jovem Gauss descobriu essa relação ao perceber que a soma dos termos equidistantes dos extremos é sempre constante: (a1 + an) = (a2 + a(n-1)) = (a3 + a(n-2))."
+        },
+        {
+          "type": "callout",
+          "title": "Aplicações Típicas no ENEM",
+          "content": "• Fileiras de cadeiras em um teatro ou estádio onde cada fileira tem 2 ou 4 assentos a mais que a anterior.\n• Poupança progressiva (guardar R$ 5,00 na 1ª semana, R$ 10,00 na 2ª, R$ 15,00 na 3ª...).\n• Empilhamento de latas ou canos formando triângulos simétricos."
+        }
+      ],
+      "quiz": [
+        {
+          "question": "Um teatro tem 20 fileiras de poltronas. A primeira fileira tem 14 poltronas e cada fileira seguinte tem 2 poltronas a mais que a fileira imediatamente anterior. Qual é a capacidade total de poltronas do teatro?",
+          "options": [
+            "660 poltronas",
+            "640 poltronas",
+            "680 poltronas",
+            "620 poltronas"
+          ],
+          "correctAnswer": 0,
+          "explanation": "a1 = 14, r = 2, n = 20. O último termo é a20 = 14 + (20 - 1) * 2 = 14 + 38 = 52. A soma total é S20 = [(a1 + a20) * 20] / 2 = [(14 + 52) * 20] / 2 = 66 * 10 = 660 poltronas."
+        }
+      ]
+    },
+    {
+      "id": "mat-cap-21-progressao-geometrica",
+      "number": 21,
+      "title": "21. Progressão Geométrica (PG): Crescimento Exponencial e Decaimento",
+      "epigraph": {
+        "text": "Na Progressão Geométrica, a razão entre qualquer termo e seu antecessor é uma constante multiplicativa (q). A PG é a versão discreta da função exponencial.",
+        "author": "Guia de Sequências no ENEM"
+      },
+      "sections": [
+        {
+          "type": "heading",
+          "level": 2,
+          "content": "Termo Geral da PG"
+        },
+        {
+          "type": "paragraph",
+          "content": "Para encontrar o termo an a partir do primeiro termo a1, multiplicamos pela razão q elevada a (n - 1):\nan = a1 * q^(n - 1).\nSe q > 1 e a1 > 0: a PG é crescente.\nSe 0 < q < 1 e a1 > 0: a PG é decrescente (exemplo: decaimento de remédio na corrente sanguínea ou desvalorização anual de um carro).\nSe q < 0: a PG é oscilante (alterna sinais positivos e negativos)."
+        },
+        {
+          "type": "heading",
+          "level": 2,
+          "content": "Soma dos Termos da PG: Finita e Infinita"
+        },
+        {
+          "type": "paragraph",
+          "content": "• Soma da PG Finita: Sn = a1 * (q^n - 1) / (q - 1) [para q != 1].\n• Soma da PG Infinita (Série Geométrica Convergente, válida apenas para |q| < 1):\nS_infinito = a1 / (1 - q).\nEssa fórmula resolve problemas de fractais geométricos (como o floco de neve de Koch) e dízimas periódicas."
+        }
+      ],
+      "quiz": [
+        {
+          "question": "Uma bola de borracha é solta de uma altura de 16 metros. A cada quique no solo, ela atinge 1/2 da altura anterior. Qual a distância total vertical percorrida por essa bola até parar completamente?",
+          "options": [
+            "48 metros",
+            "32 metros",
+            "64 metros",
+            "16 metros"
+          ],
+          "correctAnswer": 0,
+          "explanation": "Na 1ª queda: 16 m. Depois, cada quique sobe e desce a mesma altura: sobe 8 e desce 8 (16); sobe 4 e desce 4 (8); sobe 2 e desce 2 (4)... As subidas e descidas após o 1º impacto formam uma PG infinita com a1 = 2 * 8 = 16 e razão q = 1/2. Soma dos quiques = a1 / (1 - q) = 16 / (1 - 1/2) = 16 / 0,5 = 32 m. Distância total = 16 (queda inicial) + 32 = 48 metros."
+        }
+      ]
+    },
+    {
+      "id": "mat-cap-22-angulos-triangulos-pitagoras",
+      "number": 22,
+      "title": "22. Ângulos, Triângulos e o Teorema de Pitágoras",
+      "epigraph": {
+        "text": "A soma dos ângulos internos de qualquer triângulo no plano euclidiano é sempre 180°. O Teorema de Pitágoras é a relação métrica mais testada da história dos exames vestibulares.",
+        "author": "Geometria Euclidiana no ENEM"
+      },
+      "sections": [
+        {
+          "type": "heading",
+          "level": 2,
+          "content": "Classificação e Condição de Existência de Triângulos"
+        },
+        {
+          "type": "paragraph",
+          "content": "Condição de Existência (Desigualdade Triangular): Para que três segmentos a, b e c formem um triângulo, o comprimento de qualquer lado deve ser estritamente menor que a soma dos outros dois e maior que o módulo da diferença: |b - c| < a < b + c.\nClassificação quanto aos lados: Equilátero (3 lados iguais e 3 ângulos de 60°), Isósceles (2 lados iguais e ângulos da base congruentes) e Escaleno (3 lados distintos).\nClassificação quanto aos ângulos: Acutângulo (3 ângulos < 90°), Retângulo (um ângulo de 90°) e Obtusângulo (um ângulo > 90°)."
+        },
+        {
+          "type": "heading",
+          "level": 2,
+          "content": "O Teorema de Pitágoras e os Triângulos Notáveis"
+        },
+        {
+          "type": "paragraph",
+          "content": "Em todo triângulo retângulo de hipotenusa 'a' e catetos 'b' e 'c':\na² = b² + c².\nTriângulos Pitagóricos que você deve memorizar para poupar tempo de prova:\n• 3 - 4 - 5 (e seus múltiplos: 6-8-10, 9-12-15, 15-20-25, 30-40-50...)\n• 5 - 12 - 13\n• 8 - 15 - 17\n• 7 - 24 - 25."
+        }
+      ],
+      "quiz": [
+        {
+          "question": "Um poste de 12 metros de altura está perpendicular ao solo. Um cabo de sustentação deve ser fixado do topo do poste até um ponto no solo a 9 metros de distância da base do poste. Qual é o comprimento mínimo desse cabo?",
+          "options": [
+            "15 metros",
+            "14 metros",
+            "16 metros",
+            "13 metros"
+          ],
+          "correctAnswer": 0,
+          "explanation": "Triângulo retângulo de catetos 12 e 9. Note que 9 = 3 * 3 e 12 = 4 * 3. Trata-se do triângulo pitagórico 3-4-5 multiplicado por 3: Hipotenusa = 5 * 3 = 15 metros (ou h² = 12² + 9² = 144 + 81 = 225 => h = 15 m)."
+        }
+      ]
+    },
+    {
+      "id": "mat-cap-23-semelhanca-triangulos",
+      "number": 23,
+      "title": "23. Semelhança de Triângulos e Relações Métricas",
+      "epigraph": {
+        "text": "Se dois triângulos possuem os mesmos ângulos internos, seus lados homólogos (opostos aos mesmos ângulos) são proporcionais. É a base do cálculo de alturas inalcançáveis e sombras projetadas.",
+        "author": "Teorema de Tales e Semelhança"
+      },
+      "sections": [
+        {
+          "type": "heading",
+          "level": 2,
+          "content": "Critérios de Semelhança e Proporcionalidade de Tales"
+        },
+        {
+          "type": "paragraph",
+          "content": "Dois triângulos ABC e DEF são semelhantes (ABC ~ DEF) principalmente pelo caso Ângulo-Ângulo (AA): se dois ângulos de um triângulo são iguais a dois ângulos do outro, o terceiro é obrigatoriamente igual e os triângulos são semelhantes. A razão de semelhança k vale:\na / d = b / e = c / f = k.\nAtenção crucial: se os comprimentos lineares variam na razão k, as ÁREAS variam na razão k²!"
+        },
+        {
+          "type": "callout",
+          "title": "Relações Métricas no Triângulo Retângulo",
+          "content": "Seja a hipotenusa 'a', catetos 'b' e 'c', altura relativa à hipotenusa 'h', e projeções dos catetos 'm' e 'n':\n1. b² = a * m\n2. c² = a * n\n3. h² = m * n\n4. a * h = b * c (Hipotenusa vezes altura = cateto vezes cateto - fórmula salva-vidas no ENEM!)."
+        }
+      ],
+      "quiz": [
+        {
+          "question": "Uma pessoa de 1,80 m de altura projeta uma sombra de 1,20 m no solo no mesmo instante em que um edifício projeta uma sombra de 30 m. Qual é a altura desse edifício?",
+          "options": [
+            "45 metros",
+            "40 metros",
+            "50 metros",
+            "36 metros"
+          ],
+          "correctAnswer": 0,
+          "explanation": "Por semelhança de triângulos retângulos: Altura_edificio / Sombra_edificio = Altura_pessoa / Sombra_pessoa => H / 30 = 1,80 / 1,20 = 1,5. Logo, H = 30 * 1,5 = 45 metros."
+        }
+      ]
+    },
+    {
+      "id": "mat-cap-24-quadrilateros-poligonos",
+      "number": 24,
+      "title": "24. Quadriláteros e Polígonos Regulares",
+      "epigraph": {
+        "text": "Polígonos regulares possuem todos os lados e todos os ângulos congruentes. O hexágono regular, em especial, é formado por seis triângulos equiláteros perfeitos.",
+        "author": "Mosaicos e Pavimentações no ENEM"
+      },
+      "sections": [
+        {
+          "type": "heading",
+          "level": 2,
+          "content": "Quadriláteros Notáveis: Propriedades e Hierarquia"
+        },
+        {
+          "type": "paragraph",
+          "content": "• Trapézio: Possui pelo menos um par de lados paralelos (base maior B e base menor b). Trapézio isósceles tem lados não paralelos iguais e diagonais iguais.\n• Paralelogramo: Lados opostos paralelos e congruentes. Ângulos opostos congruentes. As diagonais interceptam-se nos seus pontos médios.\n• Retângulo: Paralelogramo equiângulo (quatro ângulos de 90°). Suas diagonais são iguais.\n• Losango: Paralelogramo equilátero (quatro lados iguais). Suas diagonais são PERPENDICULARES entre si.\n• Quadrado: É simultaneamente retângulo e losango (quatro ângulos retos e quatro lados iguais)."
+        },
+        {
+          "type": "heading",
+          "level": 2,
+          "content": "Ângulos em Polígonos de n Lados"
+        },
+        {
+          "type": "paragraph",
+          "content": "• Soma dos Ângulos Internos: Si = (n - 2) * 180°\n• Soma dos Ângulos Externos: Se = 360° (para QUALQUER polígono convexo, não importa o número de lados!)\n• Ângulo Interno de polígono regular: ai = Si / n = [(n - 2) * 180°] / n\n• Número de Diagonais: d = [n * (n - 3)] / 2."
+        }
+      ],
+      "quiz": [
+        {
+          "question": "Qual é a medida do ângulo interno de um hexágono regular?",
+          "options": [
+            "120°",
+            "108°",
+            "135°",
+            "140°"
+          ],
+          "correctAnswer": 0,
+          "explanation": "Para n = 6: Si = (6 - 2) * 180° = 4 * 180° = 720°. Como é regular, ai = 720° / 6 = 120°."
+        }
+      ]
+    },
+    {
+      "id": "mat-cap-25-circunferencia-circulo",
+      "number": 25,
+      "title": "25. Circunferência, Círculo e Setores Circulares",
+      "epigraph": {
+        "text": "Circunferência é o contorno (comprimento C = 2*pi*R); círculo é a região interna preenchida (área A = pi*R²). Não confunda as duas grandezas.",
+        "author": "Geometria Circular no ENEM"
+      },
+      "sections": [
+        {
+          "type": "heading",
+          "level": 2,
+          "content": "Comprimento e Área do Círculo"
+        },
+        {
+          "type": "paragraph",
+          "content": "• Raio (R) e Diâmetro (D): D = 2R.\n• Comprimento da Circunferência: C = 2 * pi * R = pi * D (onde pi ~= 3,14, ou frequentemente adotado como 3 ou 3,1 no ENEM para facilitar contas).\n• Área do Círculo: A = pi * R².\n• Aplicação clássica no ENEM: Número de voltas de uma roda ou esteira = Distância total / Comprimento da roda (C = 2*pi*R)."
+        },
+        {
+          "type": "heading",
+          "level": 2,
+          "content": "Setor Circular e Coroa Circular"
+        },
+        {
+          "type": "paragraph",
+          "content": "• Setor Circular (fatia de pizza com ângulo central theta em graus):\nÁrea do Setor = (theta / 360°) * pi * R²\nComprimento do Arco = (theta / 360°) * 2 * pi * R\n• Coroa Circular (espaço entre dois círculos concêntricos de raios R e r):\nÁrea da Coroa = pi * (R² - r²)."
+        }
+      ],
+      "quiz": [
+        {
+          "question": "Uma pista de atletismo circular tem raio de 50 metros. Um corredor completa 6 voltas completas nessa pista. Considerando pi = 3,14, qual a distância aproximada percorrida pelo atleta?",
+          "options": [
+            "1.884 metros",
+            "1.570 metros",
+            "942 metros",
+            "2.100 metros"
+          ],
+          "correctAnswer": 0,
+          "explanation": "Comprimento de uma volta: C = 2 * pi * R = 2 * 3,14 * 50 = 314 metros. Para 6 voltas: Distância = 6 * 314 = 1.884 metros."
+        }
+      ]
+    },
+    {
+      "id": "mat-cap-26-areas-perimetros-planas",
+      "number": 26,
+      "title": "26. Áreas e Perímetros de Figuras Planas: Decomposição e Otimização",
+      "epigraph": {
+        "text": "O ENEM quase nunca cobra uma figura geométrica isolada simples. Ele apresenta uma planta baixa irregular e exige que você decomponha a figura em retângulos, triângulos e semicírculos.",
+        "author": "Competência 2 do ENEM"
+      },
+      "sections": [
+        {
+          "type": "heading",
+          "level": 2,
+          "content": "Tabela Definitiva de Fórmulas de Área"
+        },
+        {
+          "type": "paragraph",
+          "content": "• Retângulo: A = base * altura = b * h\n• Quadrado: A = lado² = L² (e diagonal d = L * raiz de 2)\n• Triângulo qualquer: A = (base * altura) / 2\n• Triângulo equilátero de lado L: A = (L² * raiz de 3) / 4 (altura h = L * raiz de 3 / 2)\n• Paralelogramo: A = base * altura\n• Losango: A = (Diagonal maior * Diagonal menor) / 2 = (D * d) / 2\n• Trapézio: A = [(Base maior + Base menor) * altura] / 2 = [(B + b) * h] / 2\n• Hexágono regular de lado L: A = 6 * (L² * raiz de 3) / 4 = 3 * L² * raiz de 3 / 2."
+        },
+        {
+          "type": "callout",
+          "title": "Estratégia da Decomposição e Subtração de Áreas",
+          "content": "Ao encarar uma área hachurada (sombreada) irregular:\n1. Calcule a área da figura envolvente total (retângulo ou círculo maior).\n2. Subtraia as áreas 'vazias' que não fazem parte da região hachurada.\nEsse método é muito mais rápido e imune a erros do que tentar somar dezenas de pequenos pedaços irregulares!"
+        }
+      ],
+      "quiz": [
+        {
+          "question": "Deseja-se gramar um terreno retangular de 20 m por 15 m, exceto por uma piscina circular instalada no centro com raio de 3 m. Adotando pi = 3, qual é a área de grama necessária para cobrir o restante do terreno?",
+          "options": [
+            "273 m²",
+            "280 m²",
+            "255 m²",
+            "291 m²"
+          ],
+          "correctAnswer": 0,
+          "explanation": "Área do retângulo: 20 * 15 = 300 m². Área da piscina circular: pi * R² = 3 * 3² = 3 * 9 = 27 m². Área gramada = 300 - 27 = 273 m²."
+        }
+      ]
+    },
+    {
+      "id": "mat-cap-27-prismas-cilindros-volume",
+      "number": 27,
+      "title": "27. Prismas e Cilindros: Volume e Capacidade em Litros",
+      "epigraph": {
+        "text": "Volume de sólidos com bases paralelas e retas (prismas e cilindros): Área da Base vezes a Altura. E lembre-se: 1 metro cúbico equivale a exatamente 1.000 litros.",
+        "author": "Regra de Conversão Essencial ENEM"
+      },
+      "sections": [
+        {
+          "type": "heading",
+          "level": 2,
+          "content": "A Regra Mestra: V = Ab * h"
+        },
+        {
+          "type": "paragraph",
+          "content": "Para qualquer prisma (reto ou oblíquo) e para qualquer cilindro:\nVolume = Área da Base * Altura (V = Ab * h).\n• Paralelepípedo retângulo (bloco retangular de dimensões a, b e c):\nVolume: V = a * b * c\nÁrea Total: At = 2(ab + ac + bc)\nDiagonal interna: D = raiz(a² + b² + c²)\n• Cubo de aresta a: V = a³, At = 6a², Diagonal D = a * raiz de 3.\n• Cilindro reto de raio R e altura h:\nVolume: V = pi * R² * h\nÁrea Lateral: Al = 2 * pi * R * h (quando planificada, é um retângulo de base 2*pi*R e altura h!)\nÁrea Total: At = 2 * pi * R * h + 2 * (pi * R²)."
+        },
+        {
+          "type": "callout",
+          "title": "Tabela de Conversão de Volumes e Capacidades (Cai em Toda Prova!)",
+          "content": "• 1 m³ = 1.000 dm³ = 1.000 Litros\n• 1 dm³ = 1 Litro\n• 1 cm³ = 1 mL\n• 1 Litro = 1.000 mL = 1.000 cm³.\nO ENEM adora dar as medidas em metros ou centímetros e pedir a resposta final em litros ou metros cúbicos!"
+        }
+      ],
+      "quiz": [
+        {
+          "question": "Uma caixa d'água cilíndrica tem raio da base medindo 2 metros e altura de 3 metros. Considerando pi = 3,1, qual é a capacidade máxima dessa caixa em litros?",
+          "options": [
+            "37.200 litros",
+            "31.000 litros",
+            "372.000 litros",
+            "12.400 litros"
+          ],
+          "correctAnswer": 0,
+          "explanation": "Volume = pi * R² * h = 3,1 * 2² * 3 = 3,1 * 4 * 3 = 37,2 m³. Como 1 m³ = 1.000 L, a capacidade é 37,2 * 1.000 = 37.200 litros."
+        }
+      ]
+    },
+    {
+      "id": "mat-cap-28-piramides-cones-troncos",
+      "number": 28,
+      "title": "28. Pirâmides e Cones: Vértices, Troncos e Proporções Cúbicas",
+      "epigraph": {
+        "text": "Sólidos que afunilam até um único vértice (pirâmides e cones): o volume é sempre 1/3 da área da base vezes a altura. Quando cortados por um plano paralelo à base, geram troncos e relações cúbicas de semelhança.",
+        "author": "Geometria Espacial no ENEM"
+      },
+      "sections": [
+        {
+          "type": "heading",
+          "level": 2,
+          "content": "Volume de Sólidos com Bico: V = (1/3) * Ab * h"
+        },
+        {
+          "type": "paragraph",
+          "content": "• Pirâmide qualquer: V = (Ab * h) / 3. Se a base for um quadrado de lado L, Ab = L² e V = (L² * h) / 3.\n• Cone reto de raio R e altura h:\nVolume: V = (pi * R² * h) / 3\nGeratriz (g): hipotenusa do triângulo retângulo formado pela altura e pelo raio da base: g² = h² + R².\nÁrea Lateral do cone: Al = pi * R * g (setor circular quando planificado)."
+        },
+        {
+          "type": "callout",
+          "title": "Semelhança Espacial e Troncos de Pirâmide/Cone",
+          "content": "Ao seccionar um cone ou pirâmide a uma altura h' paralela à base:\n• Razão das alturas: k = h' / H\n• Razão das áreas das bases: Ab' / Ab = k²\n• Razão dos volumes dos sólidos: V' / V = k³!\nPara achar o volume do TRONCO que sobra embaixo, basta subtrair: V_tronco = V_total - V_topo!"
+        }
+      ],
+      "quiz": [
+        {
+          "question": "Um recipiente cônico tem altura total de 12 cm e está preenchido com líquido até a altura de 6 cm (metade da altura total). Se o volume total do cone é de 240 mL, qual é o volume do líquido contido no recipiente?",
+          "options": [
+            "30 mL",
+            "120 mL",
+            "60 mL",
+            "40 mL"
+          ],
+          "correctAnswer": 0,
+          "explanation": "A razão entre as alturas é k = h' / H = 6 / 12 = 1/2. Como o volume varia com o cubo da razão de semelhança: V_liquido / V_total = k³ = (1/2)³ = 1/8. Logo, V_liquido = 240 / 8 = 30 mL."
+        }
+      ]
+    },
+    {
+      "id": "mat-cap-29-esferas-geometria",
+      "number": 29,
+      "title": "29. Esferas: Área Superficial e Volume",
+      "epigraph": {
+        "text": "A esfera é o sólido perfeitamente simétrico. Todo ponto de sua superfície está à mesma distância R do centro.",
+        "author": "Geometria Espacial no ENEM"
+      },
+      "sections": [
+        {
+          "type": "heading",
+          "level": 2,
+          "content": "Área da Superfície Esférica e Volume da Esfera"
+        },
+        {
+          "type": "paragraph",
+          "content": "• Área da Superfície Esférica: A = 4 * pi * R² (curiosamente, equivale exatamente a quatro vezes a área do círculo máximo da esfera).\n• Volume da Esfera: V = (4/3) * pi * R³.\n• Hemisfério (semiesfera): Volume = (2/3) * pi * R³; Área total do hemisfério fechado = 2*pi*R² (casca) + pi*R² (tampa plana) = 3*pi*R²."
+        },
+        {
+          "type": "callout",
+          "title": "Problemas de Derretimento e Moldagem no ENEM",
+          "content": "Questões clássicas trazem barras de metal ou esferas de chumbo que são derretidas para formar outros sólidos. O princípio físico e geométrico imutável é a CONSERVAÇÃO DO VOLUME: V_inicial_total = V_final_total!"
+        }
+      ],
+      "quiz": [
+        {
+          "question": "Uma esfera metálica maciça de raio 3 cm é derretida e remodelada em pequenos cilindros retos de raio 1 cm e altura 3 cm. Considerando pi = 3, quantos cilindros completos podem ser obtidos?",
+          "options": [
+            "12 cilindros",
+            "9 cilindros",
+            "15 cilindros",
+            "8 cilindros"
+          ],
+          "correctAnswer": 0,
+          "explanation": "Volume da esfera = (4/3) * pi * R³ = (4/3) * 3 * 3³ = 4 * 27 = 108 cm³. Volume de cada cilindro = pi * r² * h = 3 * 1² * 3 = 9 cm³. Quantidade de cilindros = 108 / 9 = 12 cilindros."
+        }
+      ]
+    },
+    {
+      "id": "mat-cap-30-planificacao-visao-espacial",
+      "number": 30,
+      "title": "30. Planificação de Sólidos e Visão Espacial Tridimensional",
+      "epigraph": {
+        "text": "Planificar é 'desdobrar' um sólido 3D em uma superfície plana 2D sem rasgar nem sobrepor faces. O ENEM tem pelo menos duas questões visuais puras de planificação e projeção ortogonal a cada ano.",
+        "author": "Competência de Habilidade Espacial ENEM"
+      },
+      "sections": [
+        {
+          "type": "heading",
+          "level": 2,
+          "content": "Planificações Clássicas que Caem no ENEM"
+        },
+        {
+          "type": "paragraph",
+          "content": "• Cubo: Possui 11 planificações possíveis formadas por 6 quadrados conectados. O padrão mais comum é o formato em cruz latina (4 quadrados em linha e 2 laterais).\n• Tetraedro Regular: 4 triângulos equiláteros.\n• Octaedro Regular: 8 triângulos equiláteros.\n• Cilindro Reto: Um retângulo (superfície lateral) conectado a dois círculos congruentes (as bases superior e inferior).\n• Cone Reto: Um setor circular (superfície lateral) conectado a um círculo (a base)."
+        },
+        {
+          "type": "heading",
+          "level": 2,
+          "content": "Projeção Ortogonal e Vistas (Frontal, Lateral e Superior)"
+        },
+        {
+          "type": "paragraph",
+          "content": "A projeção ortogonal de uma figura sobre um plano é a 'sombra' geométrica perpendicular produzida por raios de luz paralelos que atingem o plano formando 90°:\n• A projeção de um segmento oblíquo é sempre menor ou igual ao comprimento real do segmento.\n• A projeção de uma hélice cilíndrica (formato de mola) sobre o plano perpendicular ao seu eixo é uma CIRCUNFERÊNCIA.\n• A projeção de um cone iluminado de cima (vista superior) é um círculo com um ponto central representando o vértice."
+        }
+      ],
+      "quiz": [
+        {
+          "question": "Um cubo tem suas faces numeradas de 1 a 6 de modo que a soma das faces opostas seja sempre 7. Em sua planificação em cruz com 4 quadrados alinhados verticalmente (1, 2, 3, 4) e duas abas laterais ligadas ao quadrado 2, qual face fica oposta à face 1 após montar o cubo?",
+          "options": [
+            "Face 3",
+            "Face 6",
+            "Face 4",
+            "Face 5"
+          ],
+          "correctAnswer": 0,
+          "explanation": "Na fita vertical com quatro quadrados alinhados (1, 2, 3, 4), ao dobrar em 90°, as faces que se alternam com um quadrado de intervalo tornam-se opostas: a face 1 opõe-se à face 3, e a face 2 opõe-se à face 4."
+        }
+      ]
+    },
+    {
+      "id": "mat-cap-31-geometria-analitica-reta",
+      "number": 31,
+      "title": "31. Geometria Analítica: Ponto, Distância, Ponto Médio e Equação da Reta",
+      "epigraph": {
+        "text": "A Geometria Analítica de Descartes une a álgebra e a geometria: cada ponto do plano é um par ordenado (x, y), e cada linha é uma equação.",
+        "author": "Guia de Geometria Analítica ENEM"
+      },
+      "sections": [
+        {
+          "type": "heading",
+          "level": 2,
+          "content": "Ponto no Plano, Distância e Ponto Médio"
+        },
+        {
+          "type": "paragraph",
+          "content": "Dados dois pontos A(xA, yA) e B(xB, yB) no plano cartesiano:\n• Ponto Médio (M): O ponto central equidistante de A e B tem coordenadas dadas pela média aritmética das coordenadas:\nxM = (xA + xB) / 2 e yM = (yA + yB) / 2.\n• Distância entre Dois Pontos (d_AB): É a aplicação direta do Teorema de Pitágoras no plano cartesiano:\nd_AB = raiz[ (xB - xA)² + (yB - yA)² ]."
+        },
+        {
+          "type": "heading",
+          "level": 2,
+          "content": "Equações da Reta e Coeficiente Angular"
+        },
+        {
+          "type": "paragraph",
+          "content": "• Coeficiente Angular (m ou a): Mede a inclinação (tangente do ângulo theta formado com o semi-eixo positivo X):\nm = delta_y / delta_x = (yB - yA) / (xB - xA).\n• Equação Fundamental (Ponto-Inclinação): y - y0 = m * (x - x0).\n• Equação Reduzida: y = mx + n (onde m é o coeficiente angular e n é o coeficiente linear, ponto (0, n)).\n• Condição de Paralelismo: Duas retas r e s são paralelas se e somente se mr = ms.\n• Condição de Perpendicularismo: Duas retas r e s são perpendiculares se e somente se mr * ms = -1 (ou ms = -1 / mr)."
+        }
+      ],
+      "quiz": [
+        {
+          "question": "Em um sistema de coordenadas cartesianas onde as medidas estão em quilômetros, duas antenas transmissoras estão localizadas nos pontos A(1, 2) e B(7, 10). Qual é a distância em linha reta entre essas duas antenas?",
+          "options": [
+            "10 km",
+            "14 km",
+            "12 km",
+            "8 km"
+          ],
+          "correctAnswer": 0,
+          "explanation": "d = raiz[ (7 - 1)² + (10 - 2)² ] = raiz[ 6² + 8² ] = raiz[ 36 + 64 ] = raiz[ 100 ] = 10 km."
+        }
+      ]
+    },
+    {
+      "id": "mat-cap-32-trigonometria-triangulo-retangulo",
+      "number": 32,
+      "title": "32. Trigonometria no Triângulo Retângulo: Seno, Cosseno e Tangente",
+      "epigraph": {
+        "text": "SOH-CAH-TOA: Seno = Oposto / Hipotenusa; Cosseno = Adjacente / Hipotenusa; Tangente = Oposto / Adjacente. Três razões que resolvem qualquer rampa, telhado ou ângulo visual no ENEM.",
+        "author": "Mnemônica Clássica de Trigonometria"
+      },
+      "sections": [
+        {
+          "type": "heading",
+          "level": 2,
+          "content": "Definições das Razões Trigonométricas"
+        },
+        {
+          "type": "paragraph",
+          "content": "Em um triângulo retângulo com um ângulo agudo theta:\n• sen(theta) = Cateto Oposto / Hipotenusa\n• cos(theta) = Cateto Adjacente / Hipotenusa\n• tg(theta) = Cateto Oposto / Cateto Adjacente = sen(theta) / cos(theta)\nRelação Fundamental da Trigonometria: sen²(theta) + cos²(theta) = 1 (válida para todo e qualquer ângulo!)."
+        },
+        {
+          "type": "callout",
+          "title": "Tabela de Ângulos Notáveis (30°, 45° e 60°) - Obrigatória!",
+          "content": "• Ângulo de 30°: sen = 1/2; cos = (raiz de 3)/2; tg = (raiz de 3)/3\n• Ângulo de 45°: sen = (raiz de 2)/2; cos = (raiz de 2)/2; tg = 1\n• Ângulo de 60°: sen = (raiz de 3)/2; cos = 1/2; tg = raiz de 3\nNote que sen(30°) = cos(60°) e sen(60°) = cos(30°), pois 30° e 60° são ângulos complementares (somam 90°)!"
+        }
+      ],
+      "quiz": [
+        {
+          "question": "Para acessar um hospital, constrói-se uma rampa reta de 20 metros de comprimento que forma um ângulo de 30° com o solo horizontal. A qual altura do solo a rampa conduz os pacientes?",
+          "options": [
+            "10 metros",
+            "17,3 metros",
+            "14,1 metros",
+            "8 metros"
+          ],
+          "correctAnswer": 0,
+          "explanation": "sen(30°) = Altura / Comprimento_da_rampa => 1/2 = h / 20 => h = 20 * (1/2) = 10 metros."
+        }
+      ]
+    },
+    {
+      "id": "mat-cap-33-leis-senos-cossenos",
+      "number": 33,
+      "title": "33. Lei dos Senos e Lei dos Cossenos em Triângulos Quaisquer",
+      "epigraph": {
+        "text": "Quando o triângulo NÃO for retângulo, o Teorema de Pitágoras puro não se aplica. É o momento de convocar a Lei dos Senos ou a Lei dos Cossenos.",
+        "author": "Trigonometria Avançada no ENEM"
+      },
+      "sections": [
+        {
+          "type": "heading",
+          "level": 2,
+          "content": "Quando Usar a Lei dos Senos vs Lei dos Cossenos"
+        },
+        {
+          "type": "paragraph",
+          "content": "O segredo de prova para escolher a lei certa sem perder tempo:\n• Use LEI DOS COSSENOS quando a questão fornecer (ou envolver) TRÊS LADOS e APENAS UM ÂNGULO:\na² = b² + c² - 2*b*c*cos(A).\nObserve que se o ângulo A fosse 90°, cos(90°) = 0 e a fórmula se transformaria no próprio Teorema de Pitágoras (a² = b² + c²)!\n• Use LEI DOS SENOS quando a questão fornecer DOIS ÂNGULOS e DOIS LADOS (ou o raio R da circunferência circunscrita):\na / sen(A) = b / sen(B) = c / sen(C) = 2R."
+        }
+      ],
+      "quiz": [
+        {
+          "question": "Em um triângulo qualquer, dois lados medem 5 cm e 8 cm, formando entre si um ângulo de 60°. Qual é a medida do terceiro lado desse triângulo?",
+          "options": [
+            "7 cm",
+            "6 cm",
+            "8 cm",
+            "9 cm"
+          ],
+          "correctAnswer": 0,
+          "explanation": "Pela Lei dos Cossenos: a² = b² + c² - 2bc*cos(60°). a² = 5² + 8² - 2 * 5 * 8 * (1/2) = 25 + 64 - 40 = 89 - 40 = 49. Logo, a = raiz(49) = 7 cm."
+        }
+      ]
+    },
+    {
+      "id": "mat-cap-34-tabelas-graficos-estatistica",
+      "number": 34,
+      "title": "34. Leitura Crítica de Tabelas e Gráficos no ENEM",
+      "epigraph": {
+        "text": "Estatística representa em média 6 a 8 questões por edição no ENEM. A prova testa a sua capacidade de interpretar dados de pesquisas demográficas, econômicas, ambientais e de saúde.",
+        "author": "Matriz de Estatística do INEP"
+      },
+      "sections": [
+        {
+          "type": "heading",
+          "level": 2,
+          "content": "Tipos Fundamentais de Gráficos e Suas Armadilhas"
+        },
+        {
+          "type": "paragraph",
+          "content": "1. Gráficos de Colunas ou Barras: Ideais para comparar categorias discretas (produção por estado, vendas por marca). Cuidado com o truncamento do eixo vertical (quando o eixo não começa no zero, distorcendo visualmente as diferenças).\n2. Gráficos de Linhas: Perfeitos para mostrar evolução temporal contínua (séries temporais: PIB ao longo dos anos, variação diária de casos de gripe).\n3. Gráficos de Setores (Pizza): Indicam partes de um todo (composição percentual). Lembre-se da conversão angular: 100% = 360°, logo 10% = 36°, 25% = 90°, 50% = 180°.\n4. Histogramas: Gráficos de colunas contíguas (sem espaço entre elas) representando intervalos de classes de dados contínuos (faixas etárias, faixas salariais)."
+        }
+      ],
+      "quiz": [
+        {
+          "question": "Em um gráfico de setores representando as fontes de energia de uma cidade, o setor correspondente à energia solar possui um ângulo central de 72°. Qual é a porcentagem correspondente da energia solar na matriz dessa cidade?",
+          "options": [
+            "20%",
+            "25%",
+            "15%",
+            "18%"
+          ],
+          "correctAnswer": 0,
+          "explanation": "Como a circunferência completa tem 360° correspondendo a 100%: Porcentagem = (72° / 360°) * 100% = (1/5) * 100% = 20%."
+        }
+      ]
+    },
+    {
+      "id": "mat-cap-35-medias-aritmetica-ponderada",
+      "number": 35,
+      "title": "35. Médias: Aritmética Simples e Ponderada",
+      "epigraph": {
+        "text": "Média é o valor que sintetiza um conjunto de dados equilibrando as discrepâncias. A média ponderada atribui importâncias (pesos) diferenciados a cada valor.",
+        "author": "Guia de Estatística do ENEM"
+      },
+      "sections": [
+        {
+          "type": "heading",
+          "level": 2,
+          "content": "Média Aritmética Simples vs Ponderada"
+        },
+        {
+          "type": "paragraph",
+          "content": "• Média Aritmética Simples (X_barra): É a soma de todos os n valores dividida pelo número total de valores:\nX_barra = (x1 + x2 + ... + xn) / n.\nAtalho vital do ENEM: Soma Total = n * X_barra. Se a média de idade de 10 pessoas é 25 anos, a soma das idades de todas elas juntas é 10 * 25 = 250 anos!\n• Média Ponderada (Xp): Cada elemento xi possui um peso associado pi:\nXp = (x1*p1 + x2*p2 + ... + xn*pn) / (p1 + p2 + ... + pn).\nAtenção fatal: O denominador é SEMPRE a soma dos pesos, nunca a quantidade de disciplinas ou notas!"
+        }
+      ],
+      "quiz": [
+        {
+          "question": "Em um concurso, a prova de Matemática tem peso 3, Redação tem peso 2 e Conhecimentos Gerais tem peso 1. Um candidato obteve notas 8,0 em Matemática, 9,0 em Redação e 6,0 em Conhecimentos Gerais. Qual foi a sua média final ponderada?",
+          "options": [
+            "8,0",
+            "7,8",
+            "8,2",
+            "7,6"
+          ],
+          "correctAnswer": 0,
+          "explanation": "Soma dos pesos = 3 + 2 + 1 = 6. Média ponderada = (8*3 + 9*2 + 6*1) / 6 = (24 + 18 + 6) / 6 = 48 / 6 = 8,0."
+        }
+      ]
+    },
+    {
+      "id": "mat-cap-36-moda-mediana",
+      "number": 36,
+      "title": "36. Moda e Mediana: Medidas de Tendência Central",
+      "epigraph": {
+        "text": "Ao contrário da média, a mediana não é distorcida por valores discrepantes extremos. É o número que ocupa exatamente o centro do conjunto quando os dados estão em ordem crescente.",
+        "author": "Estatística Não Paramétrica no ENEM"
+      },
+      "sections": [
+        {
+          "type": "heading",
+          "level": 2,
+          "content": "Moda (Mo): O Valor Mais Frequente"
+        },
+        {
+          "type": "paragraph",
+          "content": "A Moda é simplesmente o valor que aparece com maior frequência no conjunto de dados:\n• Conjunto Unimodal: Possui apenas uma moda única.\n• Bimodal: Dois valores empatam com a frequência máxima.\n• Amodal: Todos os valores aparecem com a mesma frequência (nenhum se destaca)."
+        },
+        {
+          "type": "heading",
+          "level": 2,
+          "content": "Mediana (Md): O Ponto Médio do Rol"
+        },
+        {
+          "type": "paragraph",
+          "content": "PASSO OBRIGATÓRIO: Colocar TODOS os dados em ordem crescente ou decrescente (construir o ROL)!\n• Se a quantidade n de elementos for ÍMPAR: a mediana é exatamente o elemento central de posição (n + 1) / 2.\n• Se a quantidade n de elementos for PAR: existem dois elementos centrais nas posições (n/2) e (n/2 + 1). A mediana é a MÉDIA ARITMÉTICA desses dois valores centrais."
+        }
+      ],
+      "quiz": [
+        {
+          "question": "Considere o conjunto de notas de 8 alunos em um simulado: 4, 7, 5, 9, 7, 6, 8, 8. Qual é a mediana dessas notas?",
+          "options": [
+            "7,0",
+            "6,5",
+            "7,5",
+            "6,8"
+          ],
+          "correctAnswer": 0,
+          "explanation": "Colocando os 8 valores em ordem crescente (Rol): 4, 5, 6, 7, 7, 8, 8, 9. Como n = 8 (par), os termos centrais são o 4º e o 5º termos: 7 e 7. Mediana = (7 + 7) / 2 = 7,0."
+        }
+      ]
+    },
+    {
+      "id": "mat-cap-37-variancia-desvio-padrao",
+      "number": 37,
+      "title": "37. Medidas de Dispersão: Amplitude, Variância e Desvio Padrão",
+      "epigraph": {
+        "text": "Dois alunos podem ter a mesma média 7,0. Mas aquele com notas 7, 7 e 7 é muito mais 'regular' e 'homogêneo' do que o aluno com notas 10, 7 e 4. O desvio padrão mede essa regularidade.",
+        "author": "Conceito Fundamental de Regularidade no ENEM"
+      },
+      "sections": [
+        {
+          "type": "heading",
+          "level": 2,
+          "content": "Amplitude, Variância e Desvio Padrão"
+        },
+        {
+          "type": "paragraph",
+          "content": "• Amplitude (A): É a diferença entre o maior e o menor valor do conjunto: A = X_max - X_min.\n• Variância (Var ou sigma²): É a média aritmética dos quadrados das distâncias de cada dado em relação à média geral:\nVar = sum[(xi - X_barra)²] / n.\n• Desvio Padrão (DP ou sigma): É a raiz quadrada da variância: DP = raiz(Var). Tem a mesma unidade de medida dos dados originais."
+        },
+        {
+          "type": "callout",
+          "title": "A Pergunta Clássica do ENEM: Quem é o Mais Regular?",
+          "content": "O ENEM quase nunca pede para você calcular a fórmula completa da variância à mão com dezenas de números. O enunciado dá uma tabela com a média e o desvio padrão de cinco atletas ou máquinas e pergunta: 'Qual atleta teve o desempenho mais regular/homogêneo/confiável?'.\nResposta: Aquele que tiver o MENOR DESVIO PADRÃO (ou seja, cujos resultados ficaram mais próximos e concentrados em torno da média)!"
+        }
+      ],
+      "quiz": [
+        {
+          "question": "Cinco atiradores obtiveram a mesma pontuação média de 80 pontos em 10 disparos. Seus desvios padrão foram: Atirador I (DP = 4,2); Atirador II (DP = 1,8); Atirador III (DP = 5,6); Atirador IV (DP = 3,1); Atirador V (DP = 2,5). Qual atirador foi o mais regular?",
+          "options": [
+            "Atirador II",
+            "Atirador I",
+            "Atirador V",
+            "Atirador IV"
+          ],
+          "correctAnswer": 0,
+          "explanation": "Maior regularidade (ou homogeneidade) corresponde rigorosamente ao MENOR desvio padrão. O Atirador II possui o menor DP (1,8)."
+        }
+      ]
+    },
+    {
+      "id": "mat-cap-38-combinatoria-multiplicativo",
+      "number": 38,
+      "title": "38. Análise Combinatória: Princípio Multiplicativo e Fatorial",
+      "epigraph": {
+        "text": "Se uma decisão pode ser tomada de 'm' maneiras e, em seguida, uma segunda decisão pode ser tomada de 'n' maneiras, o número total de possibilidades conjuntas é m * n.",
+        "author": "Princípio Fundamental da Contagem"
+      },
+      "sections": [
+        {
+          "type": "heading",
+          "level": 2,
+          "content": "O Princípio Fundamental da Contagem (PFC)"
+        },
+        {
+          "type": "paragraph",
+          "content": "O Princípio Multiplicativo é o pilar de toda a análise combinatória. Em vez de listar uma por uma centenas de opções (como senhas bancárias, placas de veículos ou cardápios), multiplicamos o número de opções disponíveis para cada etapa independente da decisão.\nExemplo clássico: Uma pessoa tem 4 camisas, 3 calças e 2 pares de tênis. O número de trajes completos distintos que ela pode formar é 4 * 3 * 2 = 24 trajes."
+        },
+        {
+          "type": "callout",
+          "title": "Regra do Conectivo: 'E' Multiplica, 'OU' Soma",
+          "content": "• Conectivo 'E' (eventos sucessivos ou simultâneos): Multiplicam-se as possibilidades (vestir camisa E calça E tênis = 4 * 3 * 2).\n• Conectivo 'OU' (opções mutuamente exclusivas): Somam-se as possibilidades (viajar de avião OU de ônibus = 3 voos + 5 linhas de ônibus = 8 opções)."
+        }
+      ],
+      "quiz": [
+        {
+          "question": "Um sistema de senhas bancárias exige que cada cliente crie um código formado por 3 letras distintas seguidas de 2 algarismos também distintos. Quantas senhas diferentes podem ser geradas considerando o alfabeto de 26 letras e os 10 algarismos (0 a 9)?",
+          "options": [
+            "1.404.000 senhas",
+            "1.757.600 senhas",
+            "1.560.000 senhas",
+            "1.200.000 senhas"
+          ],
+          "correctAnswer": 0,
+          "explanation": "Letras distintas: 26 opções para a 1ª, 25 para a 2ª e 24 para a 3ª (26 * 25 * 24 = 15.600). Algarismos distintos: 10 opções para o 1º e 9 para o 2º (10 * 9 = 90). Total de senhas = 15.600 * 90 = 1.404.000 senhas."
+        }
+      ]
+    },
+    {
+      "id": "mat-cap-39-permutacao-arranjo-combinacao",
+      "number": 39,
+      "title": "39. Permutação, Arranjo e Combinação: O Algoritmo da Decisão",
+      "epigraph": {
+        "text": "A pergunta que decide a sua questão: 'A ordem dos elementos importa?'. Se a ordem importar, é Arranjo ou Permutação. Se a ordem não fizer a menor diferença, é Combinação.",
+        "author": "O Dilema Central da Combinatória"
+      },
+      "sections": [
+        {
+          "type": "heading",
+          "level": 2,
+          "content": "O Algoritmo de Escolha da Fórmula Correta"
+        },
+        {
+          "type": "paragraph",
+          "content": "Faça a si mesmo este teste mental: troque a posição de dois elementos escolhidos. O grupo resultante mudou ou continuou exatamente o mesmo?\n• Caso 1: A ordem IMPORTA (Ordem = Cargo, Pódio, Posição, Sequência de Fila):\n   - Se você usa TODOS os n elementos: PERMUTAÇÃO SIMPLES -> Pn = n! (Se houver repetição de letras/elementos: Pn^(a,b) = n! / (a! * b!)).\n   - Se você escolhe p elementos de um total n (com p < n): ARRANJO SIMPLES -> A(n, p) = n! / (n - p)!.\n• Caso 2: A ordem NÃO IMPORTA (Ordem = Grupo, Equipe, Comissão, Salada de Frutas, Sorteio de Duplas):\n   - COMBINAÇÃO SIMPLES -> C(n, p) = n! / [p! * (n - p)!]."
+        },
+        {
+          "type": "callout",
+          "title": "Atalho de Cálculo Rápido de Combinação sem Fatorial Gigante",
+          "content": "Para calcular C(10, 3): no numerador, comece em 10 e decresça 3 números (10 * 9 * 8). No denominador, fatorial de 3 (3 * 2 * 1):\nC(10, 3) = (10 * 9 * 8) / (3 * 2 * 1) = 720 / 6 = 120. Simples e direto, sem armar fórmulas gigantes!"
+        }
+      ],
+      "quiz": [
+        {
+          "question": "Um comitê científico composto por 4 médicos deve ser formado a partir de um grupo de 10 médicos voluntários. De quantas maneiras diferentes esse comitê pode ser escolhido?",
+          "options": [
+            "210 maneiras",
+            "5.040 maneiras",
+            "120 maneiras",
+            "240 maneiras"
+          ],
+          "correctAnswer": 0,
+          "explanation": "A ordem de escolha dos médicos não altera o comitê (escolher João e Maria é o mesmo comitê que Maria e João). Logo, é Combinação Simples: C(10, 4) = (10 * 9 * 8 * 7) / (4 * 3 * 2 * 1) = 5.040 / 24 = 210 maneiras."
+        }
+      ]
+    },
+    {
+      "id": "mat-cap-40-probabilidade-simples",
+      "number": 40,
+      "title": "40. Probabilidade Simples, Espaço Amostral e Eventos Equiprováveis",
+      "epigraph": {
+        "text": "Probabilidade = (Casos Favoráveis) / (Casos Possíveis Totais). Um valor sempre entre 0 (evento impossível) e 1 (evento certo), ou de 0% a 100%.",
+        "author": "Definição Clássica de Laplace"
+      },
+      "sections": [
+        {
+          "type": "heading",
+          "level": 2,
+          "content": "Conceitos Fundamentais da Teoria das Probabilidades"
+        },
+        {
+          "type": "paragraph",
+          "content": "• Espaço Amostral (Omega): É o conjunto de todos os resultados possíveis de um experimento aleatório. Exemplo: lançamento de um dado honesto de 6 faces: Omega = {1, 2, 3, 4, 5, 6}, com n(Omega) = 6.\n• Evento (E): É qualquer subconjunto do espaço amostral. Exemplo: sair um número primo: E = {2, 3, 5}, com n(E) = 3.\n• Probabilidade Laplaciana: P(E) = n(E) / n(Omega) = 3 / 6 = 1/2 = 50%.\n• Evento Complementar (E'): P(E') = 1 - P(E). Técnica vital para o ENEM: quando a questão pedir 'a probabilidade de pelo menos um...', calcule 1 MENOS a probabilidade de NENHUM acontecer!"
+        }
+      ],
+      "quiz": [
+        {
+          "question": "Em uma urna há 12 bolas verdes, 8 azuis e 10 amarelas, todas idênticas ao tato. Retirando-se uma bola ao acaso, qual é a probabilidade de ela NÃO ser azul?",
+          "options": [
+            "11/15 (73,3%)",
+            "4/15 (26,7%)",
+            "2/5 (40%)",
+            "3/5 (60%)"
+          ],
+          "correctAnswer": 0,
+          "explanation": "Total de bolas = 12 + 8 + 10 = 30 bolas. Bolas que NÃO são azuis = 12 verdes + 10 amarelas = 22 bolas. Probabilidade = 22 / 30 = 11 / 15 (aproximadamente 73,3%)."
+        }
+      ]
+    },
+    {
+      "id": "mat-cap-41-probabilidade-uniao-condicional",
+      "number": 41,
+      "title": "41. Probabilidade da União, Condicional e Árvore de Decisão",
+      "epigraph": {
+        "text": "A probabilidade condicional P(A|B) é a probabilidade de o evento A acontecer SABENDO que o evento B já ocorreu. O efeito direto é a redução do espaço amostral.",
+        "author": "Probabilidade Bayesiana no ENEM"
+      },
+      "sections": [
+        {
+          "type": "heading",
+          "level": 2,
+          "content": "Probabilidade da União de Dois Eventos: P(A ou B)"
+        },
+        {
+          "type": "paragraph",
+          "content": "Ao calcular a probabilidade de A OU B ocorrer:\nP(A união B) = P(A) + P(B) - P(A intersecção B).\nA subtração de P(A intersecção B) é necessária porque os elementos que pertencem simultaneamente a A e a B foram somados duas vezes! Se os eventos forem mutuamente exclusivos (não podem ocorrer juntos), P(A intersecção B) = 0."
+        },
+        {
+          "type": "heading",
+          "level": 2,
+          "content": "Probabilidade Condicional: P(A | B)"
+        },
+        {
+          "type": "paragraph",
+          "content": "A notação P(A | B) lê-se 'probabilidade de A dado B':\nP(A | B) = P(A intersecção B) / P(B).\nNo ENEM, você resolve 99% das questões de probabilidade condicional sem fórmula: basta restringir a tabela ou o espaço amostral apenas à linha ou coluna do evento B que já ocorreu, e contar quantos casos favoráveis de A existem dentro dessa linha reduzida!"
+        }
+      ],
+      "quiz": [
+        {
+          "question": "Dois dados honestos de 6 faces são lançados. Sabendo que a soma das faces obtidas foi igual a 8, qual é a probabilidade de o primeiro dado ter mostrado o número 5?",
+          "options": [
+            "1/5",
+            "1/6",
+            "1/36",
+            "2/5"
+          ],
+          "correctAnswer": 0,
+          "explanation": "O espaço amostral fica reduzido aos pares cuja soma é 8: (2,6), (3,5), (4,4), (5,3), (6,2). São 5 casos possíveis no novo espaço amostral. Desses 5, apenas o par (5,3) tem o primeiro dado igual a 5 (1 caso favorável). Logo, P = 1/5."
+        }
+      ]
+    }
+  ]
+}

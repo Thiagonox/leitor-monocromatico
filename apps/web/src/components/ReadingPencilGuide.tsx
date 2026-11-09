@@ -1,42 +1,42 @@
 'use client';
 
 import React, { useEffect, useRef, useState, useCallback } from 'react';
+import { audioSyncBus, AudioSyncData, AcousticProfile } from '@/lib/audioSync';
 
-export interface WordEntry {
-  startNode: Node;
-  startOffset: number;
-  endNode: Node;
-  endOffset: number;
-  wordStr: string;
-  phoneticWeight: number;
-  pauseWeight: number;
-  startWeight: number;
-  vocalEndWeight: number;
-  endWeight: number;
+interface TimedWord {
+  index: number;
+  word: string;
+  startTime: number;
+  vocalEndTime: number;
+  endTime: number;
+  relLeft: number;
+  relRight: number;
+  relBottom: number;
+  width: number;
+  lineIndex: number;
+  isPunctuationPause: boolean;
 }
 
 export interface ReadingPencilGuideProps {
   containerRef?: React.RefObject<HTMLElement | null>;
   activeBlockId?: string;
   activeBlockKey?: string | number;
-  isPlaying: boolean;
-  currentTime: number;
-  duration: number;
+  isPlaying?: boolean;
+  currentTime?: number;
+  duration?: number;
   isLoading?: boolean;
   enabled?: boolean;
   playbackRate?: number;
 }
 
 /**
- * Pondera a duração acústica de pronúncia e as pausas respiratórias da voz sintetizada HeyGen
+ * Ponderação fonética calibrada para fala contínua em português brasileiro
  */
-function computeWordWeights(
-  wordStr: string,
-  isLastWord: boolean
-): { phoneticWeight: number; pauseWeight: number } {
-  const cleaned = wordStr.toLowerCase().replace(/[^a-z0-9áéíóúâêîôûãõç]/g, '');
+function computePhoneticWeight(word: string): number {
+  const cleaned = word.toLowerCase().replace(/[^a-z0-9áéíóúâêîôûãõç]/g, '');
+  if (!cleaned) return 1.0;
 
-  // Palavras funcionais de transição rápida em português falado (~110-170ms)
+  // Palavras funcionais / monossílabos átonos rápidos (~90-140ms)
   const rapidWords = new Set([
     'a', 'o', 'as', 'os', 'um', 'uma', 'uns', 'umas',
     'de', 'da', 'do', 'das', 'dos',
@@ -45,48 +45,39 @@ function computeWordWeights(
     'ja', 'já', 'ao', 'aos', 'me', 'te', 'lhe', 'nos', 'vos'
   ]);
 
-  let phonetic = 2.4; // Piso de articulação da palavra
-
-  if (rapidWords.has(cleaned)) {
-    phonetic = 1.5;
-  } else if (/^\d+/.test(cleaned)) {
-    // Dígitos numéricos ("1º", "2025") levam mais tempo para pronúncia por extenso
-    phonetic = Math.max(5.0, cleaned.length * 3.5);
-  } else if (/^[A-Z0-9]{2,}$/.test(wordStr.replace(/[^A-Za-z0-9]/g, ''))) {
-    // Siglas pronunciadas letra a letra ("ENEM", "MEC", "TRI")
-    phonetic = Math.max(4.5, cleaned.length * 2.6);
-  } else if (cleaned.length > 0) {
-    // Palavra padrão: correlação com sílabas fonéticas
-    phonetic = 1.6 + cleaned.length * 0.75;
+  if (rapidWords.has(cleaned)) return 1.15;
+  if (/^\d+/.test(cleaned)) return Math.max(4.0, cleaned.length * 2.5);
+  if (/^[A-Z0-9]{2,}$/.test(word.replace(/[^A-Za-z0-9]/g, ''))) {
+    return Math.max(3.8, cleaned.length * 2.0);
   }
 
-  // Ponderação das pausas respiratórias da fala
-  let pause = 0.5; // Micro-silêncio natural entre palavras (~45ms)
+  // Contagem aproximada de vogais (núcleos silábicos)
+  const vowels = cleaned.match(/[aeiouyáéíóúâêîôûãõ]/gi);
+  const syllableCount = vowels ? vowels.length : Math.max(1, Math.floor(cleaned.length / 3));
 
-  if (/[.!?…]+['"”’)]*$/.test(wordStr)) {
-    // Ponto final, exclamação, interrogação: pausa longa (~750-850ms)
-    pause = 10.5;
-  } else if (/[,;:—–]+['"”’)]*$/.test(wordStr)) {
-    // Vírgula, ponto e vírgula, travessão, dois pontos: pausa média (~380-450ms)
-    pause = 5.2;
-  } else if (/\.\.\./.test(wordStr)) {
-    pause = 9.0;
-  }
-
-  if (isLastWord) {
-    // Pausa de fechamento do bloco antes da costura com o próximo áudio
-    pause += 5.5;
-  }
-
-  return { phoneticWeight: phonetic, pauseWeight: pause };
+  return 1.4 + syllableCount * 1.55 + cleaned.length * 0.35;
 }
 
 /**
- * Mapeia todos os nós de texto dentro do bloco ativo em palavras com nós DOM e pesos acústicos
+ * Mede com precisão sub-pixel todas as palavras visíveis do bloco no DOM,
+ * tratando drop-caps (primeira letra gigante), quebras de linha e nós aninhados.
  */
-function parseBlockWords(root: HTMLElement): WordEntry[] {
-  const charRefs: { node: Node; offset: number; ch: string }[] = [];
+function measureBlockWords(root: HTMLElement): {
+  words: {
+    word: string;
+    relLeft: number;
+    relRight: number;
+    relBottom: number;
+    width: number;
+    lineIndex: number;
+  }[];
+} {
+  const blockRect = root.getBoundingClientRect();
+  if (blockRect.width === 0 || blockRect.height === 0) {
+    return { words: [] };
+  }
 
+  const charRefs: { node: Node; offset: number; ch: string }[] = [];
   const walker = document.createTreeWalker(root, NodeFilter.SHOW_TEXT, {
     acceptNode(node) {
       const parent = node.parentElement;
@@ -112,14 +103,15 @@ function parseBlockWords(root: HTMLElement): WordEntry[] {
     }
   }
 
-  if (charRefs.length === 0) return [];
+  if (charRefs.length === 0) return { words: [] };
 
   const rawWords: {
     startNode: Node;
     startOffset: number;
     endNode: Node;
     endOffset: number;
-    wordStr: string;
+    word: string;
+    isFirstWord: boolean;
   }[] = [];
 
   let i = 0;
@@ -128,9 +120,9 @@ function parseBlockWords(root: HTMLElement): WordEntry[] {
     if (i >= charRefs.length) break;
 
     const startIdx = i;
-    let wordStr = '';
+    let word = '';
     while (i < charRefs.length && !/\s/.test(charRefs[i].ch)) {
-      wordStr += charRefs[i].ch;
+      word += charRefs[i].ch;
       i++;
     }
     const endIdx = i - 1;
@@ -140,339 +132,361 @@ function parseBlockWords(root: HTMLElement): WordEntry[] {
       startOffset: charRefs[startIdx].offset,
       endNode: charRefs[endIdx].node,
       endOffset: charRefs[endIdx].offset + 1,
-      wordStr,
+      word,
+      isFirstWord: rawWords.length === 0,
     });
   }
 
-  if (rawWords.length === 0) return [];
+  const measured: {
+    word: string;
+    relLeft: number;
+    relRight: number;
+    relBottom: number;
+    width: number;
+    lineIndex: number;
+  }[] = [];
 
-  const LEAD_IN_WEIGHT = 1.2; // Breve respiração inicial antes da primeira sílaba (~80ms)
-  let totalWeight = LEAD_IN_WEIGHT;
+  let currentLineIndex = 0;
+  let lastMeasuredBottom = -1;
 
-  const intermediate = rawWords.map((rw, idx) => {
-    const isLast = idx === rawWords.length - 1;
-    const { phoneticWeight, pauseWeight } = computeWordWeights(rw.wordStr, isLast);
-    totalWeight += phoneticWeight + pauseWeight;
+  for (let idx = 0; idx < rawWords.length; idx++) {
+    const rw = rawWords[idx];
+    try {
+      const range = document.createRange();
+      range.setStart(rw.startNode, rw.startOffset);
+      range.setEnd(rw.endNode, rw.endOffset);
+      const rects = range.getClientRects();
+
+      let targetRect: DOMRect | { left: number; right: number; bottom: number; width: number } | null = null;
+
+      if (rects.length > 0) {
+        if (rw.isFirstWord && rects.length > 1) {
+          // Drop-cap detectado: combina o retângulo da capitular com o resto da palavra
+          const left = Math.min(...Array.from(rects).map((r) => r.left));
+          const right = Math.max(...Array.from(rects).map((r) => r.right));
+          const bottom = Math.max(...Array.from(rects).map((r) => r.bottom));
+          targetRect = { left, right, bottom, width: right - left };
+        } else {
+          targetRect = rects[0];
+        }
+      } else {
+        const b = range.getBoundingClientRect();
+        if (b && b.width > 0) targetRect = b;
+      }
+
+      if (targetRect && targetRect.width > 0) {
+        const relBottom = targetRect.bottom - blockRect.top + 2;
+        if (lastMeasuredBottom > 0 && Math.abs(relBottom - lastMeasuredBottom) > 13) {
+          currentLineIndex++;
+        }
+        lastMeasuredBottom = relBottom;
+
+        measured.push({
+          word: rw.word,
+          relLeft: targetRect.left - blockRect.left,
+          relRight: targetRect.right - blockRect.left,
+          relBottom,
+          width: targetRect.width,
+          lineIndex: currentLineIndex,
+        });
+      }
+    } catch (e) {}
+  }
+
+  return { words: measured };
+}
+
+/**
+ * Constrói o modelo de temporização estritamente contínuo e monotônico de palavras.
+ * Cada palavra tem:
+ * - Janela de vocalização (onde o lápis caminha suavemente sobre o texto)
+ * - Janela de pausa pontuada (onde o lápis fica imóvel na pontuação enquanto a voz respira)
+ */
+function buildWordTimingModel(
+  measuredWords: {
+    word: string;
+    relLeft: number;
+    relRight: number;
+    relBottom: number;
+    width: number;
+    lineIndex: number;
+  }[],
+  duration: number,
+  acousticProfile?: AcousticProfile | null
+): TimedWord[] {
+  if (measuredWords.length === 0 || duration <= 0) return [];
+
+  // Ponderações fonéticas e pesos de pausas
+  interface WordScore {
+    wordItem: (typeof measuredWords)[0];
+    phoneticWeight: number;
+    pauseWeight: number;
+    isPunctuationPause: boolean;
+  }
+
+  const scores: WordScore[] = measuredWords.map((mw, idx) => {
+    const isMajor = /[.!?…\n]+['"”’)]*$/.test(mw.word);
+    const isMinor = /[,;:—–]+['"”’)]*$/.test(mw.word);
+    const isLast = idx === measuredWords.length - 1;
+
+    const pWeight = computePhoneticWeight(mw.word);
+    let pauseW = 0;
+    if (isMajor || isLast) {
+      pauseW = isLast ? 7.5 : 8.5; // ~450ms a 700ms
+    } else if (isMinor) {
+      pauseW = 4.2; // ~250ms a 380ms
+    }
+
     return {
-      ...rw,
-      phoneticWeight,
-      pauseWeight,
+      wordItem: mw,
+      phoneticWeight: pWeight,
+      pauseWeight: pauseW,
+      isPunctuationPause: pauseW > 0,
     };
   });
 
-  let acc = LEAD_IN_WEIGHT;
-  return intermediate.map((item) => {
-    const startWeight = acc / totalWeight;
-    const phoneticSpan = item.phoneticWeight / totalWeight;
-    const vocalEndWeight = startWeight + phoneticSpan;
-    acc += item.phoneticWeight + item.pauseWeight;
-    const endWeight = acc / totalWeight;
+  const totalScore = scores.reduce((sum, s) => sum + s.phoneticWeight + s.pauseWeight, 0);
+  if (totalScore <= 0) return [];
 
-    return {
-      startNode: item.startNode,
-      startOffset: item.startOffset,
-      endNode: item.endNode,
-      endOffset: item.endOffset,
-      wordStr: item.wordStr,
-      phoneticWeight: item.phoneticWeight,
-      pauseWeight: item.pauseWeight,
-      startWeight,
-      vocalEndWeight,
-      endWeight,
-    };
+  const timedWords: TimedWord[] = [];
+  let currentAccumulator = 0;
+
+  scores.forEach((s, idx) => {
+    const vocalDuration = (s.phoneticWeight / totalScore) * duration;
+    const pauseDuration = (s.pauseWeight / totalScore) * duration;
+
+    const startTime = currentAccumulator;
+    const vocalEndTime = startTime + vocalDuration;
+    const endTime = vocalEndTime + pauseDuration;
+    currentAccumulator = endTime;
+
+    timedWords.push({
+      index: idx,
+      word: s.wordItem.word,
+      startTime,
+      vocalEndTime,
+      endTime,
+      relLeft: s.wordItem.relLeft,
+      relRight: s.wordItem.relRight,
+      relBottom: s.wordItem.relBottom,
+      width: s.wordItem.width,
+      lineIndex: s.wordItem.lineIndex,
+      isPunctuationPause: s.isPunctuationPause,
+    });
   });
+
+  return timedWords;
 }
 
 export function ReadingPencilGuide({
   containerRef,
   activeBlockId,
   activeBlockKey = 0,
-  isPlaying,
-  currentTime,
-  duration,
-  isLoading = false,
   enabled = true,
-  playbackRate = 1,
 }: ReadingPencilGuideProps) {
   const cursorRef = useRef<HTMLDivElement | null>(null);
   const trailRef = useRef<HTMLDivElement | null>(null);
 
-  const [words, setWords] = useState<WordEntry[]>([]);
   const [isLifting, setIsLifting] = useState(false);
+  const [isActiveLayer, setIsActiveLayer] = useState(false);
 
-  // Armazena as propriedades ativas em um Ref para sincronização sem interrupções de rAF
-  const livePropsRef = useRef({
-    currentTime,
-    duration,
-    isPlaying,
-    isLoading,
-    playbackRate,
-  });
-  livePropsRef.current = {
-    currentTime,
-    duration,
-    isPlaying,
-    isLoading,
-    playbackRate,
-  };
+  const currentBlockIdRef = useRef<string>('');
+  const targetElementRef = useRef<HTMLElement | null>(null);
+  const timedWordsRef = useRef<TimedWord[]>([]);
+  const lastSyncDataRef = useRef<AudioSyncData>(audioSyncBus.getCurrent());
+  const pendingTargetIdRef = useRef<string>('');
 
-  const wordsRef = useRef<WordEntry[]>([]);
-  wordsRef.current = words;
-
-  const targetBlockElementRef = useRef<HTMLElement | null>(null);
-
-  // Posições interpoladas para renderização orgânica 60fps
   const stateRef = useRef({
     curX: 0,
     curY: 0,
     lineStartX: 0,
-    lastLineY: -1,
+    lastLineIndex: -1,
     initializedPos: false,
     lastFrameTime: performance.now(),
     liftTimer: null as any,
   });
 
-  // Localiza e sincroniza o elemento do bloco no DOM
-  const resolveTargetBlock = useCallback((): HTMLElement | null => {
-    if (activeBlockId) {
-      const el = document.getElementById(activeBlockId);
-      if (el) return el;
-    }
-    if (containerRef && containerRef.current) {
-      return containerRef.current;
-    }
-    return null;
-  }, [activeBlockId, containerRef]);
+  // Mede e constrói o modelo do bloco ativo
+  const measureTargetElement = useCallback((targetId: string, syncData: AudioSyncData): boolean => {
+    if (!targetId) return false;
+    const el = document.getElementById(targetId);
+    if (!el) return false;
 
-  // Atualiza as palavras e reseta coordenadas imediatamente quando o bloco ativo muda
+    const { words } = measureBlockWords(el);
+    if (words.length === 0) return false;
+
+    targetElementRef.current = el;
+    currentBlockIdRef.current = targetId;
+
+    const dur = syncData.duration > 0 ? syncData.duration : 10;
+    const model = buildWordTimingModel(words, dur, syncData.acousticProfile);
+    timedWordsRef.current = model;
+
+    const s = stateRef.current;
+    s.initializedPos = false;
+    s.lastLineIndex = -1;
+    s.lineStartX = 0;
+
+    setIsLifting(true);
+    clearTimeout(s.liftTimer);
+    s.liftTimer = setTimeout(() => setIsLifting(false), 180);
+
+    if (trailRef.current) {
+      trailRef.current.style.width = '0px';
+    }
+
+    if (model.length > 0) {
+      const blockRect = el.getBoundingClientRect();
+      const first = model[0];
+      s.curX = blockRect.left + first.relLeft;
+      s.curY = blockRect.top + first.relBottom;
+      s.lineStartX = s.curX;
+      s.lastLineIndex = first.lineIndex;
+      s.initializedPos = true;
+
+      if (cursorRef.current) {
+        cursorRef.current.style.transform = `translate3d(${s.curX.toFixed(1)}px, ${s.curY.toFixed(1)}px, 0)`;
+      }
+    }
+
+    return true;
+  }, []);
+
+  // Monitora alterações imediatas do barramento de áudio
   useEffect(() => {
     if (!enabled) return;
 
-    let retryCount = 0;
-    let cancelled = false;
+    const unsubscribe = audioSyncBus.subscribe((data) => {
+      lastSyncDataRef.current = data;
+      setIsActiveLayer(data.isPlaying || data.currentTime > 0);
 
-    function scanBlock() {
-      if (cancelled) return;
-      const el = resolveTargetBlock();
-      if (el) {
-        targetBlockElementRef.current = el;
-        const parsed = parseBlockWords(el);
-        setWords(parsed);
-
-        // Reset imediato das coordenadas e levantamento suave do lápis
-        const s = stateRef.current;
-        s.initializedPos = false;
-        s.lastLineY = -1;
-        s.lineStartX = 0;
-
-        setIsLifting(true);
-        clearTimeout(s.liftTimer);
-        s.liftTimer = setTimeout(() => {
-          if (!cancelled) setIsLifting(false);
-        }, 220);
-
-        if (trailRef.current) {
-          trailRef.current.style.width = '0px';
-        }
-      } else if (retryCount < 5) {
-        retryCount++;
-        requestAnimationFrame(scanBlock);
+      const targetId = data.blockId || activeBlockId || '';
+      if (targetId && targetId !== currentBlockIdRef.current) {
+        pendingTargetIdRef.current = targetId;
+        measureTargetElement(targetId, data);
       }
-    }
-
-    scanBlock();
+    });
 
     return () => {
-      cancelled = true;
+      unsubscribe();
     };
-  }, [activeBlockId, activeBlockKey, enabled, resolveTargetBlock]);
+  }, [enabled, activeBlockId, measureTargetElement]);
 
-  // Observa mudanças de tamanho de tela ou redimensionamento do bloco para recalcular posições
+  // Recalcula coordenadas em caso de redimensionamento da janela
   useEffect(() => {
     const handleResize = () => {
-      const el = targetBlockElementRef.current;
-      if (el) {
-        const parsed = parseBlockWords(el);
-        setWords(parsed);
+      if (currentBlockIdRef.current) {
+        measureTargetElement(currentBlockIdRef.current, lastSyncDataRef.current);
       }
     };
-
     window.addEventListener('resize', handleResize);
     return () => window.removeEventListener('resize', handleResize);
-  }, []);
+  }, [measureTargetElement]);
 
-  // Loop contínuo de animação a 60fps usando o relógio de alta precisão
+  // Loop de animação contínua a 60fps desacoplado do ciclo de render do React
   useEffect(() => {
     if (!enabled) return;
 
     let rafId: number;
 
     function tick() {
-      const {
-        currentTime: curTime,
-        duration: curDur,
-        isPlaying: playing,
-        isLoading: loading,
-        playbackRate: pRate,
-      } = livePropsRef.current;
+      const sync = lastSyncDataRef.current;
+      const cursor = cursorRef.current;
+      const trail = trailRef.current;
 
-      const currentWords = wordsRef.current;
-      const targetEl = targetBlockElementRef.current;
+      // Verifica se há bloco pendente ou se o bloco mudou
+      const desiredBlockId = sync.blockId || activeBlockId || '';
+      if (desiredBlockId && desiredBlockId !== currentBlockIdRef.current) {
+        measureTargetElement(desiredBlockId, sync);
+      }
 
-      if (!cursorRef.current) {
+      const targetEl = targetElementRef.current;
+      const words = timedWordsRef.current;
+
+      if (!cursor || !targetEl || words.length === 0 || !sync.isPlaying) {
         rafId = requestAnimationFrame(tick);
         return;
       }
 
-      const progress = curDur > 0 ? Math.min(1, Math.max(0, curTime / curDur)) : 0;
-      let target: { x: number; y: number; wordLeft: number } | null = null;
+      const curTime = sync.currentTime;
+      const blockRect = targetEl.getBoundingClientRect();
 
-      if (currentWords.length > 0) {
-        // Encontra a palavra alvo correspondente ao tempo da fala
-        let targetWord = currentWords[currentWords.length - 1];
-
-        if (progress < currentWords[0].startWeight) {
-          targetWord = currentWords[0];
-        } else {
-          for (let i = 0; i < currentWords.length; i++) {
-            if (progress <= currentWords[i].endWeight || i === currentWords.length - 1) {
-              targetWord = currentWords[i];
-              break;
-            }
+      // Localiza a palavra ativa correspondente ao timestamp exato da fala
+      let activeWord = words[words.length - 1];
+      if (curTime <= words[0].startTime) {
+        activeWord = words[0];
+      } else {
+        for (let i = 0; i < words.length; i++) {
+          if (curTime < words[i].endTime || i === words.length - 1) {
+            activeWord = words[i];
+            break;
           }
         }
-
-        try {
-          const range = document.createRange();
-          range.setStart(targetWord.startNode, targetWord.startOffset);
-          range.setEnd(targetWord.endNode, targetWord.endOffset);
-          const rects = range.getClientRects();
-
-          let rect: DOMRect | null = null;
-          let targetY = 0;
-
-          if (rects.length > 0) {
-            // Caso especial: letra capitular (drop cap) no primeiro parágrafo
-            if (rects.length > 1 && rects[0].height > rects[1].height * 1.6) {
-              rect = rects[1];
-              targetY = rect.bottom + 3;
-            } else {
-              rect = rects[0];
-              targetY = rect.bottom + 3;
-            }
-          } else {
-            const b = range.getBoundingClientRect();
-            if (b && b.width > 0) {
-              rect = b;
-              targetY = b.bottom + 3;
-            }
-          }
-
-          if (rect && rect.width > 0) {
-            // Verifica se a voz está na fase ativa de pronúncia ou na fase de pausa respiratória
-            if (progress <= targetWord.vocalEndWeight) {
-              const span = Math.max(0.0001, targetWord.vocalEndWeight - targetWord.startWeight);
-              const frac = Math.min(1, Math.max(0, (progress - targetWord.startWeight) / span));
-
-              // Se a palavra quebrar entre duas linhas no DOM
-              if (rects.length > 1 && !(rects[0].height > rects[1].height * 1.6)) {
-                if (frac < 0.5) {
-                  rect = rects[0];
-                  targetY = rects[0].bottom + 3;
-                } else {
-                  rect = rects[1];
-                  targetY = rects[1].bottom + 3;
-                }
-              }
-
-              target = {
-                x: rect.left + rect.width * frac,
-                y: targetY,
-                wordLeft: rect.left,
-              };
-            } else {
-              // A voz está em PAUSA no sinal de pontuação: o lápis repousa fixo no fim da palavra!
-              if (rects.length > 1 && !(rects[0].height > rects[1].height * 1.6)) {
-                rect = rects[rects.length - 1];
-                targetY = rect.bottom + 3;
-              }
-              target = {
-                x: rect.right,
-                y: targetY,
-                wordLeft: rect.left,
-              };
-            }
-          }
-        } catch (e) {}
       }
 
-      // Fallback seguro caso o bloco não tenha palavras renderizadas
-      if (!target && targetEl) {
-        const r = targetEl.getBoundingClientRect();
-        target = {
-          x: r.left + r.width * progress,
-          y: r.top + 28,
-          wordLeft: r.left,
-        };
+      let targetX = blockRect.left + activeWord.relLeft;
+      let targetY = blockRect.top + activeWord.relBottom;
+
+      // Fase de vocalização ativa vs repouso na pontuação
+      if (curTime < activeWord.vocalEndTime) {
+        const span = Math.max(0.001, activeWord.vocalEndTime - activeWord.startTime);
+        const frac = Math.min(1, Math.max(0, (curTime - activeWord.startTime) / span));
+        targetX = blockRect.left + activeWord.relLeft + activeWord.width * frac;
+      } else {
+        // Pausa no sinal de pontuação: o lápis repousa exatamente no ponto final/vírgula!
+        targetX = blockRect.left + activeWord.relRight;
       }
 
-      if (target) {
-        const s = stateRef.current;
-        const now = performance.now();
-        const dt = Math.min(0.1, (now - s.lastFrameTime) / 1000);
-        s.lastFrameTime = now;
+      const s = stateRef.current;
+      const now = performance.now();
+      const dt = Math.min(0.1, (now - s.lastFrameTime) / 1000);
+      s.lastFrameTime = now;
 
-        if (!s.initializedPos) {
-          s.curX = target.x;
-          s.curY = target.y;
-          s.lineStartX = target.wordLeft;
-          s.lastLineY = target.y;
-          s.initializedPos = true;
+      if (!s.initializedPos) {
+        s.curX = targetX;
+        s.curY = targetY;
+        s.lineStartX = blockRect.left + activeWord.relLeft;
+        s.lastLineIndex = activeWord.lineIndex;
+        s.initializedPos = true;
+      } else {
+        // Mudança de linha: levanta ponta suavemente e zera rastro
+        if (activeWord.lineIndex !== s.lastLineIndex) {
+          s.lineStartX = blockRect.left + activeWord.relLeft;
+          s.lastLineIndex = activeWord.lineIndex;
+
+          setIsLifting(true);
+          clearTimeout(s.liftTimer);
+          s.liftTimer = setTimeout(() => setIsLifting(false), 170);
+
+          if (trail) {
+            trail.style.width = '0px';
+          }
+        }
+
+        const dist = Math.hypot(targetX - s.curX, targetY - s.curY);
+        if (dist > 140) {
+          // Salto de seek ou transição de bloco sem arrasto diagonal na página
+          s.curX = targetX;
+          s.curY = targetY;
+          s.lineStartX = blockRect.left + activeWord.relLeft;
+          s.lastLineIndex = activeWord.lineIndex;
+          if (trail) trail.style.width = '0px';
         } else {
-          // Detecta quebra de linha: levanta suavemente a ponta do lápis
-          if (Math.abs(target.y - s.lastLineY) > 12) {
-            s.lineStartX = target.wordLeft;
-            s.lastLineY = target.y;
-
-            setIsLifting(true);
-            clearTimeout(s.liftTimer);
-            s.liftTimer = setTimeout(() => setIsLifting(false), 190);
-
-            // Zera temporariamente o rastro para não cruzar linhas
-            if (trailRef.current) {
-              trailRef.current.style.width = '0px';
-            }
-          }
-
-          // Se a distância for muito grande (mudança de bloco ou seek > 140px), salta direto sem arrastar
-          const dist = Math.hypot(target.x - s.curX, target.y - s.curY);
-          if (dist > 140) {
-            s.curX = target.x;
-            s.curY = target.y;
-            s.lineStartX = target.wordLeft;
-            s.lastLineY = target.y;
-            if (trailRef.current) {
-              trailRef.current.style.width = '0px';
-            }
-          } else {
-            // Interpolação adaptativa que responde à velocidade de reprodução
-            const rate = pRate || 1;
-            const lerpFactor = 1 - Math.exp(-24 * dt * Math.max(0.8, rate));
-            s.curX += (target.x - s.curX) * lerpFactor;
-            s.curY += (target.y - s.curY) * lerpFactor;
-          }
+          // Interpolação suave respondendo diretamente à velocidade de reprodução
+          const rate = sync.playbackRate || 1;
+          const lerpFactor = 1 - Math.exp(-32 * dt * Math.max(0.8, rate));
+          s.curX += (targetX - s.curX) * lerpFactor;
+          s.curY += (targetY - s.curY) * lerpFactor;
         }
+      }
 
-        if (cursorRef.current) {
-          cursorRef.current.style.transform = `translate3d(${s.curX.toFixed(1)}px, ${s.curY.toFixed(1)}px, 0)`;
-        }
+      cursor.style.transform = `translate3d(${s.curX.toFixed(1)}px, ${s.curY.toFixed(1)}px, 0)`;
 
-        if (trailRef.current) {
-          const startX = Math.min(s.lineStartX, s.curX);
-          const width = Math.max(0, s.curX - startX);
-          trailRef.current.style.transform = `translate3d(${startX.toFixed(1)}px, ${(s.curY - 1).toFixed(1)}px, 0)`;
-          trailRef.current.style.width = `${width.toFixed(1)}px`;
-        }
+      if (trail) {
+        const startX = Math.min(s.lineStartX, s.curX);
+        const width = Math.max(0, s.curX - startX);
+        trail.style.transform = `translate3d(${startX.toFixed(1)}px, ${(s.curY - 1).toFixed(1)}px, 0)`;
+        trail.style.width = `${width.toFixed(1)}px`;
       }
 
       rafId = requestAnimationFrame(tick);
@@ -483,32 +497,30 @@ export function ReadingPencilGuide({
     return () => {
       cancelAnimationFrame(rafId);
     };
-  }, [enabled]);
+  }, [enabled, activeBlockId, measureTargetElement]);
 
   if (!enabled) return null;
 
-  const isActive = isPlaying || isLoading || currentTime > 0;
-  const isWriting = isPlaying && !isLoading;
-  const isWaiting = (isLoading || !isPlaying) && isActive;
+  const isWriting = isActiveLayer && !isLifting;
 
   return (
     <div
-      className={`tts-pencil-layer ${isActive ? 'is-active' : ''}`}
+      className={`tts-pencil-layer ${isActiveLayer ? 'is-active' : ''}`}
       aria-hidden="true"
     >
-      {/* Rastro de grafite editorial */}
+      {/* Rastro fino de grafite editorial sob o texto */}
       <div ref={trailRef} className="tts-pencil-trail" />
 
-      {/* Cursor com o Lápis Animado */}
+      {/* Cursor com o Lápis Animado Monocromático */}
       <div
         ref={cursorRef}
-        className={`tts-pencil-cursor ${isWriting ? 'is-writing' : ''} ${isWaiting ? 'is-waiting' : ''} ${isLifting ? 'is-lifting' : ''}`}
+        className={`tts-pencil-cursor ${isWriting ? 'is-writing' : ''} ${isLifting ? 'is-lifting' : ''}`}
       >
         <div className="tts-pencil-rig">
-          {/* Ponto de grafite exato (0,0) */}
+          {/* Ponto de grafite de precisão */}
           <span className="tts-pencil-tip-dot" />
 
-          {/* SVG Fiel do Lápis Editorial Monocromático */}
+          {/* SVG Fiel do Lápis Editorial */}
           <svg
             className="tts-pencil-svg"
             viewBox="-4 -4 56 56"
@@ -518,26 +530,78 @@ export function ReadingPencilGuide({
             xmlns="http://www.w3.org/2000/svg"
           >
             <g transform="rotate(38 0 0)">
-              {/* Sombra projetada no papel */}
+              {/* Sombra de grafite no papel */}
               <path
                 d="M 1 2 L 12 6.5 L 45 6.5 L 45 1.5 L 12 1.5 Z"
                 fill="rgba(0,0,0,0.12)"
                 transform="translate(1.5, 3.5)"
               />
+
               {/* Ponta de grafite */}
-              <polygon points="0,0 4.5,-1.8 4.5,1.8" className="pencil-lead" />
-              {/* Cone de madeira apontada */}
-              <polygon points="4.5,-1.8 11.5,-4.2 11.5,4.2 4.5,1.8" className="pencil-wood" />
-              <path d="M 11.5 -4.2 Q 10 -2.1 11.5 0 Q 10 2.1 11.5 4.2" className="pencil-wood-collar" />
-              {/* Corpo hexagonal */}
-              <rect x="11.5" y="-4.2" width="24" height="8.4" className="pencil-body" />
-              <line x1="11.5" y1="-1.5" x2="35.5" y2="-1.5" className="pencil-facet" />
-              <line x1="11.5" y1="1.5" x2="35.5" y2="1.5" className="pencil-facet" />
+              <polygon
+                points="0,0 4.5,-1.8 4.5,1.8"
+                className="pencil-lead"
+              />
+
+              {/* Madeira apontada cônica */}
+              <polygon
+                points="4.5,-1.8 11.5,-4.2 11.5,4.2 4.5,1.8"
+                className="pencil-wood"
+              />
+              <path
+                d="M 11.5 -4.2 Q 10 -2.1 11.5 0 Q 10 2.1 11.5 4.2"
+                className="pencil-wood-collar"
+              />
+
+              {/* Corpo hexagonal do lápis */}
+              <rect
+                x="11.5"
+                y="-4.2"
+                width="24"
+                height="8.4"
+                className="pencil-body"
+              />
+
+              {/* Facetas de reflexo da madeira/verniz */}
+              <line
+                x1="11.5"
+                y1="-1.5"
+                x2="35.5"
+                y2="-1.5"
+                className="pencil-facet"
+              />
+              <line
+                x1="11.5"
+                y1="1.5"
+                x2="35.5"
+                y2="1.5"
+                className="pencil-facet"
+              />
+
               {/* Virola metálica */}
-              <rect x="35.5" y="-4.2" width="4.5" height="8.4" className="pencil-ferrule" />
-              <line x1="37" y1="-4.2" x2="37" y2="4.2" className="pencil-ferrule-band" />
-              <line x1="38.5" y1="-4.2" x2="38.5" y2="4.2" className="pencil-ferrule-band" />
-              {/* Borracha traseira */}
+              <rect
+                x="35.5"
+                y="-4.2"
+                width="4.5"
+                height="8.4"
+                className="pencil-ferrule"
+              />
+              <line
+                x1="37"
+                y1="-4.2"
+                x2="37"
+                y2="4.2"
+                className="pencil-ferrule-band"
+              />
+              <line
+                x1="38.5"
+                y1="-4.2"
+                x2="38.5"
+                y2="4.2"
+                className="pencil-ferrule-band"
+              />
+
+              {/* Borracha editorial na ponta */}
               <path
                 d="M 40 -4.2 H 43.5 A 2.2 2.2 0 0 1 45.7 -2 V 2 A 2.2 2.2 0 0 1 43.5 4.2 H 40 Z"
                 className="pencil-eraser"

@@ -5,6 +5,7 @@ import {
   generateLayeredFallbackPayload,
   getMasterRedacaoBook
 } from '../services/llm.js';
+import { evaluateEssayWithAi } from '../services/essayEvaluator.js';
 import { BookDoc, Chapter, AGENT_PERSONAS, AgentId } from '@mono-reader/shared';
 
 export const aiRouter = Router();
@@ -265,6 +266,30 @@ aiRouter.post('/chat', async (req: Request, res: Response) => {
     },
     model: 'Motor de Persona Fallback',
   });
+});
+
+aiRouter.post('/evaluate-essay', async (req: Request, res: Response) => {
+  const { essayText, theme = '', apiKey, model } = req.body;
+
+  if (!essayText || typeof essayText !== 'string' || !essayText.trim()) {
+    return res.status(400).json({
+      status: 'error',
+      message: 'O texto da redação é obrigatório para avaliação da banca.',
+    });
+  }
+
+  try {
+    const evaluation = await evaluateEssayWithAi(essayText, theme, apiKey, model);
+    return res.json({
+      status: 'ok',
+      evaluation,
+    });
+  } catch (err: any) {
+    return res.status(500).json({
+      status: 'error',
+      message: err?.message || 'Falha ao avaliar a redação.',
+    });
+  }
 });
 
 aiRouter.post('/deepen', async (req: Request, res: Response) => {

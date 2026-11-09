@@ -8,6 +8,7 @@ import { CatalogItem } from '@mono-reader/shared';
 import { ThemeToggle } from '@/components/ThemeToggle';
 import { BookCard } from '@/components/BookCard';
 import { AiStudio } from '@/components/AiStudio';
+import { EnemEssayCorrector } from '@/components/EnemEssayCorrector';
 
 export default function HomePage() {
   const [catalog, setCatalog] = useState<CatalogItem[]>([]);
@@ -88,6 +89,9 @@ export default function HomePage() {
 
         {/* Estúdio de Criação por IA */}
         <AiStudio onBookGenerated={loadAllBooks} />
+
+        {/* Agente Examinador de Redação ENEM */}
+        <EnemEssayCorrector />
 
         {/* Barra de Filtros e Busca */}
         <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-4 mb-6">

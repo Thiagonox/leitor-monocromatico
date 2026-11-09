@@ -14,6 +14,7 @@ import {
   Layers,
 } from 'lucide-react';
 import { requestTTS, resolveAudioUrl } from '../lib/api';
+import { audioSyncBus, analyzeAudioEnvelope, AcousticProfile } from '../lib/audioSync';
 
 export interface AudioBlockItem {
   index: number;
@@ -108,6 +109,7 @@ interface ScheduledSlot {
   source: AudioBufferSourceNode;
   gain: GainNode;
   buffer: AudioBuffer;
+  acousticProfile?: AcousticProfile;
   startCtxTime: number;
   startOffset: number;
   endCtxTime: number;
@@ -136,8 +138,8 @@ export function AudioPlayerModal({
   const [prefetchedCount, setPrefetchedCount] = useState(0);
 
   const audioCtxRef = useRef<AudioContext | null>(null);
-  const decodedCacheRef = useRef<Map<string, { buffer: AudioBuffer; cached: boolean }>>(new Map());
-  const inflightRef = useRef<Map<string, Promise<{ buffer: AudioBuffer; cached: boolean } | null>>>(new Map());
+  const decodedCacheRef = useRef<Map<string, { buffer: AudioBuffer; cached: boolean; acousticProfile?: AcousticProfile }>>(new Map());
+  const inflightRef = useRef<Map<string, Promise<{ buffer: AudioBuffer; cached: boolean; acousticProfile?: AcousticProfile } | null>>>(new Map());
 
   const currentSlotRef = useRef<ScheduledSlot | null>(null);
   const nextSlotRef = useRef<ScheduledSlot | null>(null);
@@ -166,7 +168,7 @@ export function AudioPlayerModal({
     return `${v}:${block.id}:${block.text.slice(0, 80)}`;
   }, []);
 
-  // Notifica o leitor principal e o Lápis de Leitura a 60fps
+  // Notifica o leitor principal com baixa frequência (apenas transições de estado macro)
   useEffect(() => {
     onPlaybackUpdate?.({
       isPlaying,
@@ -177,11 +179,11 @@ export function AudioPlayerModal({
       totalBlocks: blocks.length,
       playbackRate: rate,
     });
-  }, [isPlaying, currentTime, duration, isLoading, activeBlockIndex, blocks.length, rate, onPlaybackUpdate]);
+  }, [isPlaying, isLoading, activeBlockIndex, blocks.length, rate, onPlaybackUpdate]);
 
   // Busca o áudio do bloco no Bucket S3 (ou gera via HeyGen) e decodifica em AudioBuffer
   const fetchAndDecodeBlock = useCallback(
-    async (blockIndex: number, targetVoice: string): Promise<{ buffer: AudioBuffer; cached: boolean } | null> => {
+    async (blockIndex: number, targetVoice: string): Promise<{ buffer: AudioBuffer; cached: boolean; acousticProfile?: AcousticProfile } | null> => {
       const list = blocksRef.current;
       if (blockIndex < 0 || blockIndex >= list.length) return null;
       const block = list[blockIndex];
@@ -216,10 +218,12 @@ export function AudioPlayerModal({
           const ctx = getAudioCtx();
           const rawAudioBuf = await ctx.decodeAudioData(arrayBuf.slice(0));
           const cleanAudioBuf = trimAudioBuffer(ctx, rawAudioBuf);
+          const acousticProfile = analyzeAudioEnvelope(cleanAudioBuf);
 
           const entry = {
             buffer: cleanAudioBuf,
             cached: Boolean(res.cached),
+            acousticProfile,
           };
           decodedCacheRef.current.set(key, entry);
 
@@ -296,6 +300,7 @@ export function AudioPlayerModal({
       source,
       gain,
       buffer: decoded.buffer,
+      acousticProfile: decoded.acousticProfile,
       startCtxTime: stitchTime,
       startOffset: 0,
       endCtxTime: nextEndCtxTime,
@@ -330,6 +335,7 @@ export function AudioPlayerModal({
       cancelAnimationFrame(rafRef.current);
       rafRef.current = null;
     }
+    audioSyncBus.emit({ isPlaying: false });
     if (currentSlotRef.current) {
       try {
         currentSlotRef.current.source.onended = null;
@@ -404,6 +410,7 @@ export function AudioPlayerModal({
         source,
         gain,
         buffer: decoded.buffer,
+        acousticProfile: decoded.acousticProfile,
         startCtxTime: startAt,
         startOffset: safeOffset,
         endCtxTime: endAt,
@@ -421,6 +428,17 @@ export function AudioPlayerModal({
         activeIdxRef.current = blockIndex;
         onActiveBlockChange(blockIndex);
       }
+
+      audioSyncBus.emit({
+        blockIndex,
+        blockId: `reader-block-${blockIndex}`,
+        currentTime: safeOffset,
+        duration: decoded.buffer.duration,
+        isPlaying: true,
+        isLoading: false,
+        playbackRate: curRate,
+        acousticProfile: decoded.acousticProfile,
+      });
 
       // Tenta pré-agendar o próximo bloco no relógio de hardware imediatamente
       scheduleNextSlotIfReady();
@@ -458,6 +476,17 @@ export function AudioPlayerModal({
             setDuration(promoted.buffer.duration);
             setCurrentTime(0);
 
+            audioSyncBus.emit({
+              blockIndex: promoted.blockIndex,
+              blockId: `reader-block-${promoted.blockIndex}`,
+              currentTime: 0,
+              duration: promoted.buffer.duration,
+              isPlaying: true,
+              isLoading: false,
+              playbackRate: rateRef.current,
+              acousticProfile: promoted.acousticProfile,
+            });
+
             // Configura fallback onended para o bloco recém-promovido
             promoted.source.onended = () => {
               if (!isPlayingRef.current) return;
@@ -472,6 +501,7 @@ export function AudioPlayerModal({
                 } else {
                   isPlayingRef.current = false;
                   setIsPlaying(false);
+                  audioSyncBus.emit({ isPlaying: false });
                 }
               }
             };
@@ -481,8 +511,20 @@ export function AudioPlayerModal({
             scheduleNextSlotIfReady();
           } else {
             const elapsed = Math.max(0, (now - cur.startCtxTime) * rateRef.current + cur.startOffset);
-            setCurrentTime(Math.min(cur.buffer.duration, elapsed));
+            const clampedCurrent = Math.min(cur.buffer.duration, elapsed);
+            setCurrentTime(clampedCurrent);
             setDuration(cur.buffer.duration);
+
+            audioSyncBus.emit({
+              blockIndex: cur.blockIndex,
+              blockId: `reader-block-${cur.blockIndex}`,
+              currentTime: clampedCurrent,
+              duration: cur.buffer.duration,
+              isPlaying: true,
+              playbackRate: rateRef.current,
+              acousticProfile: cur.acousticProfile,
+            });
+
             scheduleNextSlotIfReady();
           }
         }

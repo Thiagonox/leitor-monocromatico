@@ -203,3 +203,43 @@ export interface TTSRequest {
   apiKey?: string;
   model?: string;
 }
+
+export interface EssayCompetencyScore {
+  number: number;
+  name: string;
+  score: number;
+  maxScore: number;
+  level: string;
+  feedback: string;
+  positives: string[];
+  deviations: string[];
+  improvement: string;
+}
+
+export interface EssayCorrectionResult {
+  totalScore: number;
+  theme: string;
+  wordCount: number;
+  paragraphCount: number;
+  estimatedLines: number;
+  competencies: EssayCompetencyScore[];
+  c5Checklist: {
+    agente: { present: boolean; text: string };
+    acao: { present: boolean; text: string };
+    meio: { present: boolean; text: string };
+    efeito: { present: boolean; text: string };
+    detalhamento: { present: boolean; text: string };
+  };
+  generalVerdict: string;
+  strengths: string[];
+  criticalCorrections: string[];
+  evaluatorName: string;
+  modelUsed?: string;
+}
+
+export interface EvaluateEssayRequest {
+  essayText: string;
+  theme?: string;
+  apiKey?: string;
+  model?: string;
+}

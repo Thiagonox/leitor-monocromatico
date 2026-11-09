@@ -9,6 +9,8 @@ import {
   ChatResponse,
   Section,
   AgentId,
+  EssayCorrectionResult,
+  EvaluateEssayRequest,
 } from '@mono-reader/shared';
 
 const API_BASE = process.env.NEXT_PUBLIC_API_URL || '';
@@ -191,4 +193,24 @@ export async function sendAgentChatMessage(payload: ChatRequest): Promise<ChatRe
   }
 
   return data;
+}
+
+export async function evaluateEssay(payload: EvaluateEssayRequest): Promise<EssayCorrectionResult> {
+  const res = await fetch(`${API_BASE}/api/ai/evaluate-essay`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(payload),
+  });
+
+  if (!res.ok) {
+    const errorData = await res.json().catch(() => ({}));
+    throw new Error(errorData.message || `Falha na avaliação da redação: HTTP ${res.status}`);
+  }
+
+  const data = await res.json();
+  if (data.status !== 'ok' || !data.evaluation) {
+    throw new Error(data.message || 'Resposta de avaliação inválida.');
+  }
+
+  return data.evaluation;
 }
