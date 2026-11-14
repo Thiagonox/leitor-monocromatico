@@ -1,0 +1,587 @@
+{
+  "meta": {
+    "id": "matematica-enem-resumo-30min",
+    "title": "Resumão Relâmpago de Matemática ENEM (30 Min)",
+    "subtitle": "Toda a Grade do 2º Dia em Linguagem de Curso Direta ao Ponto: Fórmulas Essenciais, Atalhos e Pegadinhas por Ordem de TRI",
+    "author": "Prof. Antigravity & Colegiado de Matemática",
+    "category": "Resumão 30 Min · Matemática ENEM",
+    "chaptersCount": 13,
+    "estimatedReadingTime": "Aprox. 29 min (Resumão Contido · 13 Capítulos)",
+    "description": "A revisão mais enxuta e cirúrgica de todo o edital de Matemática (45 questões) em ~30 minutos de leitura ou áudio. Cobre 100% dos 12 módulos em linguagem de curso sem enrolação: Aritmética e Conjuntos, Razão/Proporção/Escalas/Regra de Três, Porcentagem e Financeira, Estatística e Gráficos, Geometria Plana e Espacial, Álgebra, Funções (Afim, Quadrática, Exponencial e Logarítmica), Sequências (PA/PG), Trigonometria, Geometria Analítica, Probabilidade e Combinatória.",
+    "isGeneratedByAI": true
+  },
+  "chapters": [
+    {
+      "id": "mat-res-cap-1",
+      "number": "I",
+      "title": "Rota TRI 800+ & Aritmética Básica",
+      "epigraph": {
+        "text": "Na TRI, consistência vale mais que heroísmo: garanta primeiro cada questão fácil e média.",
+        "author": "Regra de Ouro do 2º Dia"
+      },
+      "sections": [
+        {
+          "type": "heading",
+          "level": 2,
+          "content": "A Lógica da TRI e as Duas Passadas"
+        },
+        {
+          "type": "paragraph",
+          "content": "Na prova de Matemática, 45 questões valem notas diferentes pela Teoria de Resposta ao Item (TRI). Quem acerta as fáceis e médias e erra as difíceis mostra coerência e ganha nota alta; quem erra fáceis por pressa e acerta difíceis no chute perde pontos preciosos. Por isso, use as Duas Passadas: na 1ª passada, ataque só as fáceis e rápidas (até 2 minutos) lendo o comando final primeiro; na 2ª passada, volte com calma às médias e deixe monstros para o chute final."
+        },
+        {
+          "type": "paragraph",
+          "content": "Para blindar a base, domine os conjuntos numéricos e as quatro operações sem tropeçar em sinal ou vírgula: naturais (N: 0, 1, 2...) servem para contar; inteiros (Z) trazem negativos; racionais (Q) viram fração a/b ou dízima periódica; reais (R) juntam racionais e irracionais como pi e raiz de 2. Lembre da ordem operacional: parênteses, potências, multiplicação ou divisão da esquerda para a direita, e soma ou subtração. Truque rápido: dividir por 0,5 equivale a multiplicar por 2!"
+        },
+        {
+          "type": "heading",
+          "level": 2,
+          "content": "Potências, Notação Científica, MMC e MDC"
+        },
+        {
+          "type": "paragraph",
+          "content": "Em potenciação e radiciação, mesma base multiplicando soma expoentes; dividindo, subtrai; expoente negativo inverte a base; expoente fracionário vira raiz, como 8^(2/3) = raiz cúbica de 8² = 4. Na notação científica a × 10^n, a mantissa 'a' precisa ficar entre 1 e 10 (1 ≤ |a| < 10). Pegadinha clássica do INEP: marcar 35 × 10^4 em vez de ajustar para 3,5 × 10^5 aumentando o expoente quando a vírgula recua."
+        },
+        {
+          "type": "callout",
+          "title": "Múltiplos, Divisores e Exemplo Relâmpago de MMC e MDC",
+          "content": "Quando usar MMC ou MDC? Use MMC em encontros periódicos ('de quanto em quanto tempo coincidem') e MDC para repartir no maior tamanho igual sem sobra! Exemplo relâmpago: dois ônibus partem às 8h com intervalos de 12 e 18 minutos; fatorando juntos, MMC(12, 18) = 36, logo reencontram às 8h36. Já para cortar fitas de 12 m e 18 m em pedaços máximos idênticos, pegue o maior divisor comum: MDC(12, 18) = 6 metros por pedaço!"
+        },
+        {
+          "type": "quote",
+          "content": "Blindar a aritmética básica elimina erros bobos e coloca você na faixa dos 800+ antes mesmo dos temas difíceis.",
+          "author": "Manual do Vestibulando Estratégico"
+        }
+      ],
+      "quiz": []
+    },
+    {
+      "id": "mat-res-cap-2",
+      "number": "II",
+      "title": "Razão, Proporção, Divisão Proporcional, Escalas & Regra de Três",
+      "epigraph": {
+        "text": "Quem confunde escala linear com escala de área ou volume cai na armadilha mais antiga do ENEM.",
+        "author": "Alerta Clássico de Prova"
+      },
+      "sections": [
+        {
+          "type": "heading",
+          "level": 2,
+          "content": "Razão, Proporção e Divisão Proporcional"
+        },
+        {
+          "type": "paragraph",
+          "content": "Razão é a comparação por quociente a/b entre duas medidas (como velocidade, densidade demográfica ou rendimento), e proporção é a igualdade entre razões onde o produto dos meios iguala o dos extremos. Grandezas diretamente proporcionais variam no mesmo sentido mantendo quociente constante; grandezas inversamente proporcionais variam em sentidos opostos mantendo produto constante. Exemplo rápido: se 4 máquinas imprimem um lote em 6 horas, 8 máquinas (o dobro) imprimem na metade do tempo, ou seja, em 3 horas."
+        },
+        {
+          "type": "paragraph",
+          "content": "Na divisão diretamente proporcional, some as partes, ache o valor de 1 cota e multiplique. Para repartir R$ 600 proporcionalmente a 2 e 3: 2 + 3 = 5 cotas, cada cota vale 600 ÷ 5 = 120, gerando R$ 240 e R$ 360. Já na divisão inversamente proporcional a 2 e 3, inverta os números para 1/2 e 1/3, iguale os denominadores em 3/6 e 2/6, e divida diretamente proporcional aos numeradores 3 e 2: quem tem menor peso leva mais (R$ 360 e R$ 240)!"
+        },
+        {
+          "type": "heading",
+          "level": 2,
+          "content": "Regra de Três Composta e Escalas E, E² e E³"
+        },
+        {
+          "type": "paragraph",
+          "content": "Na regra de três simples ou composta, isole a coluna do X de um lado da igualdade e compare cada grandeza restante com ela individualmente, perguntando 'aumentando isso, X sobe ou desce?': se sobe, mantenha a fração; se desce, inverta a fração antes de multiplicar. Pegadinha fatal do INEP: esquecer de inverter colunas como velocidade, eficiência ou número de operários quando a pergunta envolve o tempo necessário para concluir a tarefa."
+        },
+        {
+          "type": "callout",
+          "title": "Ouro do ENEM: Escala Linear E, Área E² e Volume E³",
+          "content": "Escala E = medida no desenho dividida pela medida real, sempre convertendo tudo para a mesma unidade (1 m = 100 cm)! Mas atenção mortal: se a razão linear é E, a razão entre áreas é E² e entre volumes é E³. Exemplo relâmpago: numa maquete na escala 1:20, uma piscina miniatura tem 3 cm³ de volume. Qual o volume real? Multiplique por 20³ = 8.000: o volume real é 3 × 8.000 = 24.000 cm³, ou exatamente 24 litros!"
+        },
+        {
+          "type": "quote",
+          "content": "Regra de três e escala bem montadas respondem por quase um quarto dos seus acertos seguros.",
+          "author": "Caderno de Tiro Curto"
+        }
+      ],
+      "quiz": []
+    },
+    {
+      "id": "mat-res-cap-3",
+      "number": "III",
+      "title": "Porcentagem & Matemática Financeira",
+      "epigraph": {
+        "text": "Subir 20% e cair 20% nunca devolve o preço original: o fator multiplicativo mostra a verdade na hora.",
+        "author": "Princípio da Base Variável"
+      },
+      "sections": [
+        {
+          "type": "heading",
+          "level": 2,
+          "content": "Fator Multiplicativo, Aumentos Sucessivos e Inflação"
+        },
+        {
+          "type": "paragraph",
+          "content": "Troque a regra de três demorada pelo fator multiplicativo! Aumentar p% equivale a multiplicar por (1 + p/100); descontar p% equivale a multiplicar por (1 - p/100). Em aumentos ou descontos sucessivos, basta multiplicar os fatores em sequência. Pegadinha clássica do INEP: subir 20% e depois dar 20% de desconto não devolve o preço inicial! Veja na ponta do lápis: 1,20 × 0,80 = 0,96, ou seja, ocorre uma queda real líquida de 4% sobre o valor original."
+        },
+        {
+          "type": "paragraph",
+          "content": "Nunca subtraia a inflação direto da taxa nominal para achar a variação percentual real! Use a relação exata: (1 + i_real) = (1 + i_aparente) ÷ (1 + inflação). Se um investimento rendeu 21% num ano de inflação 10%, faça 1,21 ÷ 1,10 = 1,10, obtendo ganho real de 10% (e não 11%). E atenção às taxas equivalentes em juros compostos: 10% ao mês resulta em (1,10)^12 - 1 ao ano, muito maior que os 120% de juros simples."
+        },
+        {
+          "type": "heading",
+          "level": 2,
+          "content": "Juros, Parcelamentos e Relação Custo, Receita e Lucro"
+        },
+        {
+          "type": "paragraph",
+          "content": "Juros simples crescem em linha reta sobre o capital inicial: J = C·i·t e M = C(1 + i·t). Juros compostos crescem exponencialmente sobre o saldo acumulado: M = C(1 + i)^t. Em financiamentos e parcelamentos, compare o valor à vista com a soma descontada das parcelas (dividindo cada parcela futura por (1 + i)^t): se houver entrada à vista, abata a entrada primeiro porque juros reais incidem somente sobre o saldo financiado!"
+        },
+        {
+          "type": "callout",
+          "title": "Lucro sobre Custo vs. Lucro sobre Venda (Exemplo Relâmpago)",
+          "content": "Lembre sempre da equação comercial: Lucro = Receita - Custo. A grande pegadinha das lojas no ENEM é confundir lucro sobre o custo com lucro sobre o preço de venda! Exemplo relâmpago: um livro custa R$ 80 e o lojista quer lucrar 20% sobre o preço de venda V. Não faça 80 × 1,20! Se o lucro é 20% de V, o custo R$ 80 equivale a 80% de V: 0,80·V = 80, logo V = R$ 100!"
+        },
+        {
+          "type": "quote",
+          "content": "Quem domina o fator multiplicativo resolve metade da prova financeira de cabeça e sem tropeços.",
+          "author": "Lição de Sala"
+        }
+      ],
+      "quiz": []
+    },
+    {
+      "id": "mat-res-cap-4",
+      "number": "IV",
+      "title": "Estatística Descritiva, Tabelas & Gráficos",
+      "epigraph": {
+        "text": "Antes de somar qualquer coluna, leia o eixo, a unidade e cheque se a barra começou no zero.",
+        "author": "Protocolo Anti-Pegadinha"
+      },
+      "sections": [
+        {
+          "type": "heading",
+          "level": 2,
+          "content": "Leitura Cirúrgica, Média, Moda e Mediana"
+        },
+        {
+          "type": "paragraph",
+          "content": "Em tabelas e gráficos, o INEP adora cortar o eixo vertical para exagerar diferenças visuais entre barras ou misturar escalas e unidades (milhões num eixo e porcentagem no outro). Leia título, legenda e unidade antes de calcular! Na média aritmética simples, some todos os valores e divida pela quantidade; na média ponderada, multiplique cada valor pelo seu peso (ou frequência) e divida pela soma total dos pesos — nunca divida só pelo número de linhas da tabela."
+        },
+        {
+          "type": "paragraph",
+          "content": "Moda é o valor que aparece com maior frequência na amostra (cuidado: não é o maior número da lista, e sim o mais repetido!). Mediana é o termo central da distribuição DEPOIS de ordená-la em rol crescente ou decrescente. Pegadinha fatal do ENEM: pegar o número do meio da tabela sem ordenar os valores antes! Se a quantidade de dados for ímpar, há um centro exato; se for par, tire a média aritmética dos dois valores centrais."
+        },
+        {
+          "type": "heading",
+          "level": 2,
+          "content": "Amplitude, Variância e Desvio Padrão Sem Sofrer"
+        },
+        {
+          "type": "paragraph",
+          "content": "Duas equipes podem ter exatamente a mesma média e desempenhos completamente opostos! Medidas de dispersão revelam esse espalhamento. A amplitude é apenas a diferença entre o maior e o menor dado. A variância é a média dos quadrados dos desvios em relação à média, e o desvio padrão é a raiz quadrada da variância. No ENEM, raramente você precisa calcular a conta inteira: compare visualmente qual grupo tem valores mais próximos entre si e da média geral."
+        },
+        {
+          "type": "callout",
+          "title": "Regra da Regularidade & Exemplo Relâmpago de Mediana",
+          "content": "Guarde a regra de ouro da dispersão: quanto MENOR o desvio padrão (ou variância), MAIS regular, estável e homogênea é a produção ou o candidato! Exemplo relâmpago de mediana: dados os tempos {14, 10, 18, 12} de um corredor, primeiro ordene o rol em {10, 12, 14, 18}. Como há 4 termos (quantidade par), faça a média dos dois centrais: (12 + 14) ÷ 2 = 13 segundos. Simples, rápido e blindado contra pegadinha!"
+        },
+        {
+          "type": "quote",
+          "content": "Média mostra o centro; desvio padrão mostra se o terreno é firme ou uma montanha-russa.",
+          "author": "Síntese Estatística"
+        }
+      ],
+      "quiz": []
+    },
+    {
+      "id": "mat-res-cap-5",
+      "number": "V",
+      "title": "Geometria Plana I: Ângulos, Triângulos, Pitágoras & Semelhança",
+      "epigraph": {
+        "text": "Em retas paralelas, agudo iguala agudo, obtuso iguala obtuso, e um de cada soma cento e oitenta.",
+        "author": "Atalho Geométrico"
+      },
+      "sections": [
+        {
+          "type": "heading",
+          "level": 2,
+          "content": "Ângulos, Polígonos e Propriedades dos Triângulos"
+        },
+        {
+          "type": "paragraph",
+          "content": "Ângulos opostos pelo vértice são sempre iguais. Em duas retas paralelas cortadas por uma transversal, todos os ângulos agudos são iguais entre si, todos os obtusos são iguais entre si, e qualquer agudo somado a um obtuso dá 180° — assim você resolve alternos e colaterais sem decoreba! Em qualquer polígono convexo de n lados, a soma dos ângulos internos vale Si = (n - 2)·180°, a dos externos é sempre 360°, e há n(n - 3)/2 diagonais."
+        },
+        {
+          "type": "paragraph",
+          "content": "Em todo triângulo, os ângulos internos somam 180° e cada lado precisa ser estritamente menor que a soma dos outros dois (condição de existência: varetas de 2, 3 e 6 cm nunca fecham um triângulo!). No triângulo isósceles, dois lados iguais garantem dois ângulos iguais na base. No equilátero, os três lados são idênticos, todos os ângulos internos valem 60°, a altura mede L√3/2 e a área vale L²√3/4."
+        },
+        {
+          "type": "heading",
+          "level": 2,
+          "content": "Pitágoras, Relações Métricas e Semelhança (k e k²)"
+        },
+        {
+          "type": "paragraph",
+          "content": "No triângulo retângulo, vale Pitágoras: a² = b² + c². Ganhe minutos valiosos reconhecendo ternos pitagóricos e seus múltiplos: (3, 4, 5) — como (6, 8, 10) ou (15, 20, 25) — e (5, 12, 13). Nas relações métricas com altura h relativa à hipotenusa 'a' e projeções m e n dos catetos, guarde três chaves: b² = a·m, h² = m·n e a·h = b·c, que entrega a altura relativa à hipotenusa em segundos sem nem passar por área."
+        },
+        {
+          "type": "callout",
+          "title": "Semelhança de Triângulos (k e k²) com Exemplo Relâmpago",
+          "content": "Dois triângulos com os mesmos ângulos são semelhantes na razão k: lados, alturas e perímetros multiplicam por k, mas as ÁREAS multiplicam por k²! Exemplo relâmpago: num triângulo retângulo de catetos 6 cm e 8 cm, a hipotenusa é 10 cm (dobro do 3-4-5); logo a altura h sai por 10·h = 6·8, dando h = 4,8 cm. E um triângulo semelhante com lados 3 vezes maiores (k = 3) terá área 3² = 9 vezes maior!"
+        },
+        {
+          "type": "quote",
+          "content": "Reconhecer um múltiplo de 3-4-5 no meio da prova é ganhar dois minutos de presente.",
+          "author": "Dica de Gabarito"
+        }
+      ],
+      "quiz": []
+    },
+    {
+      "id": "mat-res-cap-6",
+      "number": "VI",
+      "title": "Geometria Plana II: Quadriláteros, Círculo, Perímetro & Área",
+      "epigraph": {
+        "text": "Perímetro mede a cerca ao redor do terreno; área mede a grama que cobre o chão por dentro.",
+        "author": "Distinção Essencial"
+      },
+      "sections": [
+        {
+          "type": "heading",
+          "level": 2,
+          "content": "Quadriláteros, Perímetro Composto e Conversões"
+        },
+        {
+          "type": "paragraph",
+          "content": "Domine os cinco quadriláteros clássicos: quadrado (A = L²) e retângulo (A = b·h) têm quatro ângulos de 90°; paralelogramo mantém A = b·h usando sempre a altura perpendicular, nunca o lado inclinado! O losango tem quatro lados iguais, diagonais perpendiculares e área D·d/2. Já o trapézio tem um par de bases paralelas e área (B + b)·h/2. Em perímetros de figuras compostas, some apenas o contorno externo e ignore divisórias internas!"
+        },
+        {
+          "type": "paragraph",
+          "content": "Na conversão de unidades de área, cada salto métrico dobra o número de casas decimais por causa do expoente 2: como 1 m = 100 cm, então 1 m² = 100² cm² = 10.000 cm². Pegadinha clássica de piso e azulejo: dividir a área da sala em m² pela área do piso em cm² sem converter antes! Guarde também a unidade agrária campeã do ENEM: 1 hectare (ha) equivale exatamente a 10.000 m² (um quadrado de 100 m por 100 m)."
+        },
+        {
+          "type": "heading",
+          "level": 2,
+          "content": "Circunferência, Círculo, Setor e Coroa Circular"
+        },
+        {
+          "type": "paragraph",
+          "content": "Separe bem contorno de superfície circular! O comprimento da circunferência (borda da pista ou volta completa de uma roda) é C = 2πR; a área do círculo inteiro é A = πR². Para achar a área de um setor circular de ângulo α (uma fatia de pizza), faça a fração proporcional de 360°: A_setor = (α/360°)·πR². E na coroa circular (anel entre dois círculos concêntricos de raios R e r), basta subtrair os círculos: A_coroa = π(R² - r²)."
+        },
+        {
+          "type": "callout",
+          "title": "Pegadinha do Semicírculo & Exemplo Relâmpago (Use π ≈ 3)",
+          "content": "Muita atenção ao perímetro de um semicírculo: ele não é apenas metade de 2πR! Você precisa somar o segmento reto do diâmetro 2R que fecha a figura. Exemplo relâmpago: um jardim semicircular tem raio 10 m (adote π = 3). A área gramada vale metade do círculo: (3 × 10²) ÷ 2 = 150 m². Já o muro para cercar toda a borda mede πR + 2R = 30 + 20 = 50 metros!"
+        },
+        {
+          "type": "quote",
+          "content": "Cheque sempre se o enunciado informou o raio R ou o diâmetro D antes de elevar ao quadrado.",
+          "author": "Reflexo de Prova"
+        }
+      ],
+      "quiz": []
+    },
+    {
+      "id": "mat-res-cap-7",
+      "number": "VII",
+      "title": "Geometria Espacial: Sólidos, Áreas, Volumes & Planificação",
+      "epigraph": {
+        "text": "Base igual até o topo? Multiplique base por altura. Afinou até uma ponta? Divida por três.",
+        "author": "Família dos Volumes"
+      },
+      "sections": [
+        {
+          "type": "heading",
+          "level": 2,
+          "content": "Volumes e Áreas de Prismas, Pirâmides e Corpos Redondos"
+        },
+        {
+          "type": "paragraph",
+          "content": "Agrupe os sólidos em duas famílias e economize memória! Sólidos retos com duas bases paralelas iguais (cubo V = a³, paralelepípedo V = abc, prismas retos e cilindro V = πR²·h) seguem V = Ab·h. No cubo, área total é 6a²; no paralelepípedo, 2(ab + ac + bc); no cilindro, a lateral aberta vira um retângulo 2πR·h somado às duas tampas 2πR². Já pirâmides e cones (que afinam até uma ponta) valem um terço: V = Ab·h/3!"
+        },
+        {
+          "type": "paragraph",
+          "content": "No cone reto, a geratriz g liga o vértice à borda formando Pitágoras com o raio e a altura (g² = R² + h²), e sua área lateral mede πR·g. A esfera tem regras próprias: área da superfície mede 4πR² e volume mede (4/3)πR³. Pegadinha repetida todo ano no ENEM: informar o diâmetro da lata, do copo ou da bola e induzir o candidato apressado a jogar o diâmetro direto no lugar do raio R!"
+        },
+        {
+          "type": "heading",
+          "level": 2,
+          "content": "Capacidade em Litros e Planificação de Sólidos"
+        },
+        {
+          "type": "paragraph",
+          "content": "Para transformar volume em litros sem errar zeros, memorize só dois elos: 1 dm³ = 1 L (logo 1.000 cm³ = 1 L) e 1 m³ = 1.000 L. Em questões de planificação, visualize abrir a embalagem contando faces e arestas coladas: um cilindro vira um retângulo entre dois círculos; um cone vira um setor circular mais um círculo. Se o problema pedir o menor caminho de uma formiga pela superfície da caixa, planifique as duas faces adjacentes e trace uma reta por Pitágoras!"
+        },
+        {
+          "type": "callout",
+          "title": "Exemplo Relâmpago: Caixa d'Água Cilíndrica em Litros",
+          "content": "Uma caixa cilíndrica tem diâmetro de 2 m e altura de 3 m (adote π = 3). Primeiro passo obrigatório contra pegadinha: divida o diâmetro por 2 para achar o raio R = 1 m! Agora calcule o volume: V = πR²·h = 3 × 1² × 3 = 9 m³. Como cada 1 m³ comporta 1.000 litros, o reservatório armazena exatamente 9 × 1.000 = 9.000 litros de água!"
+        },
+        {
+          "type": "quote",
+          "content": "Abrir o sólido no papel transforma um problema tridimensional intimidador num simples Pitágoras plano.",
+          "author": "Estratégia Espacial"
+        }
+      ],
+      "quiz": []
+    },
+    {
+      "id": "mat-res-cap-8",
+      "number": "VIII",
+      "title": "Álgebra Essencial, Equações, Inequações & Sistemas",
+      "epigraph": {
+        "text": "Nunca distribua o quadrado sobre a soma: o termo do meio '2ab' já derrubou milhares de candidatos.",
+        "author": "Alerta Algébrico"
+      },
+      "sections": [
+        {
+          "type": "heading",
+          "level": 2,
+          "content": "Produtos Notáveis, Fatoração e Equações"
+        },
+        {
+          "type": "paragraph",
+          "content": "Em expressões algébricas, guarde os três produtos notáveis que destravam simplificações: quadrado da soma (a + b)² = a² + 2ab + b², quadrado da diferença (a - b)² = a² - 2ab + b², e diferença de quadrados a² - b² = (a + b)(a - b). Fatorar colocando o fator comum em evidência simplifica frações gigantes na hora. Nunca cometa o erro clássico de escrever (x + 3)² = x² + 9 esquecendo o + 6x!"
+        },
+        {
+          "type": "paragraph",
+          "content": "Na equação do 1º grau, isole o x trocando operações; na inequação do 1º grau, atenção redobrada à regra de ouro: multiplicar ou dividir os dois lados por um número negativo INVERTE o sentido da desigualdade! Na equação do 2º grau ax² + bx + c = 0, use Δ = b² - 4ac e Bhaskara x = (-b ± √Δ)/(2a), ou acelere com Soma = -b/a e Produto = c/a. Na inequação do 2º grau, ache as raízes e analise o sinal da parábola."
+        },
+        {
+          "type": "heading",
+          "level": 2,
+          "content": "Sistemas Lineares e Tradução de Problemas"
+        },
+        {
+          "type": "paragraph",
+          "content": "Para traduzir problemas do português para a álgebra, batize o que a pergunta pede com letras sugestivas e monte as sentenças passo a passo: 'excede em 8' vira + 8; 'o dobro da diferença' vira 2(x - y). Em sistemas de duas equações lineares, o método da adição costuma ser o mais veloz: multiplique uma das linhas para gerar coeficientes opostos e some as equações para cancelar uma incógnita de imediato e resolver direto."
+        },
+        {
+          "type": "callout",
+          "title": "Exemplo Relâmpago: Sistema Clássico de Carros e Motos",
+          "content": "Um estacionamento tem 20 veículos entre carros (4 rodas) e motos (2 rodas), totalizando 64 rodas. Quantos carros há? Monte c + m = 20 e 4c + 2m = 64. Multiplique a primeira equação por -2 obtendo -2c - 2m = -40 e some com a segunda: os termos em 'm' se anulam, sobra 2c = 24, logo c = 12 carros (e 8 motos) em três linhas!"
+        },
+        {
+          "type": "quote",
+          "content": "Traduzir bem a primeira frase do enunciado já é metade da equação resolvida.",
+          "author": "Oficina de Álgebra"
+        }
+      ],
+      "quiz": []
+    },
+    {
+      "id": "mat-res-cap-9",
+      "number": "IX",
+      "title": "Funções I: Conceito, Gráficos, Afim & Quadrática",
+      "epigraph": {
+        "text": "Na função afim, o segredo está na taxa constante; na quadrática, quase toda pergunta mora no vértice.",
+        "author": "Mapa das Funções"
+      },
+      "sections": [
+        {
+          "type": "heading",
+          "level": 2,
+          "content": "Domínio, Imagem e Função Afim (1º Grau)"
+        },
+        {
+          "type": "paragraph",
+          "content": "Função é uma regra que associa cada entrada x do domínio a uma única saída y da imagem. No gráfico cartesiano, você lê o domínio projetando a curva no eixo horizontal x e a imagem projetando no eixo vertical y; onde a curva sobe da esquerda para a direita é crescente, onde desce é decrescente. Já a função afim f(x) = ax + b desenha uma reta com taxa de variação constante."
+        },
+        {
+          "type": "paragraph",
+          "content": "Em f(x) = ax + b, o coeficiente linear 'b' é o valor inicial (bandeirada do táxi, custo fixo) onde a reta corta o eixo vertical y. O coeficiente angular 'a' é a taxa de variação constante por unidade: a = Δy / Δx. Se a > 0 a reta sobe; se a < 0 desce. Pegadinha do ENEM: calcular uma proporção direta (regra de três) esquecendo que existe uma taxa fixa 'b' somada ao preço!"
+        },
+        {
+          "type": "heading",
+          "level": 2,
+          "content": "Função Quadrática (2º Grau) e o Poder do Vértice"
+        },
+        {
+          "type": "paragraph",
+          "content": "A função quadrática f(x) = ax² + bx + c forma uma parábola. O sinal de 'a' manda na concavidade: se a > 0, boca para cima com ponto de mínimo; se a < 0, boca para baixo com ponto de máximo. O termo 'c' corta o eixo y, e as raízes tocam o eixo x conforme o Δ. Leu 'lucro máximo', 'área máxima' ou 'custo mínimo'? Corra para o vértice: Xv = -b/(2a) e Yv = -Δ/(4a) ou f(Xv)."
+        },
+        {
+          "type": "callout",
+          "title": "Pegadinha Xv vs. Yv & Exemplo Relâmpago de Lucro Máximo",
+          "content": "Atenção ao comando final: Xv responde QUANDO ou QUANTOS itens geram o extremo; Yv responde QUAL é o valor máximo ou mínimo! Exemplo relâmpago: o lucro é L(x) = -2x² + 40x - 50 (x em peças). Quantas peças maximizam o lucro e quanto ele vale? Xv = -40 ÷ (2·(-2)) = 10 peças. Substituindo na função: Yv = -2(100) + 40(10) - 50 = R$ 150!"
+        },
+        {
+          "type": "quote",
+          "content": "Em modelagem de funções, saber o que o eixo X e o eixo Y representam vale mais que decorar fórmulas.",
+          "author": "Guia Prático ENEM"
+        }
+      ],
+      "quiz": []
+    },
+    {
+      "id": "mat-res-cap-10",
+      "number": "X",
+      "title": "Funções II: Exponencial, Logarítmica & Sequências (PA e PG)",
+      "epigraph": {
+        "text": "Quando o crescimento multiplica, é exponencial ou PG; quando o número gigante vira degrau suave, é logaritmo.",
+        "author": "Intuição de Modelagem"
+      },
+      "sections": [
+        {
+          "type": "heading",
+          "level": 2,
+          "content": "Função Exponencial, Logaritmo e Escalas Científicas"
+        },
+        {
+          "type": "paragraph",
+          "content": "Na função exponencial f(x) = c·a^x, a variável está no expoente. Se a > 1, cresce rápido; se 0 < a < 1, decai (meia-vida divide por 2 a cada período T: Q(t) = Q0·(1/2)^(t/T)). Já o logaritmo é o expoente escondido: log_b(a) = x significa b^x = a. Para pH, escala Richter e decibéis, domine três propriedades: log(x·y) = log x + log y; log(x/y) = log x - log y; e a regra do tombo log(x^k) = k·log x."
+        },
+        {
+          "type": "paragraph",
+          "content": "Na leitura gráfica, a exponencial básica y = a^x corta o eixo y em (0, 1) e se aproxima do eixo x sem nunca tocá-lo, enquanto a logarítmica y = log_a(x) corta o eixo x em (1, 0) e cresce cada vez mais devagar (só existe para x > 0). Pegadinha clássica de escala: esquecer que na escala Richter (base 10) subir 2 graus na magnitude multiplica a energia sísmica por 10², isto é, 100 vezes!"
+        },
+        {
+          "type": "heading",
+          "level": 2,
+          "content": "Sequências Numéricas: PA e PG no Bolso"
+        },
+        {
+          "type": "paragraph",
+          "content": "Sequência numérica segue uma lei de formação. Na Progressão Aritmética (PA), somamos sempre a mesma razão r: termo geral an = a1 + (n - 1)r e soma dos termos Sn = (a1 + an)·n/2. Na Progressão Geométrica (PG), multiplicamos sempre pela razão q: termo geral an = a1·q^(n-1), soma finita Sn = a1(q^n - 1)/(q - 1), e soma infinita convergente (quando |q| < 1) S_inf = a1/(1 - q)."
+        },
+        {
+          "type": "callout",
+          "title": "Exemplo Relâmpago: Meia-Vida na Prática e Soma de PG Infinita",
+          "content": "Um medicamento de 80 mg tem meia-vida de 4 horas no organismo. Em quanto tempo a massa ativa cai para 5 mg? Conte as metades passo a passo: 80 → 40 → 20 → 10 → 5 mg. Foram 4 divisões sucessivas de 4 horas cada, logo 16 horas! E numa PG infinita com a1 = 12 e razão q = 1/3: aplique direto a fórmula S_inf = 12 ÷ (1 - 1/3) = 12 ÷ (2/3) = 18!"
+        },
+        {
+          "type": "quote",
+          "content": "Contar passos de meia-vida no braço costuma ser mais rápido e seguro do que armar logaritmos longos.",
+          "author": "Truque de Véspera"
+        }
+      ],
+      "quiz": []
+    },
+    {
+      "id": "mat-res-cap-11",
+      "number": "XI",
+      "title": "Trigonometria no Triângulo & Leis dos Senos e Cossenos",
+      "epigraph": {
+        "text": "Dois ângulos na mesa? Lei dos Senos. Dois lados e o ângulo no meio deles? Lei dos Cossenos.",
+        "author": "Bússola Trigonométrica"
+      },
+      "sections": [
+        {
+          "type": "heading",
+          "level": 2,
+          "content": "SOHCAHTOA, Ângulos Notáveis e Relação Fundamental"
+        },
+        {
+          "type": "paragraph",
+          "content": "No triângulo retângulo, posicione-se no ângulo agudo α e aplique o mantra SOHCAHTOA: Seno = Oposto / Hipotenusa; Cosseno = Adjacente / Hipotenusa; Tangente = Oposto / Adjacente (lembrando também que tg α = sen α / cos α). Se o enunciado der apenas o seno e pedir o cosseno, aplique a relação fundamental sen²α + cos²α = 1 para achar o outro valor em segundos sem desenhar triângulo algum!"
+        },
+        {
+          "type": "paragraph",
+          "content": "Tenha na ponta da língua a tabela dos ângulos notáveis (30°, 45° e 60°): para o seno, monte '1, 2, 3' sobre 2 com raiz no numerador (1/2, √2/2, √3/2); para o cosseno, inverta a ordem (√3/2, √2/2, 1/2); para a tangente, √3/3, 1 e √3. Pegadinha clássica do INEP: usar tangente quando a medida dada na rampa, escada ou cabo esticado é a hipotenusa — envolvendo hipotenusa, use seno ou cosseno!"
+        },
+        {
+          "type": "heading",
+          "level": 2,
+          "content": "Triângulos Quaisquer: Lei dos Senos e Lei dos Cossenos"
+        },
+        {
+          "type": "paragraph",
+          "content": "Quando o triângulo não possui ângulo de 90°, escolha a lei olhando os dados da figura! Se você conhece dois ângulos e um lado, formando pares completos 'lado e ângulo oposto', use a Lei dos Senos: a/sen A = b/sen B = c/sen C = 2R. Se você conhece dois lados e o ângulo espremido ENTRE eles (ou os três lados buscando descobrir um ângulo interno), use a Lei dos Cossenos: a² = b² + c² - 2bc·cos A."
+        },
+        {
+          "type": "callout",
+          "title": "Exemplo Relâmpago: Escolhendo a Lei Certa em 10 Segundos",
+          "content": "Dois trechos retilíneos de estrada medem 5 km e 8 km e se encontram formando um ângulo de 60°. Qual a distância em linha reta entre as extremidades? Como temos dois lados conhecidos e o ângulo exatamente entre eles, é Lei dos Cossenos na veia: d² = 5² + 8² - 2·5·8·cos 60° = 25 + 64 - 80·(1/2) = 89 - 40 = 49. Extraindo a raiz quadrada, encontramos d = 7 km sem erro!"
+        },
+        {
+          "type": "quote",
+          "content": "Antes de escolher seno, cosseno ou tangente, circule no desenho o que é cateto e o que é hipotenusa.",
+          "author": "Checklist Visual"
+        }
+      ],
+      "quiz": []
+    },
+    {
+      "id": "mat-res-cap-12",
+      "number": "XII",
+      "title": "Geometria Analítica Express",
+      "epigraph": {
+        "text": "A fórmula da distância entre dois pontos nada mais é do que o velho Pitágoras de roupa cartesiana.",
+        "author": "Desmistificando a Analítica"
+      },
+      "sections": [
+        {
+          "type": "heading",
+          "level": 2,
+          "content": "Coordenadas, Distância e Ponto Médio Sem Decoreba"
+        },
+        {
+          "type": "paragraph",
+          "content": "No plano cartesiano, todo ponto (x, y) começa andando na horizontal (abscissa x) e depois sobe ou desce na vertical (ordenada y). Para achar o ponto médio entre A(x1, y1) e B(x2, y2), tire a média aritmética simples das coordenadas: M = ((x1 + x2)/2, (y1 + y2)/2). Para a distância entre A e B, esqueça fórmulas assustadoras: calcule os passos Δx = x2 - x1 e Δy = y2 - y1 e aplique Pitágoras d = √(Δx² + Δy²)."
+        },
+        {
+          "type": "paragraph",
+          "content": "Veja como isso acelera sua prova: qual a distância entre os pontos (1, 2) e (4, 6)? O passo horizontal é Δx = 3 e o vertical é Δy = 4; reconhecendo o terno 3-4-5, a distância é 5 direto! Pegadinha frequente do ENEM: inverter a ordem do par (x, y) ao ler um mapa urbano ou esquecer de dobrar quando o problema dá o ponto médio M e pede a outra extremidade B."
+        },
+        {
+          "type": "heading",
+          "level": 2,
+          "content": "Equação da Reta, Retas Paralelas e Perpendiculares"
+        },
+        {
+          "type": "paragraph",
+          "content": "A inclinação de uma reta (coeficiente angular) é m = Δy / Δx = (y2 - y1)/(x2 - x1). Na equação reduzida y = mx + n, 'm' mede a inclinação e 'n' indica onde a reta corta o eixo y. Na equação geral ax + by + c = 0, isole y para enxergar m = -a/b. Duas retas são paralelas quando possuem mesma inclinação (m1 = m2) e são perpendiculares quando m1·m2 = -1."
+        },
+        {
+          "type": "callout",
+          "title": "Exemplo Relâmpago: Achando a Reta Perpendicular",
+          "content": "Dada a reta r de equação y = 2x + 3, ache a reta s perpendicular a r que passa pelo ponto (0, 5). Como m_r = 2, para ser perpendicular inverta a fração e troque o sinal: m_s = -1/2 (confira multiplicando: 2 × (-1/2) = -1!). Como ela passa pelo ponto (0, 5), o coeficiente linear é n = 5. Portanto, a reta s é y = (-1/2)x + 5!"
+        },
+        {
+          "type": "quote",
+          "content": "Se você enxergar Δx e Δy no gráfico, nunca mais trava em distância ou inclinação de reta.",
+          "author": "Caderno Analítico"
+        }
+      ],
+      "quiz": []
+    },
+    {
+      "id": "mat-res-cap-13",
+      "number": "XIII",
+      "title": "Probabilidade & Análise Combinatória",
+      "epigraph": {
+        "text": "Ordem importa? Arranjo ou multiplique direto. Ordem não importa? Combinação dividindo os repetidos.",
+        "author": "Teste de Ouro da Contagem"
+      },
+      "sections": [
+        {
+          "type": "heading",
+          "level": 2,
+          "content": "PFC, Permutação, Arranjo e Combinação"
+        },
+        {
+          "type": "paragraph",
+          "content": "Em análise de possibilidades, ataque primeiro pelo Princípio Fundamental da Contagem (PFC): divida a escolha em etapas independentes, preencha todas as restrições antes de tudo e multiplique as opções de cada etapa! Quando apenas embaralhamos todos os n elementos numa fila, usamos permutação simples P_n = n!; se houver elementos repetidos (como nos anagramas de ARARA), divida pelos fatoriais das repetições; em círculo (mesa redonda), fixe 1 pessoa e calcule (n - 1)!."
+        },
+        {
+          "type": "paragraph",
+          "content": "Para escolher p elementos dentre n disponíveis, faça o teste decisivo da ORDEM: se trocar os escolhidos de lugar muda o resultado (senhas, pódio, presidente e vice), a ordem importa — use Arranjo ou multiplique as vagas direto pelo PFC! Se trocar de lugar forma exatamente o mesmo grupo (comissão, dupla, salada de frutas), a ordem NÃO importa — use Combinação: C(n, p) = n! ÷ [p!(n - p)!]. Pegadinha mortal: usar arranjo em escolha de comissões!"
+        },
+        {
+          "type": "heading",
+          "level": 2,
+          "content": "Probabilidade Simples, Complementar, União e Condicional"
+        },
+        {
+          "type": "paragraph",
+          "content": "Probabilidade simples mede a razão entre os casos favoráveis do evento e o espaço amostral total (sempre um valor entre 0 e 1). Na união de eventos ('A ou B'), some e subtraia a interseção: P(A∪B) = P(A) + P(B) - P(A∩B). Apareceu a expressão 'pelo menos um'? Vá pelo complementar: P = 1 - P(nenhum)! E na probabilidade condicional ('sabendo que...', 'dado que...'), o denominador encolhe para o novo universo restrito pela condição."
+        },
+        {
+          "type": "callout",
+          "title": "Exemplo Relâmpago: Combinação e Probabilidade Condicional",
+          "content": "Quantas duplas distintas saem de um grupo com 5 alunos? Como a ordem de escolha não importa, aplique combinação: C(5, 2) = (5 × 4) ÷ 2 = 10 duplas! Agora veja a condicional: numa sala com 10 homens (6 de óculos) e 10 mulheres (4 de óculos), sorteia-se ao acaso uma pessoa que USA ÓCULOS. Qual a chance de ser mulher? O espaço amostral reduzido são apenas as 10 pessoas de óculos: logo P = 4/10 = 40%!"
+        },
+        {
+          "type": "quote",
+          "content": "Na dúvida em Combinatória, teste dois elementos trocando de lugar: se o resultado for o mesmo, divida!",
+          "author": "Fechamento TRI 800+"
+        }
+      ],
+      "quiz": []
+    }
+  ]
+}

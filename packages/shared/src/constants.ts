@@ -24,6 +24,30 @@ export const DEFAULT_CATALOG: CatalogItem[] = [
     file: "/data/ciencias-da-natureza-enem-completo.json",
     description: "Curso completo, conversado e altamente didático cobrindo 100% do edital oficial de Ciências da Natureza para o ENEM (45 questões do 2º dia). BIOLOGIA (9 módulos): Ecologia (Prioridade 800+), Meio Ambiente e Biomas, Genética e Biotecnologia (Prioridade 800+), Citologia, Metabolismo Celular, Divisão Celular, Evolução, Fisiologia Humana e Saúde Pública/ISTs. FÍSICA (11 módulos): Eletricidade e Circuitos (Prioridade 800+), Mecânica e Gráficos (Prioridade 800+), Leis de Newton, Trabalho e Energia, Hidrostática, Termologia, Termodinâmica, Magnetismo, Ondulatória e Efeito Doppler, Óptica e Física Moderna. QUÍMICA (13 módulos): Estequiometria (Prioridade 800+), Química Orgânica (Prioridade 800+), Estrutura da Matéria, Tabela Periódica, Ligações e Forças Intermoleculares, Reações, Soluções, Funções Inorgânicas e pH, Termoquímica, Cinética, Equilíbrio Químico, Eletroquímica e Química Ambiental.",
     isPriority: true
+  },
+  {
+    id: "matematica-enem-resumo-30min",
+    title: "Resumão Relâmpago de Matemática ENEM (30 Min)",
+    subtitle: "Toda a Grade do 2º Dia em Linguagem de Curso Direta ao Ponto: Fórmulas Essenciais, Atalhos e Pegadinhas por Ordem de TRI",
+    author: "Prof. Antigravity & Colegiado de Matemática",
+    category: "Resumão 30 Min · Matemática ENEM",
+    chaptersCount: 13,
+    estimatedTime: "Aprox. 30 min (Resumão Contido · 13 Capítulos)",
+    file: "/data/matematica-enem-resumo-30min.json",
+    description: "A revisão mais enxuta e cirúrgica de todo o edital de Matemática (45 questões) em ~30 minutos de leitura ou áudio. Cobre 100% dos 12 módulos em linguagem de curso sem enrolação: Aritmética e Conjuntos, Razão/Proporção/Escalas/Regra de Três, Porcentagem e Financeira, Estatística e Gráficos, Geometria Plana e Espacial, Álgebra, Funções (Afim, Quadrática, Exponencial e Logarítmica), Sequências (PA/PG), Trigonometria, Geometria Analítica, Probabilidade e Combinatória.",
+    isPriority: true
+  },
+  {
+    id: "ciencias-da-natureza-enem-resumo-30min",
+    title: "Resumão Relâmpago de Ciências da Natureza ENEM (30 Min)",
+    subtitle: "Biologia, Física e Química Integradas em ~30 Minutos: O Coração das 45 Questões em Linguagem de Curso Direta ao Ponto",
+    author: "Prof. Antigravity & Colegiado de Ciências da Natureza",
+    category: "Resumão 30 Min · Ciências da Natureza ENEM",
+    chaptersCount: 13,
+    estimatedTime: "Aprox. 30 min (Resumão Contido · 13 Capítulos)",
+    file: "/data/ciencias-da-natureza-enem-resumo-30min.json",
+    description: "Revisão super contida de ~30 minutos cobrindo 100% dos 33 módulos do edital de Ciências da Natureza em linguagem de cursinho direto ao ponto, ordenada por peso TRI 800+: Ecologia, Meio Ambiente/Biomas, Genética/Evolução, Citologia/Metabolismo/Divisão Celular, Fisiologia e Saúde/ISTs; Eletricidade/Magnetismo, Mecânica/Newton/Energia, Hidrostática/Termologia/Termodinâmica, Ondulatória/Óptica/Moderna; Estrutura Atômica/Tabela/Ligações, Estequiometria/Soluções, Funções Inorgânicas/Termoquímica/Cinética/Equilíbrio, Eletroquímica, Orgânica e Ambiental.",
+    isPriority: true
   }
 ];
 
