@@ -674,6 +674,16 @@ export function AudioPlayerModal({
 
       if (!decoded) {
         setIsLoading(true);
+        audioSyncBus.emit({
+          blockIndex,
+          blockId: `reader-block-${blockIndex}`,
+          currentTime: 0,
+          duration: 0,
+          isPlaying: false,
+          isLoading: true,
+          playbackRate: rateRef.current,
+          acousticProfile: null,
+        });
         decoded = await fetchAndDecodeBlock(blockIndex, voiceRef.current, { isPrefetch: false });
         if (mySeq !== playSeqRef.current) return;
         setIsLoading(false);

@@ -292,6 +292,17 @@ export function ReadingPencilGuide({
 
   const currentBlockIdRef = useRef<string>('');
   const targetElementRef = useRef<HTMLElement | null>(null);
+  const measuredWordsRef = useRef<
+    {
+      word: string;
+      relLeft: number;
+      relRight: number;
+      relBottom: number;
+      width: number;
+      lineIndex: number;
+    }[]
+  >([]);
+  const measuredDurationRef = useRef<number>(0);
   const timedWordsRef = useRef<TimedWord[]>([]);
   const lastSyncDataRef = useRef<AudioSyncData>(audioSyncBus.getCurrent());
   const pendingTargetIdRef = useRef<string>('');
@@ -306,7 +317,7 @@ export function ReadingPencilGuide({
     liftTimer: null as any,
   });
 
-  // Mede e constrói o modelo do bloco ativo
+  // Mede e constrói o modelo do bloco ativo apenas com duração válida pertencente ao próprio bloco
   const measureTargetElement = useCallback((targetId: string, syncData: AudioSyncData): boolean => {
     if (!targetId) return false;
     const el = document.getElementById(targetId);
@@ -317,10 +328,15 @@ export function ReadingPencilGuide({
 
     targetElementRef.current = el;
     currentBlockIdRef.current = targetId;
+    measuredWordsRef.current = words;
 
-    const dur = syncData.duration > 0 ? syncData.duration : 10;
-    const model = buildWordTimingModel(words, dur, syncData.acousticProfile);
-    timedWordsRef.current = model;
+    const validDur =
+      syncData.duration > 0 && (!syncData.blockId || syncData.blockId === targetId)
+        ? syncData.duration
+        : 0;
+    measuredDurationRef.current = validDur;
+    timedWordsRef.current =
+      validDur > 0 ? buildWordTimingModel(words, validDur, syncData.acousticProfile) : [];
 
     const s = stateRef.current;
     s.initializedPos = false;
@@ -335,9 +351,9 @@ export function ReadingPencilGuide({
       trailRef.current.style.width = '0px';
     }
 
-    if (model.length > 0) {
-      const blockRect = el.getBoundingClientRect();
-      const first = model[0];
+    const blockRect = el.getBoundingClientRect();
+    const first = words[0];
+    if (first) {
       s.curX = blockRect.left + first.relLeft;
       s.curY = blockRect.top + first.relBottom;
       s.lineStartX = s.curX;
@@ -352,6 +368,37 @@ export function ReadingPencilGuide({
     return true;
   }, []);
 
+  // Garante medição e recalibração imediata assim que a duração real do áudio chega após loading
+  const syncTargetBlock = useCallback(
+    (targetId: string, syncData: AudioSyncData) => {
+      if (!targetId) return;
+      if (targetId !== currentBlockIdRef.current) {
+        pendingTargetIdRef.current = targetId;
+        measureTargetElement(targetId, syncData);
+        return;
+      }
+
+      const validDur =
+        syncData.duration > 0 && (!syncData.blockId || syncData.blockId === targetId)
+          ? syncData.duration
+          : 0;
+
+      if (validDur > 0 && Math.abs(validDur - measuredDurationRef.current) > 0.05) {
+        if (measuredWordsRef.current.length > 0) {
+          timedWordsRef.current = buildWordTimingModel(
+            measuredWordsRef.current,
+            validDur,
+            syncData.acousticProfile
+          );
+          measuredDurationRef.current = validDur;
+        } else {
+          measureTargetElement(targetId, syncData);
+        }
+      }
+    },
+    [measureTargetElement]
+  );
+
   // Monitora alterações imediatas do barramento de áudio
   useEffect(() => {
     if (!enabled) return;
@@ -361,16 +408,15 @@ export function ReadingPencilGuide({
       setIsActiveLayer(data.isPlaying || data.currentTime > 0);
 
       const targetId = data.blockId || activeBlockId || '';
-      if (targetId && targetId !== currentBlockIdRef.current) {
-        pendingTargetIdRef.current = targetId;
-        measureTargetElement(targetId, data);
+      if (targetId) {
+        syncTargetBlock(targetId, data);
       }
     });
 
     return () => {
       unsubscribe();
     };
-  }, [enabled, activeBlockId, measureTargetElement]);
+  }, [enabled, activeBlockId, syncTargetBlock]);
 
   // Recalcula coordenadas em caso de redimensionamento da janela
   useEffect(() => {
@@ -394,10 +440,10 @@ export function ReadingPencilGuide({
       const cursor = cursorRef.current;
       const trail = trailRef.current;
 
-      // Verifica se há bloco pendente ou se o bloco mudou
+      // Verifica se há bloco pendente ou se o bloco/duração real mudou
       const desiredBlockId = sync.blockId || activeBlockId || '';
-      if (desiredBlockId && desiredBlockId !== currentBlockIdRef.current) {
-        measureTargetElement(desiredBlockId, sync);
+      if (desiredBlockId) {
+        syncTargetBlock(desiredBlockId, sync);
       }
 
       const targetEl = targetElementRef.current;
@@ -497,7 +543,7 @@ export function ReadingPencilGuide({
     return () => {
       cancelAnimationFrame(rafId);
     };
-  }, [enabled, activeBlockId, measureTargetElement]);
+  }, [enabled, activeBlockId, syncTargetBlock]);
 
   if (!enabled) return null;
 
