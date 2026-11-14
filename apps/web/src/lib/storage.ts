@@ -47,40 +47,55 @@ export function setStoredFontSize(size: number) {
   document.documentElement.style.setProperty('--font-size', `${size}px`);
 }
 
+const REMOVED_BOOK_IDS = new Set([
+  'elogio-da-tinta',
+  'generos-textuais',
+  'gramatica-aplicada',
+  'historia-da-arte-e-cultura',
+  'interpretacao-de-texto',
+  'lingua-estrangeira-ingles-espanhol',
+  'linguagens-enem-completo',
+  'linguagens-enem-essencial',
+  'literatura-e-autores',
+  'redacao-enem',
+  'revisao-turbo-linguagens-enem',
+]);
+
 export function purgeLegacyRedacaoBooks(): void {
   if (typeof window === 'undefined') return;
   try {
-    // Purga do custom catalog
+    // Purga obras legadas ou removidas do catálogo local
     const stored = localStorage.getItem(CUSTOM_CATALOG_KEY);
     if (stored) {
       let list = JSON.parse(stored);
       if (Array.isArray(list)) {
         list = list.filter((item: any) => {
-          const isLegacy = (item.id && (item.id.includes('redacao') || item.id.startsWith('obra-17938'))) ||
-            (item.title && item.title.toLowerCase().includes('redação')) ||
-            (item.title && item.title.toLowerCase().includes('redacao'));
-          return !isLegacy || item.id === 'redacao-enem';
+          const isRemoved = item.id && (REMOVED_BOOK_IDS.has(item.id) || item.id.startsWith('obra-17938'));
+          return !isRemoved;
         });
         localStorage.setItem(CUSTOM_CATALOG_KEY, JSON.stringify(list));
       }
     }
 
-    // Varredura de chaves órfãs
+    // Varredura de chaves órfãs ou cacheadas de obras antigas
     const toRemove: string[] = [];
     for (let i = 0; i < localStorage.length; i++) {
       const k = localStorage.key(i);
-      if (k && (
+      if (!k) continue;
+      const isRemovedKey =
         k.startsWith('book_json_obra-17938') ||
         k.startsWith('book_layered_obra-17938') ||
         k.startsWith('book_generations_obra-17938') ||
-        (k.startsWith('book_json_') && k.includes('redacao') && k !== 'book_json_redacao-enem')
-      )) {
+        Array.from(REMOVED_BOOK_IDS).some(
+          id => k === `book_json_${id}` || k === `book_layered_${id}` || k === `book_generations_${id}`
+        );
+      if (isRemovedKey) {
         toRemove.push(k);
       }
     }
     toRemove.forEach(k => localStorage.removeItem(k));
   } catch (e) {
-    console.warn('Erro ao purgar redações legadas:', e);
+    console.warn('Erro ao purgar obras legadas:', e);
   }
 }
 

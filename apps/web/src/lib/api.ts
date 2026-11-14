@@ -16,39 +16,36 @@ import {
 const API_BASE = process.env.NEXT_PUBLIC_API_URL || '';
 
 export async function fetchCatalog(): Promise<CatalogItem[]> {
+  // Prioriza o catálogo estático empacotado no próprio deploy do Web App
   try {
-    const res = await fetch(`${API_BASE}/api/catalog`, { cache: 'no-store' });
+    const res = await fetch('/data/library.json', { cache: 'no-store' });
     if (res.ok) {
       const data = await res.json();
-      if (data.status === 'ok' && Array.isArray(data.catalog) && data.catalog.length > 0) {
-        return data.catalog;
+      if (Array.isArray(data) && data.length > 0) {
+        return data;
       }
     }
-  } catch (err) {
-    console.warn('API catalog fetch falhou, tentando fallback estático:', err);
-  }
-
-  // Fallback para arquivo estático
-  try {
-    const res = await fetch('/data/library.json');
-    if (res.ok) {
-      return await res.json();
-    }
   } catch (e) {
-    console.warn('Fallback estático falhou:', e);
+    console.warn('Falha ao carregar /data/library.json:', e);
   }
 
   return DEFAULT_CATALOG;
 }
 
 export async function fetchBook(id: string): Promise<BookDoc | null> {
-  // Normalização de IDs de redação legada
-  const canonicalId = (id.startsWith('obra-17938') || (id.includes('redacao') && id !== 'redacao-enem'))
-    ? 'redacao-enem'
-    : id;
-
+  // 1. Prioriza os arquivos estáticos atualizados empacotados no Web App
   try {
-    const res = await fetch(`${API_BASE}/api/books/${canonicalId}`, { cache: 'no-store' });
+    const res = await fetch(`/data/${id}.json`, { cache: 'no-store' });
+    if (res.ok) {
+      return await res.json();
+    }
+  } catch (e) {
+    console.warn(`Estático /data/${id}.json falhou, tentando API:`, e);
+  }
+
+  // 2. Fallback para API (obras personalizadas geradas por IA)
+  try {
+    const res = await fetch(`${API_BASE}/api/books/${id}`, { cache: 'no-store' });
     if (res.ok) {
       const data = await res.json();
       if (data.status === 'ok' && data.book) {
@@ -56,23 +53,13 @@ export async function fetchBook(id: string): Promise<BookDoc | null> {
       }
     }
   } catch (err) {
-    console.warn(`API fetch para ${canonicalId} falhou, tentando estático:`, err);
+    console.warn(`API fetch para ${id} falhou:`, err);
   }
 
-  // Fallback para arquivo estático no Next.js public
-  try {
-    const res = await fetch(`/data/${canonicalId}.json`);
-    if (res.ok) {
-      return await res.json();
-    }
-  } catch (e) {
-    console.warn(`Estático /data/${canonicalId}.json falhou:`, e);
-  }
-
-  // Fallback para localStorage
+  // 3. Fallback para localStorage
   if (typeof window !== 'undefined') {
     try {
-      const local = localStorage.getItem(`book_json_${canonicalId}`);
+      const local = localStorage.getItem(`book_json_${id}`);
       if (local) return JSON.parse(local);
     } catch (e) {}
   }
