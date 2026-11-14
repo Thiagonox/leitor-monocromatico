@@ -332,6 +332,38 @@ async function requestSingleHeyGenChunk(
   return rawBuf;
 }
 
+function extractTrimmedPcm(rawBuf: Buffer): Buffer {
+  const isWav = rawBuf.length > 44 && rawBuf.subarray(0, 4).toString() === 'RIFF';
+  const pcmRaw = isWav ? rawBuf.subarray(44) : rawBuf;
+  const validLen = pcmRaw.length - (pcmRaw.length % 2);
+  const aligned = validLen === pcmRaw.length ? pcmRaw : pcmRaw.subarray(0, validLen);
+  return trimPcmSilence(aligned, 44100);
+}
+
+async function synthesizeChunkRecursivePcm(
+  chunkText: string,
+  voice: string,
+  apiKey: string,
+  depth: number = 0
+): Promise<Buffer> {
+  try {
+    const rawBuf = await requestSingleHeyGenChunk(chunkText, voice, apiKey);
+    return extractTrimmedPcm(rawBuf);
+  } catch (err) {
+    if (depth < 3 && chunkText.length > 90) {
+      const subChunks = splitTextForTTS(chunkText, Math.max(80, Math.floor(chunkText.length * 0.52)));
+      if (subChunks.length > 1) {
+        const subPcm: Buffer[] = [];
+        for (const sub of subChunks) {
+          subPcm.push(await synthesizeChunkRecursivePcm(sub, voice, apiKey, depth + 1));
+        }
+        return Buffer.concat(subPcm);
+      }
+    }
+    throw err;
+  }
+}
+
 // Geração EXCLUSIVA via heygen/heygen-voice-1-turbo:free (SEM QUALQUER FALLBACK)
 export async function synthesizeHeyGenAudio(
   text: string,
@@ -355,26 +387,10 @@ export async function synthesizeHeyGenAudio(
     throw new Error('Chave de API do HeyGen/OpenRouter não configurada. Configure HEYGEN_API_KEY no Railway.');
   }
 
-  const chunks = splitTextForTTS(cleanText, 650);
-  if (chunks.length === 1) {
-    const rawBuf = await requestSingleHeyGenChunk(chunks[0], voice, apiKey);
-    const isAlreadyWav = rawBuf.length > 4 && rawBuf.subarray(0, 4).toString() === 'RIFF';
-    const finalWavBuffer = isAlreadyWav ? rawBuf : pcmToWav(rawBuf, 44100, 1, 16);
-    return {
-      audioBuffer: finalWavBuffer,
-      model,
-      voice,
-    };
-  }
-
+  const chunks = splitTextForTTS(cleanText, 280);
   const pcmParts: Buffer[] = [];
   for (const chunk of chunks) {
-    const rawBuf = await requestSingleHeyGenChunk(chunk, voice, apiKey);
-    const isWav = rawBuf.length > 44 && rawBuf.subarray(0, 4).toString() === 'RIFF';
-    const pcmRaw = isWav ? rawBuf.subarray(44) : rawBuf;
-    const validLen = pcmRaw.length - (pcmRaw.length % 2);
-    const aligned = validLen === pcmRaw.length ? pcmRaw : pcmRaw.subarray(0, validLen);
-    pcmParts.push(trimPcmSilence(aligned, 44100));
+    pcmParts.push(await synthesizeChunkRecursivePcm(chunk, voice, apiKey));
   }
 
   const combinedPcm = Buffer.concat(pcmParts);

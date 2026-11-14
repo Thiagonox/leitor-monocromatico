@@ -334,19 +334,20 @@ export function AudioPlayerModal({
       if (inflight) return inflight;
 
       const promise = (async () => {
-        const chunks = splitTextForTTS(block.text, 650);
+        const chunks = splitTextForTTS(block.text, 280);
         if (chunks.length === 0) return null;
 
         const synthAndDecodeChunk = async (
           chunkText: string,
-          chunkId: string
+          chunkId: string,
+          depth: number = 0
         ): Promise<{ buffer: AudioBuffer; cached: boolean }> => {
           const maxAttempts = 2;
           let lastErr: Error | null = null;
 
           for (let attempt = 1; attempt <= maxAttempts; attempt++) {
             const controller = new AbortController();
-            const timeoutId = setTimeout(() => controller.abort(), 45000);
+            const timeoutId = setTimeout(() => controller.abort(), 35000);
             try {
               const res = await requestTTS({
                 text: chunkText,
@@ -376,10 +377,34 @@ export function AudioPlayerModal({
             } catch (err: any) {
               lastErr = err instanceof Error ? err : new Error(String(err));
               if (attempt < maxAttempts) {
-                await new Promise((r) => setTimeout(r, 600));
+                await new Promise((r) => setTimeout(r, 500));
               }
             } finally {
               clearTimeout(timeoutId);
+            }
+          }
+
+          // Fallback automático: se o trecho ainda falhou (ex: 502 do HeyGen), fatia pela metade e tenta novamente
+          if (depth < 3 && chunkText.length > 90) {
+            const subChunks = splitTextForTTS(
+              chunkText,
+              Math.max(80, Math.floor(chunkText.length * 0.52))
+            );
+            if (subChunks.length > 1) {
+              const subResults: { buffer: AudioBuffer; cached: boolean }[] = [];
+              for (let s = 0; s < subChunks.length; s++) {
+                subResults.push(
+                  await synthAndDecodeChunk(subChunks[s], `${chunkId}-s${depth}-${s + 1}`, depth + 1)
+                );
+              }
+              const ctx = getAudioCtx();
+              return {
+                buffer: concatAudioBuffers(
+                  ctx,
+                  subResults.map((r) => r.buffer)
+                ),
+                cached: subResults.every((r) => r.cached),
+              };
             }
           }
 
