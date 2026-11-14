@@ -126,17 +126,24 @@ export async function requestTTS(payload: {
   chapterId?: string;
   apiKey?: string;
 }): Promise<TTSResponse> {
-  const res = await fetch(`${API_BASE}/api/ai/tts`, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify(payload)
-  });
+  const controller = new AbortController();
+  const timeoutId = setTimeout(() => controller.abort(), 28000);
+  try {
+    const res = await fetch(`${API_BASE}/api/ai/tts`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload),
+      signal: controller.signal,
+    });
 
-  const data: TTSResponse = await res.json();
-  if (data.status === 'ok' && data.audioUrl) {
-    data.audioUrl = resolveAudioUrl(data.audioUrl);
+    const data: TTSResponse = await res.json();
+    if (data.status === 'ok' && data.audioUrl) {
+      data.audioUrl = resolveAudioUrl(data.audioUrl);
+    }
+    return data;
+  } finally {
+    clearTimeout(timeoutId);
   }
-  return data;
 }
 
 export async function requestContinueStream(payload: {

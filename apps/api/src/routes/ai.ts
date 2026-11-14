@@ -511,6 +511,8 @@ import {
 } from '../services/tts.js';
 import path from 'path';
 
+const inflightTtsJobs = new Map<string, Promise<{ cached: boolean; model: string }>>();
+
 aiRouter.post('/tts', async (req: Request, res: Response) => {
   const {
     text,
@@ -525,34 +527,34 @@ aiRouter.post('/tts', async (req: Request, res: Response) => {
 
   try {
     const cacheKey = getAudioCacheKey(text, voice, chapterId);
-    const cached = await isAudioInBucket(cacheKey);
+    let job = inflightTtsJobs.get(cacheKey);
 
-    if (cached) {
-      console.log(`[Railway Bucket HIT] Áudio HeyGen encontrado no Bucket: ${cacheKey}.wav`);
-      return res.json({
-        status: 'ok',
-        cached: true,
-        cacheKey,
-        audioUrl: `/api/ai/audio/${cacheKey}.wav`,
-        model: 'heygen/heygen-voice-1-turbo:free',
-        voice,
+    if (!job) {
+      job = (async () => {
+        const cached = await isAudioInBucket(cacheKey);
+        if (cached) {
+          console.log(`[Railway Bucket HIT] Áudio HeyGen encontrado no Bucket: ${cacheKey}.wav`);
+          return { cached: true, model: 'heygen/heygen-voice-1-turbo:free' };
+        }
+
+        console.log(`[Railway Bucket MISS] Gerando áudio exclusivamente com heygen/heygen-voice-1-turbo:free (voz: ${voice})...`);
+        const { audioBuffer, model } = await synthesizeHeyGenAudio(text, voice, apiKey);
+        await saveAudioToBucket(cacheKey, audioBuffer);
+        return { cached: false, model };
+      })().finally(() => {
+        inflightTtsJobs.delete(cacheKey);
       });
+      inflightTtsJobs.set(cacheKey, job);
     }
 
-    console.log(`[Railway Bucket MISS] Gerando áudio exclusivamente com heygen/heygen-voice-1-turbo:free (voz: ${voice})...`);
-
-    // Geração EXCLUSIVA HeyGen (SEM QUALQUER FALLBACK)
-    const { audioBuffer, model } = await synthesizeHeyGenAudio(text, voice, apiKey);
-
-    // Salva no Bucket S3 nativo do Railway
-    await saveAudioToBucket(cacheKey, audioBuffer);
+    const result = await job;
 
     return res.json({
       status: 'ok',
-      cached: false,
+      cached: result.cached,
       cacheKey,
       audioUrl: `/api/ai/audio/${cacheKey}.wav`,
-      model,
+      model: result.model,
       voice,
     });
   } catch (err: any) {

@@ -243,28 +243,56 @@ export async function synthesizeHeyGenAudio(
 
   console.log(`[HeyGen TTS] Chamando exclusivamente ${model} (voz: ${voice}, chars: ${cleanText.length})...`);
 
-  const resp = await fetch(endpoint, {
-    method: 'POST',
-    headers: {
-      Authorization: `Bearer ${apiKey}`,
-      'Content-Type': 'application/json',
-      'HTTP-Referer': 'https://mono-readerweb-production.up.railway.app',
-      'X-Title': 'Leitor Monocromatico HeyGen Audio',
-    },
-    body: JSON.stringify(payload),
-  });
+  const maxAttempts = 2;
+  let lastError: Error | null = null;
+  let rawBuf: Buffer = Buffer.alloc(0);
 
-  if (!resp.ok) {
-    const errorText = await resp.text();
-    console.error(`[HeyGen TTS Error] HTTP ${resp.status}:`, errorText);
-    throw new Error(`Erro do provedor HeyGen (${resp.status}): ${errorText}`);
+  for (let attempt = 1; attempt <= maxAttempts; attempt++) {
+    try {
+      const resp = await fetch(endpoint, {
+        method: 'POST',
+        headers: {
+          Authorization: `Bearer ${apiKey}`,
+          'Content-Type': 'application/json',
+          'HTTP-Referer': 'https://mono-readerweb-production.up.railway.app',
+          'X-Title': 'Leitor Monocromatico HeyGen Audio',
+        },
+        body: JSON.stringify(payload),
+        signal: AbortSignal.timeout(22000),
+      });
+
+      if (!resp.ok) {
+        const errorText = await resp.text();
+        console.error(`[HeyGen TTS Error] Tentativa ${attempt}/${maxAttempts} HTTP ${resp.status}:`, errorText);
+        const err = new Error(`Erro do provedor HeyGen (${resp.status}): ${errorText}`);
+        if ((resp.status === 429 || resp.status >= 500) && attempt < maxAttempts) {
+          lastError = err;
+          await new Promise((r) => setTimeout(r, 700 * attempt));
+          continue;
+        }
+        throw err;
+      }
+
+      const arrayBuf = await resp.arrayBuffer();
+      rawBuf = Buffer.from(arrayBuf);
+      if (rawBuf.length === 0) {
+        throw new Error('O provedor HeyGen retornou um áudio vazio.');
+      }
+      lastError = null;
+      break;
+    } catch (err: any) {
+      lastError = err instanceof Error ? err : new Error(String(err));
+      if (attempt < maxAttempts) {
+        console.warn(`[HeyGen TTS Retry] Tentativa ${attempt} falhou (${lastError.message}), tentando novamente...`);
+        await new Promise((r) => setTimeout(r, 700 * attempt));
+        continue;
+      }
+      throw lastError;
+    }
   }
 
-  const arrayBuf = await resp.arrayBuffer();
-  const rawBuf = Buffer.from(arrayBuf);
-
-  if (rawBuf.length === 0) {
-    throw new Error('O provedor HeyGen retornou um áudio vazio.');
+  if (lastError || rawBuf.length === 0) {
+    throw lastError || new Error('Falha ao sintetizar áudio via HeyGen.');
   }
 
   // Se o OpenRouter retornar PCM puro, converte para WAV universal 16-bit 44.1kHz mono

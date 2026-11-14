@@ -50,6 +50,7 @@ const VOICES = [
 ];
 
 const PREFETCH_WINDOW = 4; // Pré-carrega e decodifica 4 blocos à frente em background
+const PREFETCH_CONCURRENCY = 2; // Evita rajadas simultâneas que saturam a síntese TTS
 const CROSSFADE_SEC = 0.016; // 16ms de micro-crossfade acústico imperceptível entre blocos
 
 // Remove silêncio residual no float32 AudioBuffer e aplica envelope cosseno suave nas bordas
@@ -149,7 +150,11 @@ export function AudioPlayerModal({
   const voiceRef = useRef('nadine');
   const blocksRef = useRef<AudioBlockItem[]>(blocks);
   const activeIdxRef = useRef(activeBlockIndex);
+  const prevExternalIdxRef = useRef(activeBlockIndex);
   const rafRef = useRef<number | null>(null);
+  const watchdogRef = useRef<ReturnType<typeof setInterval> | null>(null);
+  const playSeqRef = useRef(0);
+  const playBlockAtRef = useRef<(blockIndex: number, offsetSeconds?: number) => Promise<void>>(async () => {});
 
   blocksRef.current = blocks;
   activeIdxRef.current = activeBlockIndex;
@@ -168,6 +173,25 @@ export function AudioPlayerModal({
     return `${v}:${block.id}:${block.text.slice(0, 80)}`;
   }, []);
 
+  // Recalcula quantos blocos contíguos à frente já estão decodificados e prontos no buffer
+  const recomputePrefetchCount = useCallback(
+    (fromIdx: number, targetVoice: string) => {
+      const list = blocksRef.current;
+      let contiguous = 0;
+      for (let offset = 1; offset <= PREFETCH_WINDOW; offset++) {
+        const idx = fromIdx + offset;
+        if (idx >= list.length) break;
+        if (decodedCacheRef.current.has(getBlockCacheKey(list[idx], targetVoice))) {
+          contiguous++;
+        } else {
+          break;
+        }
+      }
+      setPrefetchedCount(contiguous);
+    },
+    [getBlockCacheKey]
+  );
+
   // Notifica o leitor principal com baixa frequência (apenas transições de estado macro)
   useEffect(() => {
     onPlaybackUpdate?.({
@@ -183,7 +207,11 @@ export function AudioPlayerModal({
 
   // Busca o áudio do bloco no Bucket S3 (ou gera via HeyGen) e decodifica em AudioBuffer
   const fetchAndDecodeBlock = useCallback(
-    async (blockIndex: number, targetVoice: string): Promise<{ buffer: AudioBuffer; cached: boolean; acousticProfile?: AcousticProfile } | null> => {
+    async (
+      blockIndex: number,
+      targetVoice: string,
+      opts?: { isPrefetch?: boolean }
+    ): Promise<{ buffer: AudioBuffer; cached: boolean; acousticProfile?: AcousticProfile } | null> => {
       const list = blocksRef.current;
       if (blockIndex < 0 || blockIndex >= list.length) return null;
       const block = list[blockIndex];
@@ -191,66 +219,135 @@ export function AudioPlayerModal({
 
       const key = getBlockCacheKey(block, targetVoice);
       const existing = decodedCacheRef.current.get(key);
-      if (existing) return existing;
+      if (existing) {
+        recomputePrefetchCount(activeIdxRef.current, targetVoice);
+        return existing;
+      }
 
       const inflight = inflightRef.current.get(key);
       if (inflight) return inflight;
 
       const promise = (async () => {
-        try {
-          const res = await requestTTS({
-            text: block.text,
-            voice: targetVoice,
-            chapterId: block.id,
-          });
+        const maxAttempts = 2;
+        let lastErr: Error | null = null;
 
-          if (res.status !== 'ok' || !res.audioUrl) {
-            throw new Error(res.message || 'Falha ao sintetizar bloco via HeyGen Turbo');
-          }
+        for (let attempt = 1; attempt <= maxAttempts; attempt++) {
+          const controller = new AbortController();
+          const timeoutId = setTimeout(() => controller.abort(), 25000);
+          try {
+            const res = await requestTTS({
+              text: block.text,
+              voice: targetVoice,
+              chapterId: block.id,
+            });
 
-          const directUrl = resolveAudioUrl(res.audioUrl);
-          const audioResp = await fetch(directUrl);
-          if (!audioResp.ok) {
-            throw new Error(`HTTP ${audioResp.status} ao baixar áudio do Bucket S3`);
-          }
-
-          const arrayBuf = await audioResp.arrayBuffer();
-          const ctx = getAudioCtx();
-          const rawAudioBuf = await ctx.decodeAudioData(arrayBuf.slice(0));
-          const cleanAudioBuf = trimAudioBuffer(ctx, rawAudioBuf);
-          const acousticProfile = analyzeAudioEnvelope(cleanAudioBuf);
-
-          const entry = {
-            buffer: cleanAudioBuf,
-            cached: Boolean(res.cached),
-            acousticProfile,
-          };
-          decodedCacheRef.current.set(key, entry);
-
-          // Atualiza contador de blocos prontos na janela
-          let readyInWindow = 0;
-          for (let i = activeIdxRef.current; i <= Math.min(list.length - 1, activeIdxRef.current + PREFETCH_WINDOW); i++) {
-            if (decodedCacheRef.current.has(getBlockCacheKey(list[i], targetVoice))) {
-              readyInWindow++;
+            if (res.status !== 'ok' || !res.audioUrl) {
+              throw new Error(res.message || 'Falha ao sintetizar bloco via HeyGen Turbo');
             }
-          }
-          setPrefetchedCount(readyInWindow);
 
-          return entry;
-        } catch (err: any) {
-          if (blockIndex === activeIdxRef.current) {
-            setErrorMessage(err?.message || 'Erro ao gerar áudio do bloco');
+            const directUrl = resolveAudioUrl(res.audioUrl);
+            const audioResp = await fetch(directUrl, { signal: controller.signal });
+            if (!audioResp.ok) {
+              throw new Error(`HTTP ${audioResp.status} ao baixar áudio do Bucket S3`);
+            }
+
+            const arrayBuf = await audioResp.arrayBuffer();
+            const ctx = getAudioCtx();
+            const rawAudioBuf = await ctx.decodeAudioData(arrayBuf.slice(0));
+            const cleanAudioBuf = trimAudioBuffer(ctx, rawAudioBuf);
+            const acousticProfile = analyzeAudioEnvelope(cleanAudioBuf);
+
+            const entry = {
+              buffer: cleanAudioBuf,
+              cached: Boolean(res.cached),
+              acousticProfile,
+            };
+            decodedCacheRef.current.set(key, entry);
+            recomputePrefetchCount(activeIdxRef.current, targetVoice);
+            return entry;
+          } catch (err: any) {
+            lastErr = err instanceof Error ? err : new Error(String(err));
+            if (attempt < maxAttempts) {
+              await new Promise((r) => setTimeout(r, 500));
+            }
+          } finally {
+            clearTimeout(timeoutId);
           }
-          return null;
-        } finally {
-          inflightRef.current.delete(key);
         }
-      })();
+
+        if (!opts?.isPrefetch) {
+          setErrorMessage(lastErr?.message || 'Erro ao gerar áudio do bloco');
+        }
+        return null;
+      })().finally(() => {
+        inflightRef.current.delete(key);
+      });
 
       inflightRef.current.set(key, promise);
       return promise;
     },
-    [getAudioCtx, getBlockCacheKey]
+    [getAudioCtx, getBlockCacheKey, recomputePrefetchCount]
+  );
+
+  const finishPlayback = useCallback(() => {
+    isPlayingRef.current = false;
+    setIsPlaying(false);
+    setIsLoading(false);
+    audioSyncBus.emit({ isPlaying: false, isLoading: false });
+  }, []);
+
+  const stopAllNodes = useCallback(() => {
+    playSeqRef.current++;
+    if (rafRef.current) {
+      cancelAnimationFrame(rafRef.current);
+      rafRef.current = null;
+    }
+    if (watchdogRef.current) {
+      clearInterval(watchdogRef.current);
+      watchdogRef.current = null;
+    }
+    audioSyncBus.emit({ isPlaying: false });
+    if (currentSlotRef.current) {
+      try {
+        currentSlotRef.current.source.onended = null;
+        currentSlotRef.current.source.stop();
+        currentSlotRef.current.source.disconnect();
+      } catch (e) {}
+      currentSlotRef.current = null;
+    }
+    if (nextSlotRef.current) {
+      try {
+        nextSlotRef.current.source.onended = null;
+        nextSlotRef.current.source.stop();
+        nextSlotRef.current.source.disconnect();
+      } catch (e) {}
+      nextSlotRef.current = null;
+    }
+  }, []);
+
+  const promoteNextSlotRef = useRef<() => boolean>(() => false);
+
+  const attachSlotOnEnded = useCallback(
+    (slot: ScheduledSlot) => {
+      slot.source.onended = () => {
+        if (!isPlayingRef.current) return;
+        const cur = currentSlotRef.current;
+        if (!cur || cur.blockIndex !== slot.blockIndex) return;
+
+        if (nextSlotRef.current && nextSlotRef.current.blockIndex === slot.blockIndex + 1) {
+          promoteNextSlotRef.current();
+          return;
+        }
+
+        const nextIdx = slot.blockIndex + 1;
+        if (nextIdx < blocksRef.current.length) {
+          playBlockAtRef.current(nextIdx, 0);
+        } else {
+          finishPlayback();
+        }
+      };
+    },
+    [finishPlayback]
   );
 
   // Agenda o próximo bloco com precisão de amostra (sample-accurate) no relógio de hardware do Web Audio API
@@ -272,21 +369,25 @@ export function AudioPlayerModal({
 
     const ctx = getAudioCtx();
     const curRate = rateRef.current;
-    const stitchTime = Math.max(ctx.currentTime + 0.004, cur.endCtxTime - CROSSFADE_SEC);
+    const now = ctx.currentTime;
+    const rawStitch = cur.endCtxTime - CROSSFADE_SEC;
+    const stitchTime = Math.max(now + 0.005, rawStitch);
 
     const source = ctx.createBufferSource();
     source.buffer = decoded.buffer;
     source.playbackRate.value = curRate;
 
     const gain = ctx.createGain();
-    gain.gain.setValueAtTime(0.0001, stitchTime);
-    gain.gain.linearRampToValueAtTime(1.0, stitchTime + CROSSFADE_SEC);
-
-    // Suaviza a saída do bloco atual exatamente no ponto de costura
-    try {
-      cur.gain.gain.setValueAtTime(1.0, stitchTime);
-      cur.gain.gain.linearRampToValueAtTime(0.0001, stitchTime + CROSSFADE_SEC);
-    } catch (e) {}
+    if (rawStitch >= now + 0.004) {
+      gain.gain.setValueAtTime(0.0001, stitchTime);
+      gain.gain.linearRampToValueAtTime(1.0, stitchTime + CROSSFADE_SEC);
+      try {
+        cur.gain.gain.setValueAtTime(1.0, stitchTime);
+        cur.gain.gain.linearRampToValueAtTime(0.0001, stitchTime + CROSSFADE_SEC);
+      } catch (e) {}
+    } else {
+      gain.gain.setValueAtTime(1.0, stitchTime);
+    }
 
     source.connect(gain);
     gain.connect(ctx.destination);
@@ -295,7 +396,7 @@ export function AudioPlayerModal({
     const nextDurationScaled = decoded.buffer.duration / curRate;
     const nextEndCtxTime = stitchTime + nextDurationScaled;
 
-    nextSlotRef.current = {
+    const nextSlot: ScheduledSlot = {
       blockIndex: nextIdx,
       source,
       gain,
@@ -307,72 +408,103 @@ export function AudioPlayerModal({
       stitchCtxTime: nextEndCtxTime - CROSSFADE_SEC,
       cached: decoded.cached,
     };
-  }, [getAudioCtx, getBlockCacheKey]);
+    attachSlotOnEnded(nextSlot);
+    nextSlotRef.current = nextSlot;
+  }, [attachSlotOnEnded, getAudioCtx, getBlockCacheKey]);
 
-  // Dispara o pipeline de pré-carregamento para os próximos N blocos em background
+  // Dispara o pipeline de pré-carregamento em fila priorizada (concorrência controlada = 2)
   const triggerLookaheadPrefetch = useCallback(
     async (fromIndex: number, targetVoice: string) => {
       const list = blocksRef.current;
+      recomputePrefetchCount(fromIndex, targetVoice);
       if (fromIndex >= list.length - 3) {
         onNearEnd?.();
       }
 
+      const indices: number[] = [];
       for (let offset = 1; offset <= PREFETCH_WINDOW; offset++) {
         const idx = fromIndex + offset;
-        if (idx >= list.length) break;
-        fetchAndDecodeBlock(idx, targetVoice).then((res) => {
+        if (idx < list.length) indices.push(idx);
+      }
+
+      let cursor = 0;
+      const runWorker = async () => {
+        while (cursor < indices.length) {
+          const idx = indices[cursor++];
+          const res = await fetchAndDecodeBlock(idx, targetVoice, { isPrefetch: true });
           if (res && isPlayingRef.current) {
             scheduleNextSlotIfReady();
           }
-        });
-      }
+        }
+      };
+
+      const workers = Array.from({ length: Math.min(PREFETCH_CONCURRENCY, indices.length) }, () => runWorker());
+      await Promise.all(workers);
     },
-    [fetchAndDecodeBlock, onNearEnd, scheduleNextSlotIfReady]
+    [fetchAndDecodeBlock, onNearEnd, recomputePrefetchCount, scheduleNextSlotIfReady]
   );
 
-  const stopAllNodes = useCallback(() => {
-    if (rafRef.current) {
-      cancelAnimationFrame(rafRef.current);
-      rafRef.current = null;
-    }
-    audioSyncBus.emit({ isPlaying: false });
-    if (currentSlotRef.current) {
-      try {
-        currentSlotRef.current.source.onended = null;
-        currentSlotRef.current.source.stop();
-        currentSlotRef.current.source.disconnect();
-      } catch (e) {}
-      currentSlotRef.current = null;
-    }
-    if (nextSlotRef.current) {
-      try {
-        nextSlotRef.current.source.onended = null;
-        nextSlotRef.current.source.stop();
-        nextSlotRef.current.source.disconnect();
-      } catch (e) {}
-      nextSlotRef.current = null;
-    }
-  }, []);
+  const promoteNextSlot = useCallback((): boolean => {
+    const ctx = audioCtxRef.current;
+    const promoted = nextSlotRef.current;
+    if (!ctx || !promoted) return false;
+
+    nextSlotRef.current = null;
+    currentSlotRef.current = promoted;
+
+    activeIdxRef.current = promoted.blockIndex;
+    prevExternalIdxRef.current = promoted.blockIndex;
+    onActiveBlockChange(promoted.blockIndex);
+    setIsCached(promoted.cached);
+    setDuration(promoted.buffer.duration);
+    setCurrentTime(Math.max(0, Math.min(promoted.buffer.duration, (ctx.currentTime - promoted.startCtxTime) * rateRef.current)));
+    recomputePrefetchCount(promoted.blockIndex, voiceRef.current);
+
+    audioSyncBus.emit({
+      blockIndex: promoted.blockIndex,
+      blockId: `reader-block-${promoted.blockIndex}`,
+      currentTime: 0,
+      duration: promoted.buffer.duration,
+      isPlaying: true,
+      isLoading: false,
+      playbackRate: rateRef.current,
+      acousticProfile: promoted.acousticProfile,
+    });
+
+    triggerLookaheadPrefetch(promoted.blockIndex, voiceRef.current);
+    scheduleNextSlotIfReady();
+    return true;
+  }, [onActiveBlockChange, recomputePrefetchCount, scheduleNextSlotIfReady, triggerLookaheadPrefetch]);
+
+  promoteNextSlotRef.current = promoteNextSlot;
 
   // Inicia a reprodução de um bloco específico a partir de um offset em segundos
   const playBlockAt = useCallback(
     async (blockIndex: number, offsetSeconds: number = 0) => {
       const list = blocksRef.current;
       if (blockIndex < 0 || blockIndex >= list.length) {
-        setIsPlaying(false);
-        isPlayingRef.current = false;
+        finishPlayback();
         return;
       }
 
       stopAllNodes();
+      const mySeq = playSeqRef.current;
       setErrorMessage(null);
+
+      if (activeIdxRef.current !== blockIndex) {
+        activeIdxRef.current = blockIndex;
+        prevExternalIdxRef.current = blockIndex;
+        onActiveBlockChange(blockIndex);
+      }
+      recomputePrefetchCount(blockIndex, voiceRef.current);
 
       const ctx = getAudioCtx();
       if (ctx.state === 'suspended') {
         await ctx.resume();
+        if (mySeq !== playSeqRef.current) return;
       }
 
-      // Dispara prefetch imediato dos blocos seguintes em paralelo
+      // Dispara prefetch priorizado dos blocos seguintes (máx 2 simultâneos)
       triggerLookaheadPrefetch(blockIndex, voiceRef.current);
 
       const key = getBlockCacheKey(list[blockIndex], voiceRef.current);
@@ -380,15 +512,19 @@ export function AudioPlayerModal({
 
       if (!decoded) {
         setIsLoading(true);
-        decoded = await fetchAndDecodeBlock(blockIndex, voiceRef.current);
+        decoded = await fetchAndDecodeBlock(blockIndex, voiceRef.current, { isPrefetch: false });
+        if (mySeq !== playSeqRef.current) return;
         setIsLoading(false);
       }
 
-      if (!decoded) return;
+      if (!decoded) {
+        finishPlayback();
+        return;
+      }
 
       const curRate = rateRef.current;
-      const safeOffset = Math.max(0, Math.min(offsetSeconds, decoded.buffer.duration - 0.05));
-      const remainingDuration = (decoded.buffer.duration - safeOffset) / curRate;
+      const safeOffset = Math.max(0, Math.min(offsetSeconds, Math.max(0, decoded.buffer.duration - 0.05)));
+      const remainingDuration = Math.max(0.05, (decoded.buffer.duration - safeOffset) / curRate);
 
       const source = ctx.createBufferSource();
       source.buffer = decoded.buffer;
@@ -405,7 +541,7 @@ export function AudioPlayerModal({
 
       source.start(startAt, safeOffset);
 
-      currentSlotRef.current = {
+      const slot: ScheduledSlot = {
         blockIndex,
         source,
         gain,
@@ -417,17 +553,14 @@ export function AudioPlayerModal({
         stitchCtxTime: endAt - CROSSFADE_SEC,
         cached: decoded.cached,
       };
+      attachSlotOnEnded(slot);
+      currentSlotRef.current = slot;
 
       isPlayingRef.current = true;
       setIsPlaying(true);
       setIsCached(decoded.cached);
       setDuration(decoded.buffer.duration);
       setCurrentTime(safeOffset);
-
-      if (activeIdxRef.current !== blockIndex) {
-        activeIdxRef.current = blockIndex;
-        onActiveBlockChange(blockIndex);
-      }
 
       audioSyncBus.emit({
         blockIndex,
@@ -443,107 +576,74 @@ export function AudioPlayerModal({
       // Tenta pré-agendar o próximo bloco no relógio de hardware imediatamente
       scheduleNextSlotIfReady();
 
-      // Fallback caso o próximo bloco ainda esteja baixando quando o bloco atual terminar
-      source.onended = () => {
-        if (!isPlayingRef.current) return;
-        if (currentSlotRef.current && currentSlotRef.current.blockIndex === blockIndex && !nextSlotRef.current) {
-          const nextIdx = blockIndex + 1;
-          if (nextIdx < blocksRef.current.length) {
-            playBlockAt(nextIdx, 0);
-          } else {
-            isPlayingRef.current = false;
-            setIsPlaying(false);
-          }
-        }
-      };
-
-      // Loop de sincronização de relógio de hardware (60fps)
-      const tick = () => {
+      const syncFrame = () => {
         if (!isPlayingRef.current || !audioCtxRef.current) return;
         const now = audioCtxRef.current.currentTime;
         const cur = currentSlotRef.current;
+        if (!cur) return;
 
-        if (cur) {
-          // Verifica se cruzamos o ponto exato de costura para promover o próximo bloco sem qualquer corte!
-          if (nextSlotRef.current && now >= nextSlotRef.current.startCtxTime) {
-            const promoted = nextSlotRef.current;
-            nextSlotRef.current = null;
-            currentSlotRef.current = promoted;
-
-            activeIdxRef.current = promoted.blockIndex;
-            onActiveBlockChange(promoted.blockIndex);
-            setIsCached(promoted.cached);
-            setDuration(promoted.buffer.duration);
-            setCurrentTime(0);
-
-            audioSyncBus.emit({
-              blockIndex: promoted.blockIndex,
-              blockId: `reader-block-${promoted.blockIndex}`,
-              currentTime: 0,
-              duration: promoted.buffer.duration,
-              isPlaying: true,
-              isLoading: false,
-              playbackRate: rateRef.current,
-              acousticProfile: promoted.acousticProfile,
-            });
-
-            // Configura fallback onended para o bloco recém-promovido
-            promoted.source.onended = () => {
-              if (!isPlayingRef.current) return;
-              if (
-                currentSlotRef.current &&
-                currentSlotRef.current.blockIndex === promoted.blockIndex &&
-                !nextSlotRef.current
-              ) {
-                const afterIdx = promoted.blockIndex + 1;
-                if (afterIdx < blocksRef.current.length) {
-                  playBlockAt(afterIdx, 0);
-                } else {
-                  isPlayingRef.current = false;
-                  setIsPlaying(false);
-                  audioSyncBus.emit({ isPlaying: false });
-                }
-              }
-            };
-
-            // Avança a janela de prefetch e agenda o bloco seguinte
-            triggerLookaheadPrefetch(promoted.blockIndex, voiceRef.current);
-            scheduleNextSlotIfReady();
-          } else {
-            const elapsed = Math.max(0, (now - cur.startCtxTime) * rateRef.current + cur.startOffset);
-            const clampedCurrent = Math.min(cur.buffer.duration, elapsed);
-            setCurrentTime(clampedCurrent);
-            setDuration(cur.buffer.duration);
-
-            audioSyncBus.emit({
-              blockIndex: cur.blockIndex,
-              blockId: `reader-block-${cur.blockIndex}`,
-              currentTime: clampedCurrent,
-              duration: cur.buffer.duration,
-              isPlaying: true,
-              playbackRate: rateRef.current,
-              acousticProfile: cur.acousticProfile,
-            });
-
-            scheduleNextSlotIfReady();
-          }
+        if (nextSlotRef.current && now >= nextSlotRef.current.startCtxTime) {
+          promoteNextSlot();
+          return;
         }
 
-        rafRef.current = requestAnimationFrame(tick);
+        const elapsed = Math.max(0, (now - cur.startCtxTime) * rateRef.current + cur.startOffset);
+        const clampedCurrent = Math.min(cur.buffer.duration, elapsed);
+        setCurrentTime(clampedCurrent);
+        setDuration(cur.buffer.duration);
+
+        audioSyncBus.emit({
+          blockIndex: cur.blockIndex,
+          blockId: `reader-block-${cur.blockIndex}`,
+          currentTime: clampedCurrent,
+          duration: cur.buffer.duration,
+          isPlaying: true,
+          playbackRate: rateRef.current,
+          acousticProfile: cur.acousticProfile,
+        });
+
+        scheduleNextSlotIfReady();
+
+        // Watchdog caso onended falhe ou rAF tenha sofrido throttling
+        if (now >= cur.endCtxTime + 0.3 && !nextSlotRef.current) {
+          const nextIdx = cur.blockIndex + 1;
+          if (nextIdx < blocksRef.current.length) {
+            playBlockAtRef.current(nextIdx, 0);
+          } else {
+            finishPlayback();
+          }
+        }
+      };
+
+      const tick = () => {
+        if (!isPlayingRef.current || !audioCtxRef.current) return;
+        syncFrame();
+        if (isPlayingRef.current) {
+          rafRef.current = requestAnimationFrame(tick);
+        }
       };
 
       rafRef.current = requestAnimationFrame(tick);
+      watchdogRef.current = setInterval(() => {
+        if (isPlayingRef.current) syncFrame();
+      }, 180);
     },
     [
+      attachSlotOnEnded,
       fetchAndDecodeBlock,
+      finishPlayback,
       getAudioCtx,
       getBlockCacheKey,
       onActiveBlockChange,
+      promoteNextSlot,
+      recomputePrefetchCount,
       scheduleNextSlotIfReady,
       stopAllNodes,
       triggerLookaheadPrefetch,
     ]
   );
+
+  playBlockAtRef.current = playBlockAt;
 
   // Ao abrir o player, pré-carrega o bloco atual e os próximos imediatamente
   useEffect(() => {
@@ -551,6 +651,7 @@ export function AudioPlayerModal({
       stopAllNodes();
       isPlayingRef.current = false;
       setIsPlaying(false);
+      setIsLoading(false);
       return;
     }
 
@@ -558,8 +659,9 @@ export function AudioPlayerModal({
     async function warmup() {
       const idx = activeIdxRef.current;
       if (blocksRef.current.length === 0) return;
+      setErrorMessage(null);
       setIsLoading(true);
-      const first = await fetchAndDecodeBlock(idx, voiceRef.current);
+      const first = await fetchAndDecodeBlock(idx, voiceRef.current, { isPrefetch: false });
       if (cancelled) return;
       setIsLoading(false);
       if (first) {
@@ -577,17 +679,18 @@ export function AudioPlayerModal({
   }, [isOpen, voice, fetchAndDecodeBlock, stopAllNodes, triggerLookaheadPrefetch]);
 
   // Se o usuário clicou em outro bloco diretamente no texto enquanto o player estava aberto
-  const prevExternalIdxRef = useRef(activeBlockIndex);
   useEffect(() => {
     if (prevExternalIdxRef.current !== activeBlockIndex) {
       const currentPlayingIdx = currentSlotRef.current?.blockIndex;
       prevExternalIdxRef.current = activeBlockIndex;
       if (isOpen && currentPlayingIdx !== activeBlockIndex) {
+        recomputePrefetchCount(activeBlockIndex, voiceRef.current);
         if (isPlayingRef.current) {
           playBlockAt(activeBlockIndex, 0);
         } else {
           setCurrentTime(0);
-          fetchAndDecodeBlock(activeBlockIndex, voiceRef.current).then((res) => {
+          setErrorMessage(null);
+          fetchAndDecodeBlock(activeBlockIndex, voiceRef.current, { isPrefetch: false }).then((res) => {
             if (res) {
               setDuration(res.buffer.duration);
               setIsCached(res.cached);
@@ -597,7 +700,7 @@ export function AudioPlayerModal({
         }
       }
     }
-  }, [activeBlockIndex, isOpen, playBlockAt, fetchAndDecodeBlock, triggerLookaheadPrefetch]);
+  }, [activeBlockIndex, isOpen, playBlockAt, fetchAndDecodeBlock, recomputePrefetchCount, triggerLookaheadPrefetch]);
 
   if (!isOpen) return null;
 
@@ -637,11 +740,21 @@ export function AudioPlayerModal({
   const handlePrevBlock = () => {
     if (activeBlockIndex > 0) {
       const prev = activeBlockIndex - 1;
+      prevExternalIdxRef.current = prev;
       onActiveBlockChange(prev);
+      recomputePrefetchCount(prev, voiceRef.current);
       if (isPlayingRef.current) {
         playBlockAt(prev, 0);
       } else {
         setCurrentTime(0);
+        setErrorMessage(null);
+        fetchAndDecodeBlock(prev, voiceRef.current, { isPrefetch: false }).then((res) => {
+          if (res) {
+            setDuration(res.buffer.duration);
+            setIsCached(res.cached);
+          }
+        });
+        triggerLookaheadPrefetch(prev, voiceRef.current);
       }
     }
   };
@@ -649,11 +762,21 @@ export function AudioPlayerModal({
   const handleNextBlock = () => {
     if (activeBlockIndex < blocks.length - 1) {
       const next = activeBlockIndex + 1;
+      prevExternalIdxRef.current = next;
       onActiveBlockChange(next);
+      recomputePrefetchCount(next, voiceRef.current);
       if (isPlayingRef.current) {
         playBlockAt(next, 0);
       } else {
         setCurrentTime(0);
+        setErrorMessage(null);
+        fetchAndDecodeBlock(next, voiceRef.current, { isPrefetch: false }).then((res) => {
+          if (res) {
+            setDuration(res.buffer.duration);
+            setIsCached(res.cached);
+          }
+        });
+        triggerLookaheadPrefetch(next, voiceRef.current);
       }
     }
   };
@@ -747,16 +870,24 @@ export function AudioPlayerModal({
 
       {/* Erro do Provedor HeyGen */}
       {errorMessage && (
-        <div className="py-2.5 px-3 mb-3 bg-red-950/20 border border-red-500/40 rounded text-xs font-mono text-red-400 flex items-start gap-2">
-          <AlertCircle className="w-4 h-4 mt-0.5 flex-shrink-0" />
-          <div className="overflow-hidden">
-            <p className="font-bold mb-0.5">Erro no HeyGen Turbo:</p>
-            <p className="text-[11px] opacity-90 break-words">{errorMessage}</p>
+        <div className="py-2.5 px-3 mb-3 bg-red-950/20 border border-red-500/40 rounded text-xs font-mono text-red-400 flex items-start justify-between gap-2">
+          <div className="flex items-start gap-2 overflow-hidden">
+            <AlertCircle className="w-4 h-4 mt-0.5 flex-shrink-0" />
+            <div className="overflow-hidden">
+              <p className="font-bold mb-0.5">Erro no HeyGen Turbo:</p>
+              <p className="text-[11px] opacity-90 break-words">{errorMessage}</p>
+            </div>
           </div>
+          <button
+            onClick={() => playBlockAt(activeBlockIndex, 0)}
+            className="px-2 py-1 rounded border border-red-500/40 text-[10px] hover:bg-red-500/10 shrink-0"
+          >
+            Tentar
+          </button>
         </div>
       )}
 
-      {!isLoading && !errorMessage && (
+      {!isLoading && (
         <>
           {/* Barra de Progresso do Bloco Atual */}
           <div className="space-y-1 mb-2.5">
