@@ -30,6 +30,38 @@ import { AudioPlayerModal, AudioPlaybackState, AudioBlockItem } from '@/componen
 import { ReadingPencilGuide } from '@/components/ReadingPencilGuide';
 import { ReadingRuler } from '@/components/ReadingRuler';
 
+function renderFormattedInline(text: string): React.ReactNode {
+  if (!text || (!text.includes('*') && !text.includes('`'))) return text;
+  const parts = text.split(/(\*\*[^\n*]+?\*\*|\*(?!\s)[^\n*]+?(?<!\s)\*|`[^`\n]+`)/g);
+  return parts.map((part, idx) => {
+    if (part.startsWith('**') && part.endsWith('**') && part.length > 4) {
+      return (
+        <strong key={idx} className="font-semibold text-[var(--text-primary)]">
+          {part.slice(2, -2)}
+        </strong>
+      );
+    }
+    if (part.startsWith('*') && part.endsWith('*') && part.length > 2) {
+      return (
+        <em key={idx} className="italic">
+          {part.slice(1, -1)}
+        </em>
+      );
+    }
+    if (part.startsWith('`') && part.endsWith('`') && part.length > 2) {
+      return (
+        <code
+          key={idx}
+          className="font-mono text-[0.9em] px-1 py-0.5 rounded bg-[var(--bg-secondary)]"
+        >
+          {part.slice(1, -1)}
+        </code>
+      );
+    }
+    return part;
+  });
+}
+
 interface StreamBlock {
   blockIndex: number;
   id: string;
@@ -657,7 +689,7 @@ export default function ReaderPage({ params }: { params: Promise<{ id: string }>
                     onClick={() => audioOpen && handleStartAudioFromBlock(block.blockIndex)}
                     className={`reader-heading-2 pt-4 ${blockHighlightClass} ${audioOpen ? 'cursor-pointer' : ''}`}
                   >
-                    {block.content}
+                    {renderFormattedInline(block.content)}
                   </h2>
                 );
               }
@@ -673,7 +705,7 @@ export default function ReaderPage({ params }: { params: Promise<{ id: string }>
                   onClick={() => audioOpen && handleStartAudioFromBlock(block.blockIndex)}
                   className={`reader-heading-3 pt-2 ${blockHighlightClass} ${audioOpen ? 'cursor-pointer' : ''}`}
                 >
-                  {block.content}
+                  {renderFormattedInline(block.content)}
                 </h3>
               );
             }
@@ -693,11 +725,11 @@ export default function ReaderPage({ params }: { params: Promise<{ id: string }>
                 >
                   {block.title && (
                     <div className="font-mono text-xs uppercase tracking-wider font-bold mb-2 text-[var(--text-primary)]">
-                      {block.title}
+                      {renderFormattedInline(block.title)}
                     </div>
                   )}
                   <p className="whitespace-pre-line leading-relaxed text-[var(--text-secondary)]">
-                    {block.content}
+                    {renderFormattedInline(block.content)}
                   </p>
                 </div>
               );
@@ -716,7 +748,7 @@ export default function ReaderPage({ params }: { params: Promise<{ id: string }>
                   onClick={() => audioOpen && handleStartAudioFromBlock(block.blockIndex)}
                   className={`reader-blockquote font-serif text-base ${blockHighlightClass} ${audioOpen ? 'cursor-pointer' : ''}`}
                 >
-                  <p className="italic">&ldquo;{block.content}&rdquo;</p>
+                  <p className="italic">&ldquo;{renderFormattedInline(block.content)}&rdquo;</p>
                   {block.author && (
                     <cite className="block text-xs font-mono not-italic mt-2 text-[var(--text-muted)]">
                       — {block.author}
@@ -738,7 +770,7 @@ export default function ReaderPage({ params }: { params: Promise<{ id: string }>
                 onClick={() => audioOpen && handleStartAudioFromBlock(block.blockIndex)}
                 className={`reader-paragraph ${blockHighlightClass} ${audioOpen ? 'cursor-pointer' : ''}`}
               >
-                {block.content}
+                {renderFormattedInline(block.content)}
               </p>
             );
           })}

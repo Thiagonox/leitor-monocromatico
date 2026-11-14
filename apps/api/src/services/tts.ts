@@ -210,38 +210,72 @@ export async function getAudioFromBucket(
   }
 }
 
-// Geração EXCLUSIVA via heygen/heygen-voice-1-turbo:free (SEM QUALQUER FALLBACK)
-export async function synthesizeHeyGenAudio(
-  text: string,
-  voice: string = 'nadine',
-  userApiKey?: string
-): Promise<{ audioBuffer: Buffer; model: string; voice: string }> {
-  const cleanText = text
-    .replace(/[*#_`~>\[\]]/g, '')
-    .replace(/\s+/g, ' ')
-    .trim()
-    .slice(0, 4000);
+// Divide textos longos em blocos seguros (<= 650 chars) respeitando pontuacao para evitar HTTP 502 no HeyGen
+function splitTextForTTS(cleaned: string, maxChars: number = 650): string[] {
+  if (!cleaned) return [];
+  if (cleaned.length <= maxChars) return [cleaned];
 
-  if (!cleanText) {
-    throw new Error('Texto vazio para audiodescrição HeyGen.');
+  const chunks: string[] = [];
+  let cursor = 0;
+  const minSplit = Math.floor(maxChars * 0.45);
+
+  while (cursor < cleaned.length) {
+    const remaining = cleaned.length - cursor;
+    if (remaining <= maxChars) {
+      chunks.push(cleaned.slice(cursor).trim());
+      break;
+    }
+
+    const window = cleaned.slice(cursor, cursor + maxChars);
+    let splitAt = -1;
+
+    for (const sep of ['. ', '! ', '? ', '; ']) {
+      const idx = window.lastIndexOf(sep);
+      if (idx >= minSplit && idx + 1 > splitAt) {
+        splitAt = idx + 1;
+      }
+    }
+
+    if (splitAt === -1) {
+      for (const sep of [', ', ': ']) {
+        const idx = window.lastIndexOf(sep);
+        if (idx >= minSplit && idx + 1 > splitAt) {
+          splitAt = idx + 1;
+        }
+      }
+    }
+
+    if (splitAt === -1) {
+      const spaceIdx = window.lastIndexOf(' ');
+      splitAt = spaceIdx > 0 ? spaceIdx : maxChars;
+    }
+
+    const part = cleaned.slice(cursor, cursor + splitAt).trim();
+    if (part) chunks.push(part);
+    cursor += splitAt;
+    while (cursor < cleaned.length && cleaned[cursor] === ' ') {
+      cursor++;
+    }
   }
 
+  return chunks;
+}
+
+async function requestSingleHeyGenChunk(
+  chunkText: string,
+  voice: string,
+  apiKey: string
+): Promise<Buffer> {
   const model = 'heygen/heygen-voice-1-turbo:free';
-  const apiKey = userApiKey || CONFIG.DEFAULT_HEYGEN_API_KEY;
-
-  if (!apiKey) {
-    throw new Error('Chave de API do HeyGen/OpenRouter não configurada. Configure HEYGEN_API_KEY no Railway.');
-  }
-
   const endpoint = 'https://openrouter.ai/api/v1/audio/speech';
   const payload = {
     model,
-    input: cleanText,
+    input: chunkText,
     voice: voice || 'nadine',
     response_format: 'pcm',
   };
 
-  console.log(`[HeyGen TTS] Chamando exclusivamente ${model} (voz: ${voice}, chars: ${cleanText.length})...`);
+  console.log(`[HeyGen TTS] Chamando exclusivamente ${model} (voz: ${voice}, chars: ${chunkText.length})...`);
 
   const maxAttempts = 2;
   let lastError: Error | null = null;
@@ -258,7 +292,7 @@ export async function synthesizeHeyGenAudio(
           'X-Title': 'Leitor Monocromatico HeyGen Audio',
         },
         body: JSON.stringify(payload),
-        signal: AbortSignal.timeout(22000),
+        signal: AbortSignal.timeout(40000),
       });
 
       if (!resp.ok) {
@@ -295,9 +329,56 @@ export async function synthesizeHeyGenAudio(
     throw lastError || new Error('Falha ao sintetizar áudio via HeyGen.');
   }
 
-  // Se o OpenRouter retornar PCM puro, converte para WAV universal 16-bit 44.1kHz mono
-  const isAlreadyWav = rawBuf.length > 4 && rawBuf.subarray(0, 4).toString() === 'RIFF';
-  const finalWavBuffer = isAlreadyWav ? rawBuf : pcmToWav(rawBuf, 44100, 1, 16);
+  return rawBuf;
+}
+
+// Geração EXCLUSIVA via heygen/heygen-voice-1-turbo:free (SEM QUALQUER FALLBACK)
+export async function synthesizeHeyGenAudio(
+  text: string,
+  voice: string = 'nadine',
+  userApiKey?: string
+): Promise<{ audioBuffer: Buffer; model: string; voice: string }> {
+  const cleanText = text
+    .replace(/[*#_`~>\[\]]/g, '')
+    .replace(/\s+/g, ' ')
+    .trim()
+    .slice(0, 4000);
+
+  if (!cleanText) {
+    throw new Error('Texto vazio para audiodescrição HeyGen.');
+  }
+
+  const model = 'heygen/heygen-voice-1-turbo:free';
+  const apiKey = userApiKey || CONFIG.DEFAULT_HEYGEN_API_KEY;
+
+  if (!apiKey) {
+    throw new Error('Chave de API do HeyGen/OpenRouter não configurada. Configure HEYGEN_API_KEY no Railway.');
+  }
+
+  const chunks = splitTextForTTS(cleanText, 650);
+  if (chunks.length === 1) {
+    const rawBuf = await requestSingleHeyGenChunk(chunks[0], voice, apiKey);
+    const isAlreadyWav = rawBuf.length > 4 && rawBuf.subarray(0, 4).toString() === 'RIFF';
+    const finalWavBuffer = isAlreadyWav ? rawBuf : pcmToWav(rawBuf, 44100, 1, 16);
+    return {
+      audioBuffer: finalWavBuffer,
+      model,
+      voice,
+    };
+  }
+
+  const pcmParts: Buffer[] = [];
+  for (const chunk of chunks) {
+    const rawBuf = await requestSingleHeyGenChunk(chunk, voice, apiKey);
+    const isWav = rawBuf.length > 44 && rawBuf.subarray(0, 4).toString() === 'RIFF';
+    const pcmRaw = isWav ? rawBuf.subarray(44) : rawBuf;
+    const validLen = pcmRaw.length - (pcmRaw.length % 2);
+    const aligned = validLen === pcmRaw.length ? pcmRaw : pcmRaw.subarray(0, validLen);
+    pcmParts.push(trimPcmSilence(aligned, 44100));
+  }
+
+  const combinedPcm = Buffer.concat(pcmParts);
+  const finalWavBuffer = pcmToWav(combinedPcm, 44100, 1, 16);
 
   return {
     audioBuffer: finalWavBuffer,

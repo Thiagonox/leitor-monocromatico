@@ -105,6 +105,112 @@ function trimAudioBuffer(ctx: AudioContext, buffer: AudioBuffer): AudioBuffer {
   return trimmed;
 }
 
+// Divide textos longos em blocos seguros (<= 650 chars) respeitando pontuacao para evitar HTTP 502 no HeyGen
+function splitTextForTTS(rawText: string, maxChars: number = 650): string[] {
+  const cleaned = rawText
+    .replace(/[*#_`~>\[\]]/g, '')
+    .replace(/\s+/g, ' ')
+    .trim();
+
+  if (!cleaned) return [];
+  if (cleaned.length <= maxChars) return [cleaned];
+
+  const chunks: string[] = [];
+  let cursor = 0;
+  const minSplit = Math.floor(maxChars * 0.45);
+
+  while (cursor < cleaned.length) {
+    const remaining = cleaned.length - cursor;
+    if (remaining <= maxChars) {
+      chunks.push(cleaned.slice(cursor).trim());
+      break;
+    }
+
+    const window = cleaned.slice(cursor, cursor + maxChars);
+    let splitAt = -1;
+
+    for (const sep of ['. ', '! ', '? ', '; ']) {
+      const idx = window.lastIndexOf(sep);
+      if (idx >= minSplit && idx + 1 > splitAt) {
+        splitAt = idx + 1;
+      }
+    }
+
+    if (splitAt === -1) {
+      for (const sep of [', ', ': ']) {
+        const idx = window.lastIndexOf(sep);
+        if (idx >= minSplit && idx + 1 > splitAt) {
+          splitAt = idx + 1;
+        }
+      }
+    }
+
+    if (splitAt === -1) {
+      const spaceIdx = window.lastIndexOf(' ');
+      splitAt = spaceIdx > 0 ? spaceIdx : maxChars;
+    }
+
+    const part = cleaned.slice(cursor, cursor + splitAt).trim();
+    if (part) chunks.push(part);
+    cursor += splitAt;
+    while (cursor < cleaned.length && cleaned[cursor] === ' ') {
+      cursor++;
+    }
+  }
+
+  return chunks;
+}
+
+// Concatena varios AudioBuffers de sub-blocos em um unico AudioBuffer continuo com crossfade suave
+function concatAudioBuffers(ctx: AudioContext, buffers: AudioBuffer[]): AudioBuffer {
+  if (buffers.length === 1) return buffers[0];
+
+  const sampleRate = buffers[0].sampleRate;
+  const channels = buffers[0].numberOfChannels;
+  const baseOverlap = Math.floor(sampleRate * 0.008); // 8ms de crossfade entre sub-partes
+
+  const overlaps: number[] = [0];
+  let totalLen = buffers[0].length;
+  for (let k = 1; k < buffers.length; k++) {
+    const ov = Math.min(
+      baseOverlap,
+      Math.floor(buffers[k - 1].length / 4),
+      Math.floor(buffers[k].length / 4)
+    );
+    overlaps.push(ov);
+    totalLen += buffers[k].length - ov;
+  }
+
+  const out = ctx.createBuffer(channels, Math.max(1, totalLen), sampleRate);
+
+  for (let c = 0; c < channels; c++) {
+    const dst = out.getChannelData(c);
+    let writePos = 0;
+
+    for (let k = 0; k < buffers.length; k++) {
+      const buf = buffers[k];
+      const src = buf.getChannelData(Math.min(c, buf.numberOfChannels - 1));
+      const ovIn = overlaps[k];
+
+      if (k > 0 && ovIn > 0) {
+        const startMix = writePos - ovIn;
+        for (let i = 0; i < ovIn; i++) {
+          const fadeIn = 0.5 * (1 - Math.cos((Math.PI * i) / ovIn));
+          const fadeOut = 1 - fadeIn;
+          dst[startMix + i] = dst[startMix + i] * fadeOut + src[i] * fadeIn;
+        }
+        dst.set(src.subarray(ovIn), writePos);
+        writePos += src.length - ovIn;
+      } else {
+        dst.set(src, writePos);
+        writePos += src.length;
+      }
+    }
+  }
+
+  return out;
+}
+
 interface ScheduledSlot {
   blockIndex: number;
   source: AudioBufferSourceNode;
@@ -228,57 +334,88 @@ export function AudioPlayerModal({
       if (inflight) return inflight;
 
       const promise = (async () => {
-        const maxAttempts = 2;
-        let lastErr: Error | null = null;
+        const chunks = splitTextForTTS(block.text, 650);
+        if (chunks.length === 0) return null;
 
-        for (let attempt = 1; attempt <= maxAttempts; attempt++) {
-          const controller = new AbortController();
-          const timeoutId = setTimeout(() => controller.abort(), 25000);
-          try {
-            const res = await requestTTS({
-              text: block.text,
-              voice: targetVoice,
-              chapterId: block.id,
-            });
+        const synthAndDecodeChunk = async (
+          chunkText: string,
+          chunkId: string
+        ): Promise<{ buffer: AudioBuffer; cached: boolean }> => {
+          const maxAttempts = 2;
+          let lastErr: Error | null = null;
 
-            if (res.status !== 'ok' || !res.audioUrl) {
-              throw new Error(res.message || 'Falha ao sintetizar bloco via HeyGen Turbo');
+          for (let attempt = 1; attempt <= maxAttempts; attempt++) {
+            const controller = new AbortController();
+            const timeoutId = setTimeout(() => controller.abort(), 45000);
+            try {
+              const res = await requestTTS({
+                text: chunkText,
+                voice: targetVoice,
+                chapterId: chunkId,
+              });
+
+              if (res.status !== 'ok' || !res.audioUrl) {
+                throw new Error(res.message || 'Falha ao sintetizar bloco via HeyGen Turbo');
+              }
+
+              const directUrl = resolveAudioUrl(res.audioUrl);
+              const audioResp = await fetch(directUrl, { signal: controller.signal });
+              if (!audioResp.ok) {
+                throw new Error(`HTTP ${audioResp.status} ao baixar áudio do Bucket S3`);
+              }
+
+              const arrayBuf = await audioResp.arrayBuffer();
+              const ctx = getAudioCtx();
+              const rawAudioBuf = await ctx.decodeAudioData(arrayBuf.slice(0));
+              const cleanAudioBuf = trimAudioBuffer(ctx, rawAudioBuf);
+
+              return {
+                buffer: cleanAudioBuf,
+                cached: Boolean(res.cached),
+              };
+            } catch (err: any) {
+              lastErr = err instanceof Error ? err : new Error(String(err));
+              if (attempt < maxAttempts) {
+                await new Promise((r) => setTimeout(r, 600));
+              }
+            } finally {
+              clearTimeout(timeoutId);
             }
-
-            const directUrl = resolveAudioUrl(res.audioUrl);
-            const audioResp = await fetch(directUrl, { signal: controller.signal });
-            if (!audioResp.ok) {
-              throw new Error(`HTTP ${audioResp.status} ao baixar áudio do Bucket S3`);
-            }
-
-            const arrayBuf = await audioResp.arrayBuffer();
-            const ctx = getAudioCtx();
-            const rawAudioBuf = await ctx.decodeAudioData(arrayBuf.slice(0));
-            const cleanAudioBuf = trimAudioBuffer(ctx, rawAudioBuf);
-            const acousticProfile = analyzeAudioEnvelope(cleanAudioBuf);
-
-            const entry = {
-              buffer: cleanAudioBuf,
-              cached: Boolean(res.cached),
-              acousticProfile,
-            };
-            decodedCacheRef.current.set(key, entry);
-            recomputePrefetchCount(activeIdxRef.current, targetVoice);
-            return entry;
-          } catch (err: any) {
-            lastErr = err instanceof Error ? err : new Error(String(err));
-            if (attempt < maxAttempts) {
-              await new Promise((r) => setTimeout(r, 500));
-            }
-          } finally {
-            clearTimeout(timeoutId);
           }
-        }
 
-        if (!opts?.isPrefetch) {
-          setErrorMessage(lastErr?.message || 'Erro ao gerar áudio do bloco');
+          throw lastErr || new Error('Erro ao gerar áudio do bloco');
+        };
+
+        try {
+          const chunkResults: { buffer: AudioBuffer; cached: boolean }[] = [];
+          for (let i = 0; i < chunks.length; i++) {
+            const chunkId = chunks.length === 1 ? block.id : `${block.id}-part-${i + 1}`;
+            const result = await synthAndDecodeChunk(chunks[i], chunkId);
+            chunkResults.push(result);
+          }
+
+          const ctx = getAudioCtx();
+          const mergedBuffer = concatAudioBuffers(
+            ctx,
+            chunkResults.map((c) => c.buffer)
+          );
+          const acousticProfile = analyzeAudioEnvelope(mergedBuffer);
+
+          const entry = {
+            buffer: mergedBuffer,
+            cached: chunkResults.every((c) => c.cached),
+            acousticProfile,
+          };
+          decodedCacheRef.current.set(key, entry);
+          recomputePrefetchCount(activeIdxRef.current, targetVoice);
+          return entry;
+        } catch (err: any) {
+          const msg = err instanceof Error ? err.message : String(err);
+          if (!opts?.isPrefetch) {
+            setErrorMessage(msg || 'Erro ao gerar áudio do bloco');
+          }
+          return null;
         }
-        return null;
       })().finally(() => {
         inflightRef.current.delete(key);
       });

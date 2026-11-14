@@ -127,7 +127,7 @@ export async function requestTTS(payload: {
   apiKey?: string;
 }): Promise<TTSResponse> {
   const controller = new AbortController();
-  const timeoutId = setTimeout(() => controller.abort(), 28000);
+  const timeoutId = setTimeout(() => controller.abort(), 45000);
   try {
     const res = await fetch(`${API_BASE}/api/ai/tts`, {
       method: 'POST',
